@@ -17,11 +17,13 @@ namespace PSWikidata
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "item")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "string")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "quantity")]
         public PSWDItem Item { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "string")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "quantity")]
         public string Property { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Item that will be the value of the property.", ParameterSetName = "item")]
@@ -35,6 +37,25 @@ namespace PSWikidata
 
         [Parameter(Mandatory = true, HelpMessage = "Text that will be the value of the property.", ParameterSetName = "string")]
         public string ValueString { get; set; }
+
+        [Parameter(Mandatory = true, HelpMessage = "Quantity to be assigned to the property.", ParameterSetName = "quantity")]
+        public decimal ValueAmount { get; set; }
+
+        private decimal valuePlusMinus = 0;
+        [Parameter(Mandatory = false, HelpMessage = "Range around the value.", ParameterSetName = "quantity")]
+        public decimal ValuePlusMinus
+        {
+            get { return valuePlusMinus; }
+            set { valuePlusMinus = value; }
+        }
+
+        private string valueUnit = "1";
+        [Parameter(Mandatory = false, HelpMessage = "Unit of the quantity value.", ParameterSetName = "quantity")]
+        public string ValueUnit
+        {
+            get { return valueUnit; }
+            set { valueUnit = value; }
+        }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "monolingual")]
@@ -89,6 +110,9 @@ namespace PSWikidata
                     break;
                 case "string":
                     dataValue = new Wikibase.DataValues.StringValue(ValueString);
+                    break;
+                case "quantity":
+                    dataValue = new Wikibase.DataValues.QuantityValue(ValueAmount, ValueAmount - ValuePlusMinus, ValueAmount + ValuePlusMinus, ValueUnit);
                     break;
                 default:
                     throw new Exception("Unidentified parameter set");
