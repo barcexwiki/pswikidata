@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlets\AddWDAlias.cs" />
+    <Compile Include="Cmdlets\AddWDStatement.cs" />
     <Compile Include="DataValues\PSWDMonolingualTextValue.cs" />
     <Compile Include="DataValues\PSWDGlobeCoordinateValue.cs" />
     <Compile Include="DataValues\PSWDQuantityValue.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="DataValues\PSWDStringValue.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\wikibase.net\Wikibase.Net\WikiBase.csproj">
+    <ProjectReference Include="..\..\wikibase.net\Wikibase.NET\WikiBase.csproj">
       <Project>{fc9f81dc-20ad-4fe5-9ea1-dab417f947ea}</Project>
       <Name>WikiBase</Name>
     </ProjectReference>
