@@ -31,6 +31,7 @@ namespace PSWikidata
             descriptions.Clear();
             labels.Clear();
             aliases.Clear();
+            claims.Clear();
 
             qId = ExtensionData.id.ToString();
 
