@@ -9,16 +9,16 @@ namespace PSWikidata.DataValues
 {
     class PSWDTimeValue
     {
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         internal PSWDTimeValue(Wikibase.DataValues.TimeValue t)
         {
-            Date = t.DateTime;
+            Date = t.FullValue;
         }
 
         public override string ToString()
         {
-            return Date.ToUniversalTime().ToString();
+            return Date;
         }
     }
 }
