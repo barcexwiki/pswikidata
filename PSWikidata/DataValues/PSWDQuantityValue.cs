@@ -17,15 +17,17 @@ namespace PSWikidata.DataValues
 
         internal PSWDQuantityValue(Wikibase.DataValues.QuantityValue q)
         {
-            Amount = decimal.Parse(q.Amount,CultureInfo.InvariantCulture);
-            LowerBound = decimal.Parse(q.LowerBound,CultureInfo.InvariantCulture);
-            UpperBound = decimal.Parse(q.UpperBound, CultureInfo.InvariantCulture);
+            Amount = q.Amount;
+            LowerBound = q.LowerBound;
+            UpperBound = q.UpperBound;
             Unit = q.Unit;
         }
 
         public override string ToString()
         {
-            string unitSuffix = (Unit == "1") ? "" : " / " + Unit;
+            Match m = Regex.Match(Unit, "^http://www.wikidata.org/entity/(?<quid>Q[0-9]+)$", RegexOptions.IgnoreCase);
+
+            string unitSuffix = (Unit == "1") ? "" : " / " + (m.Success ? m.Groups["quid"].Value : Unit);
 
 
 
