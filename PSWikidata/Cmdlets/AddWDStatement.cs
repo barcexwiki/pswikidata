@@ -18,13 +18,27 @@ namespace PSWikidata
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "string")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "quantity")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "time")]
         public PSWDItem Item { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "string")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "quantity")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "time")]
         public string Property { get; set; }
+
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "item")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "monolingual")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "string")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "time")]
+        public SwitchParameter Multiple
+        {
+            get { return multiple; }
+            set { multiple = value; }
+        }
+        private bool multiple;
+
 
         [Parameter(Mandatory = true, HelpMessage = "Item that will be the value of the property.", ParameterSetName = "item")]
         public string ValueItem { get; set; }
@@ -41,32 +55,64 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Quantity to be assigned to the property.", ParameterSetName = "quantity")]
         public decimal ValueAmount { get; set; }
 
-        private decimal valuePlusMinus = 0;
         [Parameter(Mandatory = false, HelpMessage = "Range around the value.", ParameterSetName = "quantity")]
         public decimal ValuePlusMinus
         {
             get { return valuePlusMinus; }
             set { valuePlusMinus = value; }
         }
+        private decimal valuePlusMinus = 0;
 
-        private string valueUnit = "1";
         [Parameter(Mandatory = false, HelpMessage = "Unit of the quantity value.", ParameterSetName = "quantity")]
         public string ValueUnit
         {
             get { return valueUnit; }
             set { valueUnit = value; }
         }
+        private string valueUnit = "1";
 
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "item")]
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "monolingual")]
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "string")]
-        public SwitchParameter Multiple
+        [Parameter(Mandatory = true, HelpMessage = "Time in the forma [+|-]yyyyyyyyyyyy-mm-ddThh:mm:ssZ.", ParameterSetName = "time")]
+        public string ValueTime { get; set; }
+
+        [Parameter(Mandatory = false, HelpMessage = "Offset in minutes from UTC.", ParameterSetName = "time")]
+        public int ValueTimeZoneOffset 
         {
-            get { return multiple; }
-            set { multiple = value; }
+            get { return valueTimeZoneOffset; }
+            set { valueTimeZoneOffset = value; } 
         }
-        private bool multiple;
+        private int valueTimeZoneOffset = 0;
 
+        [Parameter(Mandatory = false, HelpMessage = "How many units before the given time could it be. The unit is given by the precision.", ParameterSetName = "time")]
+        public int ValueTimeBefore
+        {
+            get { return valueTimeBefore; }
+            set { valueTimeBefore = value; }
+        }
+        private int valueTimeBefore = 0;
+
+        [Parameter(Mandatory = false, HelpMessage = "How many units after the given time could it be. The unit is given by the precision.", ParameterSetName = "time")]
+        public int ValueTimeAfter
+        {
+            get { return valueTimeAfter; }
+            set { valueTimeAfter = value; }
+        }
+        private int valueTimeAfter = 0;
+
+        [Parameter(Mandatory = false, HelpMessage = "Calendar Model.", ParameterSetName = "time")]
+        public Wikibase.DataValues.CalendarModel ValueCalendarModel 
+        {
+            get { return valueCalendarModel; }
+            set { valueCalendarModel = value; }
+        }
+        private Wikibase.DataValues.CalendarModel valueCalendarModel = Wikibase.DataValues.CalendarModel.GregorianCalendar;
+
+        [Parameter(Mandatory = false, HelpMessage = "Time precision.", ParameterSetName = "time")]
+        public Wikibase.DataValues.TimeValuePrecision ValuePrecision
+        {
+            get { return valuePrecision; }
+            set { valuePrecision = value; }
+        }
+        private Wikibase.DataValues.TimeValuePrecision valuePrecision = Wikibase.DataValues.TimeValuePrecision.Day;
 
         protected override void BeginProcessing()
         {
