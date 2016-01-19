@@ -83,20 +83,20 @@ namespace PSWikidata
         private int valueTimeZoneOffset = 0;
 
         [Parameter(Mandatory = false, HelpMessage = "How many units before the given time could it be. The unit is given by the precision.", ParameterSetName = "time")]
-        public int ValueTimeBefore
+        public int ValueBefore
         {
-            get { return valueTimeBefore; }
-            set { valueTimeBefore = value; }
+            get { return valueBefore; }
+            set { valueBefore = value; }
         }
-        private int valueTimeBefore = 0;
+        private int valueBefore = 0;
 
         [Parameter(Mandatory = false, HelpMessage = "How many units after the given time could it be. The unit is given by the precision.", ParameterSetName = "time")]
-        public int ValueTimeAfter
+        public int ValueAfter
         {
-            get { return valueTimeAfter; }
-            set { valueTimeAfter = value; }
+            get { return valueAfter; }
+            set { valueAfter = value; }
         }
-        private int valueTimeAfter = 0;
+        private int valueAfter = 0;
 
         [Parameter(Mandatory = false, HelpMessage = "Calendar Model.", ParameterSetName = "time")]
         public Wikibase.DataValues.CalendarModel ValueCalendarModel 
@@ -159,6 +159,9 @@ namespace PSWikidata
                     break;
                 case "quantity":
                     dataValue = new Wikibase.DataValues.QuantityValue(ValueAmount, ValueAmount - ValuePlusMinus, ValueAmount + ValuePlusMinus, ValueUnit);
+                    break;
+                case "time":
+                    dataValue = new Wikibase.DataValues.TimeValue(ValueTime,valueTimeZoneOffset,ValueBefore,ValueAfter,ValuePrecision,ValueCalendarModel);
                     break;
                 default:
                     throw new Exception("Unidentified parameter set");
