@@ -19,6 +19,7 @@ namespace PSWikidata
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "string")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "time")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "globecoordinate")]
         public PSWDItem Item { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]
@@ -26,12 +27,14 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "string")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "time")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "globecoordinate")]
         public string Property { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "string")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "time")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "globecoordinate")]
         public SwitchParameter Multiple
         {
             get { return multiple; }
@@ -107,12 +110,25 @@ namespace PSWikidata
         private Wikibase.DataValues.CalendarModel valueCalendarModel = Wikibase.DataValues.CalendarModel.GregorianCalendar;
 
         [Parameter(Mandatory = false, HelpMessage = "Time precision.", ParameterSetName = "time")]
-        public Wikibase.DataValues.TimeValuePrecision ValuePrecision
+        public Wikibase.DataValues.TimeValuePrecision ValueTimePrecision
         {
-            get { return valuePrecision; }
-            set { valuePrecision = value; }
+            get { return valueTimePrecision; }
+            set { valueTimePrecision = value; }
         }
-        private Wikibase.DataValues.TimeValuePrecision valuePrecision = Wikibase.DataValues.TimeValuePrecision.Day;
+        private Wikibase.DataValues.TimeValuePrecision valueTimePrecision = Wikibase.DataValues.TimeValuePrecision.Day;
+
+
+        [Parameter(Mandatory = true, HelpMessage = "Latitude of the coordinate", ParameterSetName = "globecoordinate")]
+        public double ValueLatitude { get; set; }
+
+        [Parameter(Mandatory = true, HelpMessage = "Longitude of the coordinate", ParameterSetName = "globecoordinate")]
+        public decimal ValueLongitude { get; set; }
+
+        [Parameter(Mandatory = true, HelpMessage = "Precision of the coordinate", ParameterSetName = "globecoordinate")]
+        public decimal ValueCoordinatePrecision { get; set; }
+
+        [Parameter(Mandatory = true, HelpMessage = "Precision of the coordinate", ParameterSetName = "globecoordinate")]
+        public Wikibase.DataValues.Globe ValueGlobe { get; set; }        
 
         protected override void BeginProcessing()
         {
@@ -161,7 +177,7 @@ namespace PSWikidata
                     dataValue = new Wikibase.DataValues.QuantityValue(ValueAmount, ValueAmount - ValuePlusMinus, ValueAmount + ValuePlusMinus, ValueUnit);
                     break;
                 case "time":
-                    dataValue = new Wikibase.DataValues.TimeValue(ValueTime,valueTimeZoneOffset,ValueBefore,ValueAfter,ValuePrecision,ValueCalendarModel);
+                    dataValue = new Wikibase.DataValues.TimeValue(ValueTime,valueTimeZoneOffset,ValueBefore,ValueAfter,ValueTimePrecision,ValueCalendarModel);
                     break;
                 default:
                     throw new Exception("Unidentified parameter set");

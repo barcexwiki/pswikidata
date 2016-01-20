@@ -9,9 +9,9 @@ namespace PSWikidata.DataValues
 {
     class PSWDGlobeCoordinateValue
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public double Precision { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Precision { get; set; }
         public Wikibase.DataValues.Globe Globe { get; set; }
 
         internal PSWDGlobeCoordinateValue(Wikibase.DataValues.GlobeCoordinateValue c)
