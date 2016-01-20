@@ -124,11 +124,21 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Longitude of the coordinate", ParameterSetName = "globecoordinate")]
         public decimal ValueLongitude { get; set; }
 
-        [Parameter(Mandatory = true, HelpMessage = "Precision of the coordinate", ParameterSetName = "globecoordinate")]
-        public decimal ValueCoordinatePrecision { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "Precision of the coordinate", ParameterSetName = "globecoordinate")]
+        public decimal ValueCoordinatePrecision
+        {
+            get { return valueCoordinatePrecision; }
+            set { valueCoordinatePrecision = value; }
+        }
+        private decimal valueCoordinatePrecision = 0.00027777777777778M;
 
-        [Parameter(Mandatory = true, HelpMessage = "Precision of the coordinate", ParameterSetName = "globecoordinate")]
-        public Wikibase.DataValues.Globe ValueGlobe { get; set; }        
+        [Parameter(Mandatory = false, HelpMessage = "Globe of the coordinate", ParameterSetName = "globecoordinate")]
+        public Wikibase.DataValues.Globe ValueGlobe 
+        {
+            get { return valueGlobe; }
+            set { valueGlobe = value; }
+        }
+        private Wikibase.DataValues.Globe valueGlobe = Wikibase.DataValues.Globe.Earth;
 
         protected override void BeginProcessing()
         {
@@ -178,6 +188,9 @@ namespace PSWikidata
                     break;
                 case "time":
                     dataValue = new Wikibase.DataValues.TimeValue(ValueTime,valueTimeZoneOffset,ValueBefore,ValueAfter,ValueTimePrecision,ValueCalendarModel);
+                    break;
+                case "globecoordinate":
+                    dataValue = new Wikibase.DataValues.GlobeCoordinateValue((double)ValueLatitude, (double)ValueLongitude, (double)ValueCoordinatePrecision, ValueGlobe);
                     break;
                 default:
                     throw new Exception("Unidentified parameter set");
