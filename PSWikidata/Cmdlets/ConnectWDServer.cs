@@ -23,7 +23,7 @@ namespace PSWikidata
 
         protected override void BeginProcessing()
         {
-            WikibaseApi Api = new WikibaseApi("http://www.wikidata.org");
+            WikibaseApi Api = new WikibaseApi("https://www.wikidata.org");
             bool loggedIn = Api.login(Credential.UserName, Credential.GetNetworkCredential().Password);
             if (loggedIn)
             {
