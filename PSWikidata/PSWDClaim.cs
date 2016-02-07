@@ -21,6 +21,8 @@ namespace PSWikidata
 
     public class PSWDClaim
     {
+        private List<PSWDSnak> _qualifiers = new List<PSWDSnak>();
+
         public string Property { get; set; }
         public Wikibase.SnakType Type { get; set; }
         public PSWDValueTypes ValueType { get; set; }
@@ -36,6 +38,10 @@ namespace PSWikidata
                 }
 
             }
+        }
+        public PSWDSnak[] Qualifiers
+        {
+            get { return _qualifiers.ToArray(); }
         }
 
         private object _dataValue;
@@ -87,7 +93,13 @@ namespace PSWikidata
             {
                 ValueType = PSWDValueTypes.Quantity;
                 _dataValue = new PSWDQuantityValue((QuantityValue)claim.MainSnak.DataValue);
-            } 
+            }
+
+            _qualifiers.Clear();
+            foreach ( Qualifier q in claim.Qualifiers)
+            {
+                _qualifiers.Add(new PSWDSnak(q));
+            }
 
         }
     }

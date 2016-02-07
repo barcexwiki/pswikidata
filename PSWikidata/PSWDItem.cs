@@ -9,11 +9,11 @@ namespace PSWikidata
 {
     public class PSWDItem
     {
-        private List<PSWDDescription> descriptions = new List<PSWDDescription>();
-        private List<PSWDLabel> labels = new List<PSWDLabel>();
-        private List<PSWDLabel> aliases = new List<PSWDLabel>();
-        private List<PSWDSitelink> sitelinks = new List<PSWDSitelink>();
-        private List<PSWDClaim> claims = new List<PSWDClaim>();
+        private List<PSWDDescription> _descriptions = new List<PSWDDescription>();
+        private List<PSWDLabel> _labels = new List<PSWDLabel>();
+        private List<PSWDLabel> _aliases = new List<PSWDLabel>();
+        private List<PSWDSitelink> _sitelinks = new List<PSWDSitelink>();
+        private List<PSWDClaim> _claims = new List<PSWDClaim>();
 
         private string qId;
 
@@ -28,23 +28,23 @@ namespace PSWikidata
 
         internal void RefreshFromExtensionData() 
         {
-            descriptions.Clear();
-            labels.Clear();
-            aliases.Clear();
-            claims.Clear();
+            _descriptions.Clear();
+            _labels.Clear();
+            _aliases.Clear();
+            _claims.Clear();
 
             qId = ExtensionData.Id.ToString();
 
             Dictionary<string,string> d = ExtensionData.GetDescriptions();
             foreach (string k in d.Keys)
             {
-                this.descriptions.Add(new PSWDDescription(k, d[k]));
+                this._descriptions.Add(new PSWDDescription(k, d[k]));
             }
 
             Dictionary<string, string> l = ExtensionData.GetLabels();
             foreach (string k in l.Keys)
             {
-                this.labels.Add(new PSWDLabel(k, l[k]));
+                this._labels.Add(new PSWDLabel(k, l[k]));
             }
 
             Dictionary<string, List<string>> a = ExtensionData.GetAliases();
@@ -52,25 +52,25 @@ namespace PSWikidata
             {
                 foreach (string i in a[k])
                 {
-                    this.aliases.Add(new PSWDLabel(k, i));
+                    this._aliases.Add(new PSWDLabel(k, i));
                 }
             }
 
             Dictionary<string, string> sl = ExtensionData.GetSitelinks();
             foreach (string k in sl.Keys)
             {
-                this.sitelinks.Add(new PSWDSitelink(k, sl[k]));
+                this._sitelinks.Add(new PSWDSitelink(k, sl[k]));
             }
 
             foreach (Wikibase.Claim c in ExtensionData.Claims)
             {
                 if (c is Wikibase.Statement)
                 {
-                    this.claims.Add(new PSWDStatement((Statement)c));
+                    this._claims.Add(new PSWDStatement((Statement)c));
                 }
                 else
                 {
-                    this.claims.Add(new PSWDClaim(c));
+                    this._claims.Add(new PSWDClaim(c));
                 }
             }
         
@@ -83,27 +83,27 @@ namespace PSWikidata
 
         public PSWDDescription[] Descriptions
         {
-            get { return descriptions.ToArray(); }
+            get { return _descriptions.ToArray(); }
         }
 
         public PSWDLabel[] Labels
         {
-            get { return labels.ToArray(); }
+            get { return _labels.ToArray(); }
         }
 
         public PSWDLabel[] Aliases
         {
-            get { return aliases.ToArray(); }
+            get { return _aliases.ToArray(); }
         }
 
         public PSWDSitelink[] SiteLinks
         {
-            get { return sitelinks.ToArray(); }
+            get { return _sitelinks.ToArray(); }
         }
 
         public PSWDClaim[] Claims
         {
-            get { return claims.ToArray(); }
+            get { return _claims.ToArray(); }
         }
 
         internal Item ExtensionData
