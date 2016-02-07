@@ -43,9 +43,9 @@ namespace PSWikidata
 
                 if (ShouldProcess(Item.QId, comment))
                 {
-                    Item.ExtensionData.removeAlias(Language,a);
+                    Item.ExtensionData.RemoveAlias(Language,a);
                     
-                    Item.ExtensionData.save(comment);
+                    Item.ExtensionData.Save(comment);
                     WriteVerbose(comment);
                     Item.RefreshFromExtensionData();
                     WriteObject(Item, true);

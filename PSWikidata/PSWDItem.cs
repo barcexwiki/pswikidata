@@ -33,21 +33,21 @@ namespace PSWikidata
             aliases.Clear();
             claims.Clear();
 
-            qId = ExtensionData.id.ToString();
+            qId = ExtensionData.Id.ToString();
 
-            Dictionary<string,string> d = ExtensionData.getDescriptions();
+            Dictionary<string,string> d = ExtensionData.GetDescriptions();
             foreach (string k in d.Keys)
             {
                 this.descriptions.Add(new PSWDDescription(k, d[k]));
             }
 
-            Dictionary<string, string> l = ExtensionData.getLabels();
+            Dictionary<string, string> l = ExtensionData.GetLabels();
             foreach (string k in l.Keys)
             {
                 this.labels.Add(new PSWDLabel(k, l[k]));
             }
 
-            Dictionary<string, List<string>> a = ExtensionData.getAliases();
+            Dictionary<string, List<string>> a = ExtensionData.GetAliases();
             foreach (string k in a.Keys)
             {
                 foreach (string i in a[k])
@@ -56,7 +56,7 @@ namespace PSWikidata
                 }
             }
 
-            Dictionary<string, string> sl = ExtensionData.getSitelinks();
+            Dictionary<string, string> sl = ExtensionData.GetSitelinks();
             foreach (string k in sl.Keys)
             {
                 this.sitelinks.Add(new PSWDSitelink(k, sl[k]));
@@ -64,7 +64,14 @@ namespace PSWikidata
 
             foreach (Wikibase.Claim c in ExtensionData.Claims)
             {
-                this.claims.Add(new PSWDClaim(c));
+                if (c is Wikibase.Statement)
+                {
+                    this.claims.Add(new PSWDStatement((Statement)c));
+                }
+                else
+                {
+                    this.claims.Add(new PSWDClaim(c));
+                }
             }
         
         }

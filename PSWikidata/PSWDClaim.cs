@@ -22,14 +22,13 @@ namespace PSWikidata
     public class PSWDClaim
     {
         public string Property { get; set; }
-        public Wikibase.Rank Rank { get; set; }
         public Wikibase.SnakType Type { get; set; }
         public PSWDValueTypes ValueType { get; set; }
         public object Value {
             get {
-                if (dataValue != null)
+                if (_dataValue != null)
                 {
-                    return dataValue;
+                    return _dataValue;
                 }
                 else
                 {
@@ -39,7 +38,7 @@ namespace PSWikidata
             }
         }
 
-        private object dataValue;
+        private object _dataValue;
 
         internal Wikibase.Claim ExtensionData {get; set;}
 
@@ -51,44 +50,43 @@ namespace PSWikidata
 
         internal void RefreshFromClaim(Wikibase.Claim claim)
         {
-            Property = claim.mainSnak.PropertyId.PrefixedId;
-            Rank = ((Statement)claim).Rank;
-            Type = claim.mainSnak.Type;
+            Property = claim.MainSnak.PropertyId.PrefixedId;
+            Type = claim.MainSnak.Type;
 
-            if (claim.mainSnak.DataValue is StringValue)
+            if (claim.MainSnak.DataValue is StringValue)
             {
                 ValueType = PSWDValueTypes.String;
-                dataValue = new PSWDStringValue((StringValue)claim.mainSnak.DataValue);
+                _dataValue = new PSWDStringValue((StringValue)claim.MainSnak.DataValue);
             }
 
-            if (claim.mainSnak.DataValue is EntityIdValue)
+            if (claim.MainSnak.DataValue is EntityIdValue)
             {
                 ValueType = PSWDValueTypes.EntityId;
-                dataValue = new PSWDEntityIdValue((EntityIdValue)claim.mainSnak.DataValue);
+                _dataValue = new PSWDEntityIdValue((EntityIdValue)claim.MainSnak.DataValue);
             }
 
-            if (claim.mainSnak.DataValue is GlobeCoordinateValue)
+            if (claim.MainSnak.DataValue is GlobeCoordinateValue)
             {
                 ValueType = PSWDValueTypes.GlobeCoordinate;
-                dataValue = new PSWDGlobeCoordinateValue((GlobeCoordinateValue)claim.mainSnak.DataValue);
+                _dataValue = new PSWDGlobeCoordinateValue((GlobeCoordinateValue)claim.MainSnak.DataValue);
             }
 
-            if (claim.mainSnak.DataValue is TimeValue)
+            if (claim.MainSnak.DataValue is TimeValue)
             {
                 ValueType = PSWDValueTypes.Time;
-                dataValue = new PSWDTimeValue((TimeValue)claim.mainSnak.DataValue);
+                _dataValue = new PSWDTimeValue((TimeValue)claim.MainSnak.DataValue);
             }
 
-            if (claim.mainSnak.DataValue is MonolingualTextValue)
+            if (claim.MainSnak.DataValue is MonolingualTextValue)
             {
                 ValueType = PSWDValueTypes.MonolingualText;
-                dataValue = new PSWDMonolingualTextValue((MonolingualTextValue)claim.mainSnak.DataValue);
+                _dataValue = new PSWDMonolingualTextValue((MonolingualTextValue)claim.MainSnak.DataValue);
             }
 
-            if (claim.mainSnak.DataValue is QuantityValue)
+            if (claim.MainSnak.DataValue is QuantityValue)
             {
                 ValueType = PSWDValueTypes.Quantity;
-                dataValue = new PSWDQuantityValue((QuantityValue)claim.mainSnak.DataValue);
+                _dataValue = new PSWDQuantityValue((QuantityValue)claim.MainSnak.DataValue);
             } 
 
         }

@@ -32,7 +32,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            List<String> aliases = Item.ExtensionData.getAlias(Language);
+            string[] aliases = Item.ExtensionData.GetAliases(Language);
             if (aliases != null)  WriteObject(aliases.ToArray(),true);
         }
 

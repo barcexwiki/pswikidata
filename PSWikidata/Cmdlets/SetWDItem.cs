@@ -120,14 +120,14 @@ namespace PSWikidata
 
                 if (!String.IsNullOrEmpty(Description))
                 {
-                    Item.ExtensionData.setDescription(Language, Description);
+                    Item.ExtensionData.SetDescription(Language, Description);
                     editComments.Add(String.Format("Setting description {0}: {1} ", Language, Description));
                     touched = true;
                 }
 
                 if (!String.IsNullOrEmpty(Label))
                 {
-                    Item.ExtensionData.setLabel(Language, Label);
+                    Item.ExtensionData.SetLabel(Language, Label);
                     editComments.Add(String.Format("Setting label {0}: {1}", Language, Label));
                     touched = true;
 
@@ -135,14 +135,14 @@ namespace PSWikidata
 
                 if (RemoveDescription)
                 {
-                    Item.ExtensionData.removeDescription(Language);
+                    Item.ExtensionData.RemoveDescription(Language);
                     editComments.Add(String.Format("Removing description {0}", Language));
                     touched = true;
                 }
 
                 if (RemoveLabel)
                 {
-                    Item.ExtensionData.removeLabel(Language);
+                    Item.ExtensionData.RemoveLabel(Language);
                     editComments.Add(String.Format("Removing label {0}", Language));
                     touched = true;
                 }
@@ -150,14 +150,14 @@ namespace PSWikidata
 
                 if (!String.IsNullOrEmpty(SitelinkSite))
                 {
-                    Item.ExtensionData.setSitelink(SitelinkSite, SitelinkTitle);
+                    Item.ExtensionData.SetSitelink(SitelinkSite, SitelinkTitle);
                     editComments.Add(String.Format("Setting sitelink {0}: {1} ", SitelinkSite, SitelinkTitle));
                     touched = true;
                 }
 
                 if (RemoveSitelink)
                 {
-                    Item.ExtensionData.removeSitelink(SitelinkSite);
+                    Item.ExtensionData.RemoveSitelink(SitelinkSite);
                     editComments.Add(String.Format("Removing sitelink {0}", SitelinkSite));
                     touched = true;
                 }
@@ -165,7 +165,7 @@ namespace PSWikidata
                 if (touched)
                 {
                     string comment = String.Join(" / ", editComments);
-                    Item.ExtensionData.save(comment);
+                    Item.ExtensionData.Save(comment);
                     WriteVerbose(comment);
                     Item.RefreshFromExtensionData();
                 }

@@ -32,7 +32,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string label = Item.ExtensionData.getLabel(Language);
+            string label = Item.ExtensionData.GetLabel(Language);
             if (label != null)  WriteObject(label);
         }
 

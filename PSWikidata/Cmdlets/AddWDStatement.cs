@@ -148,23 +148,14 @@ namespace PSWikidata
         private bool IsDuplicatedStatement(Wikibase.DataValues.DataValue dataValue)
         {
             
-            Dictionary<string,Claim> claims = Item.ExtensionData.getClaimsForProperty(Property.ToUpper());
+            Claim[] claims = Item.ExtensionData.GetClaims(Property.ToUpper());
 
-            bool duplicate = false;
+            var sameValueClaims = from c in claims
+                                  where c.MainSnak.DataValue.Equals(dataValue)
+                                  select c;
 
-            if (claims != null)
-            {
-                foreach (Claim c in claims.Values)
-                {
-                    if (c.mainSnak.DataValue.Equals(dataValue))
-                    {
-                        duplicate = true;
-                        break;
-                    }
-                }
-            }
+            return sameValueClaims.Any();
 
-            return duplicate;
         }
 
         protected override void ProcessRecord()
@@ -208,10 +199,10 @@ namespace PSWikidata
                                     dataValue
                                     );
 
-                    Item.ExtensionData.createStatementForSnak(snak);
+                    Item.ExtensionData.AddStatement(snak, Rank.Normal);
 
                     string comment = String.Format("Adding claim {0} {1}", Property, dataValue.ToString());
-                    Item.ExtensionData.save(comment);
+                    Item.ExtensionData.Save(comment);
 
                     Item.RefreshFromExtensionData();
 
