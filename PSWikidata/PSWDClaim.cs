@@ -21,8 +21,6 @@ namespace PSWikidata
 
     public class PSWDClaim
     {
-        private List<PSWDSnak> _qualifiers = new List<PSWDSnak>();
-
         public string Property { get; set; }
         public Wikibase.SnakType Type { get; set; }
         public PSWDValueTypes ValueType { get; set; }
@@ -44,18 +42,20 @@ namespace PSWikidata
             get { return _qualifiers.ToArray(); }
         }
 
+        private List<PSWDSnak> _qualifiers = new List<PSWDSnak>();
         private object _dataValue;
 
         internal Wikibase.Claim ExtensionData {get; set;}
 
         internal PSWDClaim(Wikibase.Claim claim)
         {
-            this.ExtensionData = claim;
-            RefreshFromClaim(claim);
+            ExtensionData = claim;
+            RefreshFromExtensionData();
         }
 
-        internal void RefreshFromClaim(Wikibase.Claim claim)
+        internal virtual void RefreshFromExtensionData()
         {
+            Claim claim = ExtensionData;
             Property = claim.MainSnak.PropertyId.PrefixedId;
             Type = claim.MainSnak.Type;
 
