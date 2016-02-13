@@ -101,11 +101,11 @@ namespace PSWikidata
             {
                 if (c is Wikibase.Statement)
                 {
-                    this._claims.Add(new PSWDStatement((Statement)c));
+                    this._claims.Add(new PSWDStatement(this,(Statement)c));
                 }
                 else
                 {
-                    this._claims.Add(new PSWDClaim(c));
+                    this._claims.Add(new PSWDClaim(this,c));
                 }
             }
         

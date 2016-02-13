@@ -41,15 +41,17 @@ namespace PSWikidata
         {
             get { return _qualifiers.ToArray(); }
         }
+        internal PSWDItem Item { get; set; }
 
         private List<PSWDSnak> _qualifiers = new List<PSWDSnak>();
         private object _dataValue;
 
         internal Wikibase.Claim ExtensionData {get; set;}
 
-        internal PSWDClaim(Wikibase.Claim claim)
+        internal PSWDClaim(PSWDItem item, Wikibase.Claim claim)
         {
             ExtensionData = claim;
+            Item = item;
             RefreshFromExtensionData();
         }
 
