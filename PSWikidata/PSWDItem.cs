@@ -21,9 +21,44 @@ namespace PSWikidata
 
         internal PSWDItem(Item item)
         {
-
             ExtensionData = item;
             RefreshFromExtensionData();
+        }
+
+        public string QId
+        {
+            get { return qId; }
+        }
+
+        public PSWDDescription[] Descriptions
+        {
+            get { return _descriptions.ToArray(); }
+        }
+
+        public PSWDLabel[] Labels
+        {
+            get { return _labels.ToArray(); }
+        }
+
+        public PSWDLabel[] Aliases
+        {
+            get { return _aliases.ToArray(); }
+        }
+
+        public PSWDSitelink[] SiteLinks
+        {
+            get { return _sitelinks.ToArray(); }
+        }
+
+        public PSWDClaim[] Claims
+        {
+            get { return _claims.ToArray(); }
+        }
+
+        internal Item ExtensionData
+        {
+            get { return extensionData; }
+            set { extensionData = value; }
         }
 
         internal void RefreshFromExtensionData() 
@@ -76,42 +111,20 @@ namespace PSWikidata
         
         }
 
-        public string QId
+        internal PSWDStatement GetStatement(string Id)
         {
-            get { return qId; }
+            var s = from c in Claims
+                    where c.ExtensionData.Id == Id
+                    select c;
+
+            if (s.Any())
+            {
+                return (PSWDStatement)s.First();
+            } 
+            else
+            {
+                return null;
+            }
         }
-
-        public PSWDDescription[] Descriptions
-        {
-            get { return _descriptions.ToArray(); }
-        }
-
-        public PSWDLabel[] Labels
-        {
-            get { return _labels.ToArray(); }
-        }
-
-        public PSWDLabel[] Aliases
-        {
-            get { return _aliases.ToArray(); }
-        }
-
-        public PSWDSitelink[] SiteLinks
-        {
-            get { return _sitelinks.ToArray(); }
-        }
-
-        public PSWDClaim[] Claims
-        {
-            get { return _claims.ToArray(); }
-        }
-
-        internal Item ExtensionData
-        {
-            get { return extensionData; }
-            set { extensionData = value; }
-        }
-
-
     }
 }

@@ -37,10 +37,10 @@ namespace PSWikidata
         internal PSWDSnak(Wikibase.Snak snak)
         {
             this.ExtensionData = snak;
-            RefreshFromQualifier(snak);
+            RefreshFromExtensionData(snak);
         }
 
-        internal void RefreshFromQualifier(Wikibase.Snak snak)
+        internal void RefreshFromExtensionData(Wikibase.Snak snak)
         {
             Property = snak.PropertyId.PrefixedId;
             Type = snak.Type;

@@ -12,6 +12,22 @@ namespace PSWikidata
     public abstract class PSWDValueNetCmdlet : PSWDNetCmdlet
     {
 
+        [Parameter(Mandatory = true, HelpMessage = "The property has no value.", ParameterSetName = "novalue")]
+        public SwitchParameter NoValue
+        {
+            get { return _noValue; }
+            set { _noValue = value; }
+        }
+        private bool _noValue;
+
+        [Parameter(Mandatory = true, HelpMessage = "The property has some unknown value.", ParameterSetName = "somevalue")]
+        public SwitchParameter SomeValue
+        {
+            get { return _someValue; }
+            set { _someValue = value; }
+        }
+        private bool _someValue;
+
         [Parameter(Mandatory = true, HelpMessage = "Item that will be the value of the property.", ParameterSetName = "item")]
         public string ValueItem { get; set; }
 
@@ -117,6 +133,10 @@ namespace PSWikidata
 
                 switch (this.ParameterSetName)
                 {
+                    case "novalue":
+                    case "somevalue":
+                        dataValue = null;
+                        break;
                     case "item":
                         dataValue = new Wikibase.DataValues.EntityIdValue(new EntityId(ValueItem));
                         break;
@@ -140,6 +160,24 @@ namespace PSWikidata
                 }
 
                 return dataValue;
+            }
+        }
+
+        protected SnakType SnakType
+        {
+            get
+            {
+                if (NoValue)
+                {
+                    return SnakType.None;
+                }
+                else if (SomeValue)
+                {
+                    return SnakType.SomeValue;
+                } else
+                {
+                    return SnakType.Value;
+                }
             }
         }
     }

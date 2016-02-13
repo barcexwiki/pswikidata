@@ -9,7 +9,7 @@ using Wikibase;
 namespace PSWikidata
 {
 
-    [Cmdlet(VerbsCommon.Add, "WDSnak",
+    [Cmdlet(VerbsCommon.New, "WDSnak",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
     public class NewWDSnak : PSWDValueNetCmdlet
@@ -20,6 +20,8 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "time")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "somevalue")]
         public string Property { get; set; }
 
         protected override void BeginProcessing()
@@ -35,8 +37,7 @@ namespace PSWikidata
 
             if (ShouldProcess("new snak", "Creating Snak"))
             {
-
-                snak = new PSWDSnak(new Snak(SnakType.Value, new EntityId(Property), DataValue));
+                snak = new PSWDSnak(new Snak(SnakType, new EntityId(Property), DataValue));
                 WriteObject(snak, true);
             }
         }
