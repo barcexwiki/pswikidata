@@ -14,12 +14,14 @@ namespace PSWikidata
         ConfirmImpact = ConfirmImpact.Medium)]
     public class AddWDQualifier : PSWDValueNetCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "item")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "monolingual")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "string")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "quantity")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "time")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "item")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "monolingual")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "string")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "quantity")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "time")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Claim to be modified.", ParameterSetName = "somevalue")]
         public PSWDClaim Claim { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]
@@ -28,13 +30,17 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "time")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "somevalue")]
         public string Property { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already a qualifier for this property.", ParameterSetName = "item")]
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already a qualifier for this property.", ParameterSetName = "monolingual")]
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already a qualifier for this property.", ParameterSetName = "string")]
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already a qualifier for this property.", ParameterSetName = "time")]
-        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already a qualifier for this property.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "item")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "monolingual")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "string")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "time")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "somevalue")]
         public SwitchParameter Multiple
         {
             get { return _multiple; }
@@ -70,16 +76,14 @@ namespace PSWikidata
 
                 if (ShouldProcess(Claim.ToString(), "Adding qualifier"))
                 {
+                    Claim.ExtensionData.AddQualifier(SnakType, new EntityId(Property), dataValue);
 
-                    Claim.ExtensionData.AddQualifier(SnakType.Value, new EntityId(Property), dataValue);
-
-                    string comment = String.Format("Adding qualifier {0} {1}", Property, dataValue.ToString());
+                    string comment = String.Format("Adding qualifier {0} {1}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue");
                     Claim.ExtensionData.Entity.Save(comment);
 
                     Claim.RefreshFromExtensionData();
 
                     WriteVerbose(comment);
-
                 }
             }
 
