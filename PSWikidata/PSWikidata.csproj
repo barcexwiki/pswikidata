@@ -47,13 +47,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlets\AddWDAlias.cs" />
+    <Compile Include="Cmdlets\AddWDReference.cs" />
+    <Compile Include="Cmdlets\NewWDSnak.cs" />
+    <Compile Include="Cmdlets\AddWDQualifier.cs" />
     <Compile Include="Cmdlets\AddWDStatement.cs" />
+    <Compile Include="Cmdlets\PSWDValueNetCmdlet.cs" />
+    <Compile Include="Cmdlets\RemoveWDStatement.cs" />
     <Compile Include="DataValues\PSWDMonolingualTextValue.cs" />
     <Compile Include="DataValues\PSWDGlobeCoordinateValue.cs" />
     <Compile Include="DataValues\PSWDQuantityValue.cs" />
     <Compile Include="DataValues\PSWDTimeValue.cs" />
     <Compile Include="DataValues\PSWDEntityIdValue.cs" />
     <Compile Include="PSWDClaim.cs" />
+    <Compile Include="PSWDReference.cs" />
+    <Compile Include="PSWDSnak.cs" />
     <Compile Include="PSWDSitelink.cs" />
     <Compile Include="Cmdlets\GetWDAlias.cs" />
     <Compile Include="Cmdlets\GetWDDescription.cs" />
@@ -70,6 +77,7 @@
     <Compile Include="PSWDSessionState.cs" />
     <Compile Include="Cmdlets\SetWDItem.cs" />
     <Compile Include="DataValues\PSWDStringValue.cs" />
+    <Compile Include="PSWDStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\wikibase.net\Wikibase.NET\WikiBase.csproj">

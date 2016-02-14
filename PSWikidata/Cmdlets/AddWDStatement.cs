@@ -62,11 +62,6 @@ namespace PSWikidata
         }
         private bool _outputStatement;
 
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
-
         private bool IsDuplicatedStatement(Wikibase.DataValues.DataValue dataValue)
         {
             
@@ -116,12 +111,6 @@ namespace PSWikidata
             if (!OutputStatement)
                 WriteObject(Item, true);
 
-        }
-
-
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
         }
 
 
