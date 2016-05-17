@@ -82,7 +82,7 @@ function Copy-WDLabel
                 }
                 else
                 {
-                    Write-Warning "$($i.QId) has no description for language $SourceLanguage"
+                    Write-Warning "$($i.QId) has no label for language $SourceLanguage"
                 } 
 
                 # sends the item to the output stream
@@ -96,17 +96,36 @@ function Copy-WDLabel
     }
 }
 
-
-function IsMale ($Item)
+function Test-WDSex
 {
-    $sexStatements = $Item.Claims | ? {$_.Property -eq "p21" -and $_.Value.Id -eq "q6581097"}
-    return $sexStatements.Count -gt 0   
-}
+    param
+    (
 
-function IsFemale ($Item)
-{
-    $sexStatements = $Item.Claims | ? {$_.Property -eq "p21" -and $_.Value.Id -eq "Q6581072"}
-    return $sexStatements.Count -gt 0   
+        # Item to be tested
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("i")] 
+        [PSWikidata.PSWDItem[]]
+        $Item,
+
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true)]        
+        [ValidateSet("Male", "Female")]
+        $Sex
+    )
+
+    switch ($Sex)
+    {
+        'Female' { 
+            $sexStatements = $Item.Claims | ? {$_.Property -eq "p21" -and $_.Value.Id -eq "Q6581072"}
+         }
+        'Male' {
+            $sexStatements = $Item.Claims | ? {$_.Property -eq "p21" -and $_.Value.Id -eq "q6581097"}
+        }
+    }
+    
+    return $sexStatements.Count -gt 0
 }
 
 <#
@@ -181,11 +200,30 @@ function Set-WDRelatives
 
     Begin
     {
+        
+        
     }
     Process
     {
         foreach ($i in $Item)
         {
+            # checks that there are no duplicate Qids
+            $allQids = @();
+            if ($ChildrenQId) 
+                { $allQids += $ChildrenQid;}
+            if ($SibligsQId) 
+                { $allQids += $SibligsQId;}
+            if ($SpouseQId) 
+                {$allQids += $SpouseQId;}
+            if ($FatherQId) 
+                {$allQids += $FatherQId;}
+            $allQids += $i.QId;
+
+            if ($allQids | group | ? {$_.count -gt 1})
+            {
+                throw "Parameters are inconsistent."
+            }
+
             if ($pscmdlet.ShouldProcess("Target", "Operation"))
             {
         
@@ -233,10 +271,10 @@ function Set-WDRelatives
 
                       Add-WDStatement -Item $i -Property p40 -ValueItem $child.QId -ErrorAction Stop | Out-Null
 
-                      if (IsMale($i)) {
+                      if (Test-WDSex -Item $i -Sex Male) {
                           Add-WDStatement -Item $child -Property p22 -ValueItem $i.QId -ErrorAction Stop | Out-Null
                       } 
-                      elseif (IsFemale($i))  {
+                      elseif (Test-WDSex -Item $i -Sex Female)  {
                           Add-WDStatement -Item $child -Property P25 -ValueItem $i.QId -ErrorAction Stop | Out-Null
                       } else {
                           throw "The sex of the parent is unknown"
@@ -264,10 +302,10 @@ function Set-WDRelatives
 
 function setSibling ([PSWikidata.PSWDItem]$a, [PSWikidata.PSWDItem] $b)
 {
-    if (IsMale($b)) {
+    if (Test-WDSex -Item $b -Sex Male) {
         Add-WDStatement -Item $a -Property "p7" -ValueItem $b.QId | Out-Null
     } 
-    elseif (IsFemale($b))  {
+    elseif (Test-WDSex -Item $b -Sex Female)  {
         Add-WDStatement -Item $a -Property "p9" -ValueItem $b.QId | Out-Null
     } else {
         throw "The sex of the sibling is unknown"
