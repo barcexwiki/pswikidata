@@ -96,6 +96,51 @@ function Copy-WDLabel
     }
 }
 
+function Test-WDInstanceOf
+{
+    param
+    (
+
+        # Item to be tested
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("i")] 
+        [PSWikidata.PSWDItem]
+        $Item,
+
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$false)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("v")] 
+        [string]
+        $QId
+    )
+
+    $statements = $Item.Claims | ? {$_.Property -eq "p31" -and $_.Value.Id -eq $QId}
+
+    return $statements.Count -gt 0
+}
+
+function Test-WDHuman
+{
+    param
+    (
+
+        # Item to be tested
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("i")] 
+        [PSWikidata.PSWDItem]
+        $Item
+    )
+
+
+    return Test-WDInstanceOf -Item $Item -QId "Q5"
+}
+
+
 function Test-WDSex
 {
     param
@@ -106,7 +151,7 @@ function Test-WDSex
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItem[]]
+        [PSWikidata.PSWDItem]
         $Item,
 
         [Parameter(Mandatory=$true, 
