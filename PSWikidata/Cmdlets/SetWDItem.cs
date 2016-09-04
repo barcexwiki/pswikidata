@@ -16,7 +16,8 @@ namespace PSWikidata
     public class SetWDItem : PSWDNetCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.")]
-        public PSWDItem Item { get; set; }
+        [PSWDItemArgumentTransformation]
+        public PSWDItem[] Item { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Language to be used.")]
         public string Language { get; set; }
@@ -57,7 +58,13 @@ namespace PSWikidata
         }
         private bool removeSitelink;
 
-
+        [Parameter(Mandatory = false, HelpMessage = "Change the item but do not save the changes to Wikidata.")]
+        public SwitchParameter DoNotSave
+        {
+            get { return _doNotSave; }
+            set { _doNotSave = value; }
+        }
+        private bool _doNotSave;
 
         protected override void BeginProcessing()
         {
@@ -109,69 +116,80 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
+            foreach (PSWDItem i in Item)
+            { 
 
-            List<string> editComments;
+                List<string> editComments;
 
-            editComments = new List<string>();
+                editComments = new List<string>();
 
-            if (ShouldProcess(Item.QId, "Setting label, description or sitelink"))
-            {
-                bool touched = false;
-
-                if (!String.IsNullOrEmpty(Description))
+                if (ShouldProcess(i.QId, "Setting label, description or sitelink"))
                 {
-                    Item.ExtensionData.SetDescription(Language, Description);
-                    editComments.Add(String.Format("Setting description {0}: {1} ", Language, Description));
-                    touched = true;
+                    bool touched = false;
+
+                    if (!String.IsNullOrEmpty(Description))
+                    {
+                        i.ExtensionData.SetDescription(Language, Description);
+                        editComments.Add(String.Format("Setting description {0}: {1} ", Language, Description));
+                        touched = true;
+                    }
+
+                    if (!String.IsNullOrEmpty(Label))
+                    {
+                        i.ExtensionData.SetLabel(Language, Label);
+                        editComments.Add(String.Format("Setting label {0}: {1}", Language, Label));
+                        touched = true;
+
+                    }
+
+                    if (RemoveDescription)
+                    {
+                        i.ExtensionData.RemoveDescription(Language);
+                        editComments.Add(String.Format("Removing description {0}", Language));
+                        touched = true;
+                    }
+
+                    if (RemoveLabel)
+                    {
+                        i.ExtensionData.RemoveLabel(Language);
+                        editComments.Add(String.Format("Removing label {0}", Language));
+                        touched = true;
+                    }
+
+
+                    if (!String.IsNullOrEmpty(SitelinkSite))
+                    {
+                        i.ExtensionData.SetSitelink(SitelinkSite, SitelinkTitle);
+                        editComments.Add(String.Format("Setting sitelink {0}: {1} ", SitelinkSite, SitelinkTitle));
+                        touched = true;
+                    }
+
+                    if (RemoveSitelink)
+                    {
+                        i.ExtensionData.RemoveSitelink(SitelinkSite);
+                        editComments.Add(String.Format("Removing sitelink {0}", SitelinkSite));
+                        touched = true;
+                    }
+
+                    if (touched)
+                    {
+                        string comment = String.Join(" / ", editComments);
+
+                        if (!DoNotSave)
+                        {
+                            i.ExtensionData.Save(comment);
+                            WriteVerbose(comment);
+                        }
+                        else
+                        {
+                            WriteVerbose(comment + " [not saving]");
+                        }
+
+                        i.RefreshFromExtensionData();
+                    }
+
+                    WriteObject(i, true);
                 }
-
-                if (!String.IsNullOrEmpty(Label))
-                {
-                    Item.ExtensionData.SetLabel(Language, Label);
-                    editComments.Add(String.Format("Setting label {0}: {1}", Language, Label));
-                    touched = true;
-
-                }
-
-                if (RemoveDescription)
-                {
-                    Item.ExtensionData.RemoveDescription(Language);
-                    editComments.Add(String.Format("Removing description {0}", Language));
-                    touched = true;
-                }
-
-                if (RemoveLabel)
-                {
-                    Item.ExtensionData.RemoveLabel(Language);
-                    editComments.Add(String.Format("Removing label {0}", Language));
-                    touched = true;
-                }
-
-
-                if (!String.IsNullOrEmpty(SitelinkSite))
-                {
-                    Item.ExtensionData.SetSitelink(SitelinkSite, SitelinkTitle);
-                    editComments.Add(String.Format("Setting sitelink {0}: {1} ", SitelinkSite, SitelinkTitle));
-                    touched = true;
-                }
-
-                if (RemoveSitelink)
-                {
-                    Item.ExtensionData.RemoveSitelink(SitelinkSite);
-                    editComments.Add(String.Format("Removing sitelink {0}", SitelinkSite));
-                    touched = true;
-                }
-
-                if (touched)
-                {
-                    string comment = String.Join(" / ", editComments);
-                    Item.ExtensionData.Save(comment);
-                    WriteVerbose(comment);
-                    Item.RefreshFromExtensionData();
-                }
-
-                WriteObject(Item, true);
-
             }
 
         }

@@ -68,7 +68,7 @@ namespace PSWikidata
             _aliases.Clear();
             _claims.Clear();
 
-            qId = ExtensionData.Id.ToString();
+            qId = ExtensionData.Id != null ?  ExtensionData.Id.ToString() : null;
 
             Dictionary<string,string> d = ExtensionData.GetDescriptions();
             foreach (string k in d.Keys)

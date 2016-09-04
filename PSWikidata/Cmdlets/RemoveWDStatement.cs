@@ -21,6 +21,15 @@ namespace PSWikidata
         )]
         public PSWDStatement Statement { get; set; }
 
+        [Parameter(Mandatory = false, HelpMessage = "Remove the statement but do not save the changes to Wikidata.")]
+        public SwitchParameter DoNotSave
+        {
+            get { return _doNotSave; }
+            set { _doNotSave = value; }
+        }
+        private bool _doNotSave;
+
+
         protected override void ProcessRecord()
         {
             string comment = String.Format("Removing statement");
@@ -28,8 +37,17 @@ namespace PSWikidata
             if (ShouldProcess(Statement.ToString(), comment))
             {
                 Statement.Item.ExtensionData.RemoveClaim(Statement.ExtensionData);
-                Statement.Item.ExtensionData.Save(comment);
-                WriteVerbose(comment);
+
+                if (!DoNotSave)
+                {
+                    Statement.Item.ExtensionData.Save(comment);
+                    WriteVerbose(comment);
+                }
+                else
+                {
+                    WriteVerbose(comment + " [not saving]");
+                }
+
                 Statement.Item.RefreshFromExtensionData();
                 WriteObject(Statement.Item, true);
             }

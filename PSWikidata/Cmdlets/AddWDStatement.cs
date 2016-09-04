@@ -62,6 +62,21 @@ namespace PSWikidata
         }
         private bool _outputStatement;
 
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "item")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "monolingual")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "string")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "time")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "somevalue")]
+        public SwitchParameter DoNotSave
+        {
+            get { return _doNotSave; }
+            set { _doNotSave = value; }
+        }
+        private bool _doNotSave;
+
+
         private bool IsDuplicatedStatement(Wikibase.DataValues.DataValue dataValue)
         {
             
@@ -96,11 +111,18 @@ namespace PSWikidata
                     string statementId = s.Id;
 
                     string comment = String.Format("Adding claim {0} {1}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue");
-                    Item.ExtensionData.Save(comment);
+
+                    if (!DoNotSave)
+                    {
+                        Item.ExtensionData.Save(comment);
+                        WriteVerbose(comment);
+                    }
+                    else
+                    {
+                        WriteVerbose(comment + " [not saving]");
+                    }
 
                     Item.RefreshFromExtensionData();
-
-                    WriteVerbose(comment);
 
                     if (OutputStatement)
                         WriteObject(Item.GetStatement(statementId), true);                    

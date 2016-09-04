@@ -1,29 +1,6 @@
-<#
-.Synopsis
-   Descripción corta
-.DESCRIPTION
-   Descripción larga
-.EXAMPLE
-   Ejemplo de cómo usar este cmdlet
-.EXAMPLE
-   Otro ejemplo de cómo usar este cmdlet
-.INPUTS
-   Entradas a este cmdlet (si hay)
-.OUTPUTS
-   Salidas de este cmdlet (si hay)
-.NOTES
-   Notas generales
-.COMPONENT
-   El componente al que pertenece este cmdlet
-.ROLE
-   El rol al que pertenece este cmdlet
-.FUNCTIONALITY
-   La funcionalidad que mejor describe a este cmdlet
-#>
 function Copy-WDLabel
 {
-    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
-                  SupportsShouldProcess=$true, 
+    [CmdletBinding(SupportsShouldProcess=$true, 
                   PositionalBinding=$false,
                   ConfirmImpact='Medium')]
     [Alias("cplabel")]
@@ -32,17 +9,16 @@ function Copy-WDLabel
     (
         # Item to be modified
         [Parameter(Mandatory=$true, 
-                   ValueFromPipeline=$true,
-                   ParameterSetName='Parameter Set 1')]
+                   ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
+        [PSWikidata.PSWDItemArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Item,
 
         # Source language
-        [Parameter(Mandatory=$true, 
-                   ParameterSetName='Parameter Set 1')]
+        [Parameter(Mandatory=$true)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("sl")] 
@@ -50,14 +26,12 @@ function Copy-WDLabel
         $SourceLanguage,
 
         # Destination languages
-        [Parameter(Mandatory=$true, 
-                   ParameterSetName='Parameter Set 1')]
+        [Parameter(Mandatory=$true)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("dl")] 
         [string[]]
         $DestinationLanguages
-
     )
 
     Begin
@@ -77,13 +51,15 @@ function Copy-WDLabel
                     foreach ($dl in $DestinationLanguages)
                     {
                         Write-Verbose "Copying label '$label' of $($i.QId) from [$SourceLanguage] to [$dl]"
-                        Set-WDItem -Item $i -Label $label -Language $dl | Out-Null
+                        Set-WDItem -Item $i -Label $label -Language $dl -DoNotSave | Out-Null
                     }
                 }
                 else
                 {
                     Write-Warning "$($i.QId) has no label for language $SourceLanguage"
                 } 
+
+                Save-WDItem -Item $Item | Out-Null
 
                 # sends the item to the output stream
                 $i
@@ -106,6 +82,7 @@ function Test-WDInstanceOf
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
+        [PSWikidata.PSWDItemArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Item,
 
@@ -132,6 +109,7 @@ function Test-WDHuman
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
+        [PSWikidata.PSWDItemArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Item
     )
@@ -151,11 +129,13 @@ function Test-WDSex
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
+        [PSWikidata.PSWDItemArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Item,
 
+        # Sex that the item will be tested against
         [Parameter(Mandatory=$true, 
-                   ValueFromPipeline=$true)]        
+                   ValueFromPipeline=$false)]        
         [ValidateSet("Male", "Female")]
         $Sex
     )
@@ -173,95 +153,79 @@ function Test-WDSex
     return $sexStatements.Count -gt 0
 }
 
-<#
-.Synopsis
-   Descripción corta
-.DESCRIPTION
-   Descripción larga
-.EXAMPLE
-   Ejemplo de cómo usar este cmdlet
-.EXAMPLE
-   Otro ejemplo de cómo usar este cmdlet
-.INPUTS
-   Entradas a este cmdlet (si hay)
-.OUTPUTS
-   Salidas de este cmdlet (si hay)
-.NOTES
-   Notas generales
-.COMPONENT
-   El componente al que pertenece este cmdlet
-.ROLE
-   El rol al que pertenece este cmdlet
-.FUNCTIONALITY
-   La funcionalidad que mejor describe a este cmdlet
-#>
 function Set-WDRelatives
 {
-    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
-                  SupportsShouldProcess=$true, 
+    [CmdletBinding(SupportsShouldProcess=$true, 
                   PositionalBinding=$false,
                   ConfirmImpact='Medium')]
-    [Alias()]
-    [OutputType([String])]
+    [OutputType([PSWikidata.PSWDItem])]
     Param
     (
          # Item to be modified
         [Parameter(Mandatory=$true, 
-                   ValueFromPipeline=$true,
-                   ParameterSetName='Parameter Set 1')]
+                   ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
+        [PSWikidata.PSWDItemArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Item,
 
+        # Item that represents the mother of the subject item
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [string]$MotherQId,
-        
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem]
+        $Mother,
+
+        # Item that represents the father of the subject item        
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [string]$FatherQId,
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem]
+        $Father,
 
+        # Item that represents the spouse of the subject item        
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [string]$SpouseQId,
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem]
+        $Spouse,
 
-
+        # Items that represent the children of the subject item 
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [string[]]$ChildrenQId,
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem[]]
+        $Children,
 
+        # Items that represent the siblings of the subject item 
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [string[]]$SibligsQId
-
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem[]]
+        $Sibligs
     )
 
-    Begin
-    {
-        
-        
-    }
     Process
     {
         foreach ($i in $Item)
         {
             # checks that there are no duplicate Qids
             $allQids = @();
-            if ($ChildrenQId) 
-                { $allQids += $ChildrenQid;}
-            if ($SibligsQId) 
-                { $allQids += $SibligsQId;}
-            if ($SpouseQId) 
-                {$allQids += $SpouseQId;}
-            if ($FatherQId) 
-                {$allQids += $FatherQId;}
+            if ($pscmdlet.MyInvocation.BoundParameters["Children"]) 
+                { $allQids += $Children.Qid;}
+            if ($pscmdlet.MyInvocation.BoundParameters["Siblings"]) 
+                { $allQids += $Sibligs.QId;}
+            if ($pscmdlet.MyInvocation.BoundParameters["Spouse"]) 
+                {$allQids += $Spouse.QId;}
+            if ($pscmdlet.MyInvocation.BoundParameters["Father"]) 
+                {$allQids += $Father.QId;}
             $allQids += $i.QId;
 
             if ($allQids | group | ? {$_.count -gt 1})
@@ -269,58 +233,51 @@ function Set-WDRelatives
                 throw "Parameters are inconsistent."
             }
 
-            if ($pscmdlet.ShouldProcess("Target", "Operation"))
+            if ($pscmdlet.ShouldProcess($i.QId, "Set relatives"))
             {
         
-              if ($pscmdlet.MyInvocation.BoundParameters["MotherQId"])
-              {
-                  $mother = Get-WDItem $MotherQId -ErrorAction Stop 
-
-                  Add-WDStatement -Item $i -Property p25 -ValueItem $mother.QId -ErrorAction Stop | Out-Null
-                  Add-WDStatement -Item $mother -Property p40 -ValueItem $i.QId -ErrorAction Stop | Out-Null
+              if ($pscmdlet.MyInvocation.BoundParameters["Mother"])
+              {                  
+                  Add-WDStatement -Item $i -Property p25 -ValueItem $Mother -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Item $Mother -Property p40 -ValueItem $i -ErrorAction Stop | Out-Null
               }
 
-              if ($pscmdlet.MyInvocation.BoundParameters["FatherQId"])
+              if ($pscmdlet.MyInvocation.BoundParameters["Father"])
               {
-                  $father = Get-WDItem $FatherQId -ErrorAction Stop 
-
-                  Add-WDStatement -Item $i -Property p22 -ValueItem $father.QId -ErrorAction Stop | Out-Null
-                  Add-WDStatement -Item $father -Property p40 -ValueItem $i.QId -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Item $i -Property p22 -ValueItem $Father -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Item $Father -Property p40 -ValueItem $i -ErrorAction Stop | Out-Null
               }
 
-              if ($pscmdlet.MyInvocation.BoundParameters["SpouseQId"])
+              if ($pscmdlet.MyInvocation.BoundParameters["Spouse"])
               {
-                  $spouse = Get-WDItem $SpouseQId -ErrorAction Stop 
-
-                  Add-WDStatement -Item $i -Property p26 -ValueItem $spouse.QId -ErrorAction Stop | Out-Null
-                  Add-WDStatement -Item $spouse -Property p26 -ValueItem $i.QId -ErrorAction Stop | Out-Null
+                  $spouse = Get-WDItem $Spouse -ErrorAction Stop 
+                  Add-WDStatement -Item $i -Property p26 -ValueItem $Spouse -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Item $Spouse -Property p26 -ValueItem $i -ErrorAction Stop | Out-Null
               }
 
 
-              foreach ($sQId in $SibligsQId)
-              {
-                  $sibling = Get-WDItem $sQId -ErrorAction Stop
-                  
-                  setSibling $i $sibling
-                  setSibling $sibling $i
+              foreach ($s in $Sibligs)
+              {                  
+                  setSibling $i $s
+                  setSibling $s $i
               }
 
 
-              if ($pscmdlet.MyInvocation.BoundParameters["ChildrenQId"])
+              if ($pscmdlet.MyInvocation.BoundParameters["Children"])
               {
-                  $ChildrenQId = $ChildrenQId | Sort-Object | Get-Unique
-                  $children = $ChildrenQId | % { Get-WDItem $_ -ErrorAction Stop }
+                  $ChildrenQId = $Children.QId | Sort-Object | Get-Unique
+                  $children = $ChildrenQId | Get-WDItem -ErrorAction Stop 
 
-                  foreach ($child in $children)
+                  foreach ($child in $Children)
                   {
 
-                      Add-WDStatement -Item $i -Property p40 -ValueItem $child.QId -ErrorAction Stop | Out-Null
+                      Add-WDStatement -Item $i -Property p40 -ValueItem $child -ErrorAction Stop | Out-Null
 
                       if (Test-WDSex -Item $i -Sex Male) {
-                          Add-WDStatement -Item $child -Property p22 -ValueItem $i.QId -ErrorAction Stop | Out-Null
+                          Add-WDStatement -Item $child -Property p22 -ValueItem $i -ErrorAction Stop | Out-Null
                       } 
                       elseif (Test-WDSex -Item $i -Sex Female)  {
-                          Add-WDStatement -Item $child -Property P25 -ValueItem $i.QId -ErrorAction Stop | Out-Null
+                          Add-WDStatement -Item $child -Property P25 -ValueItem $i -ErrorAction Stop | Out-Null
                       } else {
                           throw "The sex of the parent is unknown"
                       }
@@ -331,17 +288,12 @@ function Set-WDRelatives
                       {
                         setSibling $child $s
                       }
-                  }
-              }
+                   }
+               }
 
-
+               Write-Output $Item
             }
-
-            $Item
         }
-    }
-    End
-    {
     }
 }
 
@@ -354,5 +306,298 @@ function setSibling ([PSWikidata.PSWDItem]$a, [PSWikidata.PSWDItem] $b)
         Add-WDStatement -Item $a -Property "p9" -ValueItem $b.QId | Out-Null
     } else {
         throw "The sex of the sibling is unknown"
+    }
+}
+
+
+function Set-WDHuman
+{
+    [CmdletBinding(SupportsShouldProcess=$true, 
+                  PositionalBinding=$false,
+                  ConfirmImpact='Medium')]
+    [OutputType([PSWikidata.PSWDItem])]
+    Param
+    (
+         # Item to be modified
+        [Parameter(Mandatory=$true, 
+                   ValueFromPipeline=$true)]
+        [ValidateNotNull()]
+        [ValidateNotNullOrEmpty()]
+        [Alias("i")] 
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem[]]
+        $Item,
+
+        [Parameter(Mandatory= $false)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet("Male", "Female")]
+        $Sex,
+
+        [Parameter(Mandatory=$false)]
+        [switch]$SetInstanceOf = $false
+    )
+
+    DynamicParam {
+
+        $valueItemParameters = @{
+            "CauseOfDeath" = "P509"
+            "MannerOfDeath" = "P1196"
+            "Occupation" = "P106"
+            "CountryOfCitizenship" = "P27"
+            "PlaceOfBurial" = "P119"
+            "KilledBy" = "P157"
+            "NativeLanguage" = "P103"
+            "AlmaMater" = "P69"
+            "FieldOfWork" = "P101"
+            "NotableWork" = "P800"
+            "Employer" = "P108"
+            "PositionHeld" = "P39"
+            "Religion" = "P140"
+            "HonorifixPrefix" = "P511"
+            "FamilyName" = "P734"
+            "GivenName" = "P735"
+            "EyeColor" = "P1340"
+            "LanguagesSpoken" = "P1412"
+            "Affiliation" = "P1416"
+        }
+
+        $stringParameters = @{
+            "Pseudonym" = "P742"
+        }
+
+
+        $paramDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+
+        foreach ($paramName in $valueItemParameters.Keys)
+        {
+             $attribute = New-Object System.Management.Automation.ParameterAttribute
+             $attribute.Mandatory = $false
+             $attributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+             $attributeCollection.Add($attribute)
+
+             $attribute = New-Object System.Management.Automation.ValidateNotNullOrEmptyAttribute
+             $attributeCollection.Add($attribute)
+
+             $attribute = New-Object PSWikidata.PSWDItemArgumentTransformationAttribute
+             $attributeCollection.Add($attribute)
+         
+             $param = New-Object System.Management.Automation.RuntimeDefinedParameter($paramName, [PSWikidata.PSWDItem], $attributeCollection)
+             $paramDictionary.Add($paramName, $param)
+        }
+
+        foreach ($paramName in $stringParameters.Keys)
+        {
+             $attribute = New-Object System.Management.Automation.ParameterAttribute
+             $attribute.Mandatory = $false
+             $attributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+             $attributeCollection.Add($attribute)
+
+             $attribute = New-Object System.Management.Automation.ValidateNotNullOrEmptyAttribute
+             $attributeCollection.Add($attribute)
+         
+             $param = New-Object System.Management.Automation.RuntimeDefinedParameter($paramName, [string], $attributeCollection)
+             $paramDictionary.Add($paramName, $param)
+        }
+
+
+        return $paramDictionary
+
+    }
+
+    Begin
+    {
+        
+    }
+    Process
+    {
+        foreach ($i in $Item)
+        {
+            if ($pscmdlet.ShouldProcess("Target", "Operation"))
+            {
+                if (!(Test-WDHuman $i))
+                {
+                    if ($SetInstanceOf)
+                    {
+                        Add-WDStatement -Item $i -Property p31 -ValueItem Q5 -ErrorAction Stop | Out-Null
+                    } 
+                    else
+                    {
+                        throw "Not instance of human"
+                    }
+                }
+
+                foreach ($parameterName in $valueItemParameters.Keys)
+                {
+                    $parameterValue = $pscmdlet.MyInvocation.BoundParameters[$parameterName]
+                    if ($parameterValue)
+                    {
+                        Add-WDStatement -Item $i -Property $valueItemParameters[$parameterName] -ValueItem $parameterValue -ErrorAction Stop | Out-Null
+                    }                    
+                }
+
+
+                foreach ($parameterName in $stringParameters.Keys)
+                {
+                    $parameterValue = $pscmdlet.MyInvocation.BoundParameters[$parameterName]
+                    if ($parameterValue)
+                    {
+                        Add-WDStatement -Item $i -Property $stringParameters[$parameterName] -ValueString $parameterValue -ErrorAction Stop | Out-Null
+                    }                    
+                }
+
+                if ($pscmdlet.MyInvocation.BoundParameters["Sex"])
+                {
+                    switch ($Sex)
+                    {
+                        'Female'{ $sexQId = "Q6581072" }
+                        'Male' { $sexQId = "q6581097" }
+                    }
+
+                    $sexStatements = $Item.Claims | ? {$_.Property -eq "p21"}
+                    if ($sexStatements.Count -le 1)
+                    {
+                        if ($sexStatements.Count -eq 1)
+                        {
+                            $sexStatements | Set-WDStatement -ValueItem $sexQId -ErrorAction Stop | Out-Null
+                        } 
+                        else
+                        {
+                            Add-WDStatement -Item $i -Property p21 -ValueItem $sexQId -ErrorAction Stop | Out-Null
+                        }
+                    }
+                    else 
+                    {
+                        throw "Multiple Sex statements. Cannot determine which one to set." 
+                    }
+
+                }
+
+            }
+
+            $Item
+        }
+    }
+    End
+    {
+    }
+}
+
+
+
+function Get-WDCountry
+{
+
+ 
+    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
+                  PositionalBinding=$true,
+                  ConfirmImpact='Low')]
+    [OutputType([PSWikidata.PSWDItem])]
+    Param
+    (
+         # Item to be modified
+        [Parameter(Mandatory=$true, 
+                   Position = 0,
+                   ParameterSetName='Parameter Set 1')]
+        [ValidateNotNullOrEmpty()]
+        [Alias("iso")] 
+        [string]
+        $ISO3166   
+    )
+
+
+    Process
+    {
+        $iso = $ISO3166.ToUpper()
+
+        $query= @"
+SELECT ?country
+WHERE
+{
+    ?country  wdt:P31 wd:Q6256 .
+    ?country  wdt:P297 "$iso"
+}
+"@
+       $escapedQuery = [System.Uri]::EscapeDataString($query)
+       $uri = "https://query.wikidata.org/sparql?query=$escapedQuery&format=json"
+       $restOutput = Invoke-RestMethod -Method Get -Uri $uri
+                    
+       if ($restOutput.results.bindings.country.value -match "^http://www.wikidata.org/entity/(Q.*)$")
+       {
+           $qId = $Matches[1]
+           Get-WDItem -QId $qId
+       }
+    }
+}
+
+
+function Get-WDLanguage
+{
+
+ 
+    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
+                  PositionalBinding=$true,
+                  ConfirmImpact='Low')]
+    [OutputType([PSWikidata.PSWDItem])]
+    Param
+    (
+         # Item to be modified
+        [Parameter(Mandatory=$true, 
+                   Position = 0,
+                   ParameterSetName='Parameter Set 1')]
+        [ValidateNotNullOrEmpty()]
+        [Alias("iso")] 
+        [string]
+        $ISO618   
+    )
+
+
+    Process
+    {
+        $iso = $ISO618.ToLower()
+
+        $query= @"
+SELECT ?country
+WHERE
+{
+    ?country  wdt:P31 wd:Q34770 .
+    ?country  wdt:P218 "$iso"
+}
+"@
+       $escapedQuery = [System.Uri]::EscapeDataString($query)
+       $uri = "https://query.wikidata.org/sparql?query=$escapedQuery&format=json"
+       $restOutput = Invoke-RestMethod -Method Get -Uri $uri
+                    
+       if ($restOutput.results.bindings.country.value -match "^http://www.wikidata.org/entity/(Q.*)$")
+       {
+           $qId = $Matches[1]
+           Get-WDItem -QId $qId
+       }
+    }
+}
+
+function ConvertTo-WDTimeValueString
+{
+
+    [CmdletBinding(PositionalBinding=$true,
+                  ConfirmImpact='Low')]
+    [OutputType([string])]
+    Param
+    (
+         # Item to be modified
+        [Parameter(Mandatory=$true, 
+                   Position = 0)]
+        [ValidateNotNullOrEmpty()]
+        [System.DateTime]
+        $Date
+    )
+
+    Process
+    {
+        $result = [String]::Format("{0:0000}-{1:00}-{2:00}T{3:00}:{4:00}:{5:00}Z", $date.Year, $date.Month, $date.Day, $date.Hour, $date.Minute, $date.Second);
+        if ($date.year -gt 0) 
+        {
+            $result = "+" + $result;
+        }
+        Write-Output $result
     }
 }

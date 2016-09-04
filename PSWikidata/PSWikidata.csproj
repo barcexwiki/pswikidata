@@ -52,13 +52,17 @@
     <Compile Include="Cmdlets\AddWDQualifier.cs" />
     <Compile Include="Cmdlets\AddWDStatement.cs" />
     <Compile Include="Cmdlets\PSWDValueNetCmdlet.cs" />
+    <Compile Include="Cmdlets\SaveWDItem.cs" />
+    <Compile Include="Cmdlets\SetWDStatement.cs" />
     <Compile Include="Cmdlets\RemoveWDStatement.cs" />
+    <Compile Include="Cmdlets\NewWDItem.cs" />
     <Compile Include="DataValues\PSWDMonolingualTextValue.cs" />
     <Compile Include="DataValues\PSWDGlobeCoordinateValue.cs" />
     <Compile Include="DataValues\PSWDQuantityValue.cs" />
     <Compile Include="DataValues\PSWDTimeValue.cs" />
     <Compile Include="DataValues\PSWDEntityIdValue.cs" />
     <Compile Include="PSWDClaim.cs" />
+    <Compile Include="PSWDItemArgumentTransformationAttribute.cs" />
     <Compile Include="PSWDReference.cs" />
     <Compile Include="PSWDSnak.cs" />
     <Compile Include="PSWDSitelink.cs" />

@@ -29,7 +29,8 @@ namespace PSWikidata
         private bool _someValue;
 
         [Parameter(Mandatory = true, HelpMessage = "Item that will be the value of the property.", ParameterSetName = "item")]
-        public string ValueItem { get; set; }
+        [PSWDItemArgumentTransformationAttribute]
+        public PSWDItem ValueItem { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Text that will be the value of the property.", ParameterSetName = "monolingual")]
         public string ValueText { get; set; }
@@ -59,7 +60,7 @@ namespace PSWikidata
         }
         private string _valueUnit = "1";
 
-        [Parameter(Mandatory = true, HelpMessage = "Time in the forma [+|-]yyyyyyyyyyyy-mm-ddThh:mm:ssZ.", ParameterSetName = "time")]
+        [Parameter(Mandatory = true, HelpMessage = "Time in the format [+|-]yyyyyyyyyyyy-mm-ddThh:mm:ssZ.", ParameterSetName = "time")]
         public string ValueTime { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Offset in minutes from UTC.", ParameterSetName = "time")]
@@ -138,7 +139,7 @@ namespace PSWikidata
                         dataValue = null;
                         break;
                     case "item":
-                        dataValue = new Wikibase.DataValues.EntityIdValue(new EntityId(ValueItem));
+                        dataValue = new Wikibase.DataValues.EntityIdValue(new EntityId(ValueItem.QId));
                         break;
                     case "monolingual":
                         dataValue = new Wikibase.DataValues.MonolingualTextValue(ValueText, ValueLanguage);

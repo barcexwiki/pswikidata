@@ -48,6 +48,22 @@ namespace PSWikidata
         }
         private bool _multiple;
 
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "item")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "monolingual")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "string")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "time")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "somevalue")]
+        public SwitchParameter DoNotSave
+        {
+            get { return _doNotSave; }
+            set { _doNotSave = value; }
+        }
+        private bool _doNotSave;
+
+
+
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
@@ -79,11 +95,16 @@ namespace PSWikidata
                     Claim.ExtensionData.AddQualifier(SnakType, new EntityId(Property), dataValue);
 
                     string comment = String.Format("Adding qualifier {0} {1}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue");
-                    Claim.ExtensionData.Entity.Save(comment);
 
+                    if (!DoNotSave)
+                    { 
+                        Claim.ExtensionData.Entity.Save(comment);
+                        WriteVerbose(comment);
+                    } else
+                    {
+                        WriteVerbose(comment+ " [not saving]");
+                    }
                     Claim.RefreshFromExtensionData();
-
-                    WriteVerbose(comment);
                 }
             }
 

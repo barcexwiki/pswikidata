@@ -19,8 +19,6 @@ namespace PSWikidata
         )]
         public PSCredential Credential { get; set; }
 
-
-
         protected override void BeginProcessing()
         {
             WikibaseApi Api = new WikibaseApi("https://www.wikidata.org");

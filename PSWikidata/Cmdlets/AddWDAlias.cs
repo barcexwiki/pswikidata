@@ -35,6 +35,14 @@ namespace PSWikidata
         )]
         public string[] Alias { get; set; }
 
+        [Parameter(Mandatory = false, HelpMessage = "Add the alias but do not save the changes to Wikidata.")]
+        public SwitchParameter DoNotSave
+        {
+            get { return _doNotSave; }
+            set { _doNotSave = value; }
+        }
+        private bool _doNotSave;
+
         protected override void ProcessRecord()
         {
             foreach (string a in Alias)
@@ -43,10 +51,19 @@ namespace PSWikidata
 
                 if (ShouldProcess(Item.QId, comment))
                 {
+
                     Item.ExtensionData.AddAlias(Language,a);
 
-                    Item.ExtensionData.Save(comment);
-                    WriteVerbose(comment);
+                    if (!DoNotSave)
+                    {
+                        Item.ExtensionData.Save(comment);
+                        WriteVerbose(comment);
+                    }
+                    else
+                    {
+                        WriteVerbose(comment + " [not saving]");
+                    }
+
                     Item.RefreshFromExtensionData();
                     WriteObject(Item, true);
                 }

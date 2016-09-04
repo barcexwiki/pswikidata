@@ -20,6 +20,14 @@ namespace PSWikidata
         [Parameter(Mandatory = true, ValueFromPipeline = false, HelpMessage = "Snaks that make the reference.")]
         public PSWDSnak[] Snaks { get; set; }
 
+        [Parameter(Mandatory = false, HelpMessage = "Add the reference but do not save the changes to Wikidata.")]
+        public SwitchParameter DoNotSave
+        {
+            get { return _doNotSave; }
+            set { _doNotSave = value; }
+        }
+        private bool _doNotSave;
+
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
@@ -37,11 +45,18 @@ namespace PSWikidata
                 }
 
                 string comment = String.Format("Adding references");
-                Statement.ExtensionData.Entity.Save(comment);
+
+                if (!DoNotSave)
+                {
+                    Statement.ExtensionData.Entity.Save(comment);
+                    WriteVerbose(comment);
+                }
+                else
+                {
+                    WriteVerbose(comment + " [not saving]");
+                }
 
                 Statement.RefreshFromExtensionData();
-
-                WriteVerbose(comment);
             }
 
             WriteObject(Statement, true);
