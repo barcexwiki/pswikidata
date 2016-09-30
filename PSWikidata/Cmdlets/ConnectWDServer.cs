@@ -19,9 +19,22 @@ namespace PSWikidata
         )]
         public PSCredential Credential { get; set; }
 
+        private string _url = "https://www.wikidata.org";
+
+        [Parameter(
+           Mandatory = false,
+           Position = 1,
+           HelpMessage = "API URL."
+        )]
+        public string Url
+        {
+            get { return _url; }
+            set { _url = value; }
+        }
+
         protected override void BeginProcessing()
         {
-            WikibaseApi Api = new WikibaseApi("https://www.wikidata.org");
+            WikibaseApi Api = new WikibaseApi(Url, "PSWikidata 0.0.1"); 
             bool loggedIn = Api.login(Credential.UserName, Credential.GetNetworkCredential().Password);
             if (loggedIn)
             {
