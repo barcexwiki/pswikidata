@@ -47,28 +47,28 @@ namespace PSWikidata
         {
             foreach (string a in Alias)
             {
-                string comment = String.Format("Removing alias {0}: {1}", Language, a);
 
-                if (ShouldProcess(Item.QId, comment))
+                if (ShouldProcess(Item.QId, String.Format("Remove alias {0}: {1}", Language, a)))
                 {
-                    Item.ExtensionData.RemoveAlias(Language,a);
-
-                    if (!DoNotSave)
+                    try
                     {
-                        Item.ExtensionData.Save(comment);
-                        WriteVerbose(comment);
-                    }
-                    else
-                    {
-                        WriteVerbose(comment + " [not saving]");
-                    }
+                        Item.RemoveAlias(Language, a);
+                        WriteVerbose(String.Format("Remove alias {0}: {1} on {2}", Language, a, Item.QId));
 
-                    Item.RefreshFromExtensionData();
-                    WriteObject(Item, true);
+                        if (!DoNotSave)
+                        {
+                                string comment = Item.Save();
+                                WriteVerbose(comment);
+                        }                    
+
+                        WriteObject(Item, true);
+                    }
+                    catch (Exception e)
+                    {
+                        WriteError(new ErrorRecord(e, null, ErrorCategory.NotSpecified, Item));
+                    }
                 }
-
             }
         }
-
     }
 }

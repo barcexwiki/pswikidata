@@ -104,5 +104,12 @@ namespace PSWikidata
             }
 
         }
+
+        internal void AddQualifier(SnakType type, string propertyId, DataValue dataValue)
+        {
+            ExtensionData.AddQualifier(type, new EntityId(propertyId), dataValue);
+            RefreshFromExtensionData();
+        }
+
     }
 }

@@ -97,8 +97,7 @@ namespace PSWikidata
 
             if (Multiple || !IsDuplicatedStatement(dataValue))
             {
-
-                if (ShouldProcess(Item.QId, "Adding claim"))
+                if (ShouldProcess(Item.QId, "Add statement"))
                 {
 
                     Snak snak = new Snak(SnakType,
@@ -106,33 +105,24 @@ namespace PSWikidata
                                     dataValue
                                     );
 
-                    Statement s = Item.ExtensionData.AddStatement(snak, Rank.Normal);
-
-                    string statementId = s.Id;
-
-                    string comment = String.Format("Adding claim {0} {1}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue");
+                    PSWDStatement statement = Item.AddStatement(snak, Rank.Normal);
+                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue",Item.QId));
 
                     if (!DoNotSave)
                     {
-                        Item.ExtensionData.Save(comment);
+                        string comment = Item.Save();
                         WriteVerbose(comment);
                     }
-                    else
-                    {
-                        WriteVerbose(comment + " [not saving]");
-                    }
-
-                    Item.RefreshFromExtensionData();
 
                     if (OutputStatement)
-                        WriteObject(Item.GetStatement(statementId), true);                    
-
+                    {
+                        WriteObject(statement, true);
+                    }
                 }
             }
 
             if (!OutputStatement)
                 WriteObject(Item, true);
-
         }
 
 

@@ -17,19 +17,23 @@ namespace PSWikidata
         [PSWDItemArgumentTransformation]
         public PSWDItem[] Item { get; set; }
 
-
         protected override void ProcessRecord()
         {
             foreach (PSWDItem i in Item)
-            {
-                string comment = String.Format("Updating item");
-
-                if (ShouldProcess(i.QId, comment))
+            {                
+                if (ShouldProcess(i.QId, "Save item"))
                 {
-                     i.ExtensionData.Save(comment);
-                     WriteVerbose(comment);
-                     i.RefreshFromExtensionData();
-                     WriteObject(Item, true);
+                    try
+                    {
+                        string comment = i.Save();
+                        WriteVerbose(comment);
+                        WriteObject(i, true);
+                    }
+                    catch (Exception e)
+                    {
+                        WriteError(new ErrorRecord(e,null, ErrorCategory.NotSpecified, i));
+                        continue;
+                    }
                 }
             }
         }

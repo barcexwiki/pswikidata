@@ -90,21 +90,16 @@ namespace PSWikidata
             if (Multiple || !IsDuplicatedQualifier(dataValue))
             {
 
-                if (ShouldProcess(Claim.ToString(), "Adding qualifier"))
+                if (ShouldProcess(Claim.ToString(), "Add qualifier"))
                 {
-                    Claim.ExtensionData.AddQualifier(SnakType, new EntityId(Property), dataValue);
-
-                    string comment = String.Format("Adding qualifier {0} {1}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue");
+                    Claim.AddQualifier(SnakType, Property, dataValue);
+                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue",Claim.Item.QId));
 
                     if (!DoNotSave)
-                    { 
-                        Claim.ExtensionData.Entity.Save(comment);
-                        WriteVerbose(comment);
-                    } else
                     {
-                        WriteVerbose(comment+ " [not saving]");
+                        string comment = Claim.Item.Save();
+                        WriteVerbose(comment);
                     }
-                    Claim.RefreshFromExtensionData();
                 }
             }
 

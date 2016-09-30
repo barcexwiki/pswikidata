@@ -9,12 +9,25 @@ namespace PSWikidata
 {
     public class PSWDItem
     {
+        private struct LogEntry
+        {
+            public LogEntry(string operation, string language, string value)
+            {
+                this.operation = operation;
+                this.language = language;
+                this.value = value;
+            }
+            public string operation;
+            public string language;
+            public string value;
+        }
+
         private List<PSWDDescription> _descriptions = new List<PSWDDescription>();
         private List<PSWDLabel> _labels = new List<PSWDLabel>();
         private List<PSWDLabel> _aliases = new List<PSWDLabel>();
         private List<PSWDSitelink> _sitelinks = new List<PSWDSitelink>();
         private List<PSWDClaim> _claims = new List<PSWDClaim>();
-
+        private List<LogEntry> _log = new List<LogEntry>();
         private string qId;
 
         private Item extensionData;
@@ -125,6 +138,104 @@ namespace PSWikidata
             {
                 return null;
             }
+        }
+
+        internal void SetDescription(string language, string description)
+        {
+            ExtensionData.SetDescription(language, description);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("SetDescription", language, description));
+        }
+
+        internal void RemoveDescription(string language)
+        {
+            ExtensionData.RemoveDescription(language);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("RemoveDescription", language, null));
+        }
+
+        internal void SetLabel(string language, string description)
+        {
+            ExtensionData.SetLabel(language, description);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("SetLabel", language, description));
+        }
+
+        internal void RemoveLabel(string language)
+        {
+            ExtensionData.RemoveLabel(language);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("RemoveLabel", language, null));
+        }
+
+        internal void SetSitelink(string site, string title)
+        {
+            ExtensionData.SetSitelink(site, title);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("SetSitelink", site, title));
+        }
+
+        internal void RemoveSitelink(string site)
+        {
+            ExtensionData.RemoveSitelink(site);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("RemoveSitelink", site,null));
+        }
+
+        private string GetSaveComment()
+        {
+            string output = null;
+
+            var queryOperation =
+                from logEntry in _log
+                group logEntry by logEntry.operation into operationGroup
+                orderby operationGroup.Key
+                select operationGroup;
+
+            foreach (var operationGroup in queryOperation)
+            {
+                output += " " + operationGroup.Key + ": ";
+                List<string> comments = new List<string>();
+                foreach (var entry in operationGroup)
+                {
+                    comments.Add(String.Format("{0}", entry.language));
+                }
+                output += String.Join(" ", comments);
+            }
+
+
+            return output;
+        }
+
+        internal void AddAlias(string language, string alias)
+        {
+            ExtensionData.AddAlias(language, alias);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("AddAlias", language, alias));
+        }
+
+        internal void RemoveAlias(string language, string alias)
+        {
+            ExtensionData.RemoveAlias(language, alias);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("RemoveAlias", language, alias));
+        }
+
+        public PSWDStatement AddStatement(Snak snak, Rank rank)
+        {
+            Statement s = ExtensionData.AddStatement(snak, rank);
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("AddStatement", snak.PropertyId.ToString(), null));
+            return GetStatement(s.Id);
+        }
+
+        internal string Save()
+        {
+            string comment = GetSaveComment();
+            ExtensionData.Save(comment);
+            RefreshFromExtensionData();
+            _log.Clear();
+            return String.Format("Saved item {0}: {1}",QId,comment);
         }
     }
 }

@@ -119,73 +119,59 @@ namespace PSWikidata
             foreach (PSWDItem i in Item)
             { 
 
-                List<string> editComments;
-
-                editComments = new List<string>();
-
-                if (ShouldProcess(i.QId, "Setting label, description or sitelink"))
+                if (ShouldProcess(i.QId, "Set label, description or sitelink"))
                 {
                     bool touched = false;
 
                     if (!String.IsNullOrEmpty(Description))
                     {
-                        i.ExtensionData.SetDescription(Language, Description);
-                        editComments.Add(String.Format("Setting description {0}: {1} ", Language, Description));
+                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, i.QId));
+                        i.SetDescription(Language, Description);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(Label))
                     {
-                        i.ExtensionData.SetLabel(Language, Label);
-                        editComments.Add(String.Format("Setting label {0}: {1}", Language, Label));
+                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, i.QId));
+                        i.SetLabel(Language, Label);
                         touched = true;
-
                     }
 
                     if (RemoveDescription)
                     {
-                        i.ExtensionData.RemoveDescription(Language);
-                        editComments.Add(String.Format("Removing description {0}", Language));
+                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, i.QId));
+                        i.RemoveDescription(Language);
                         touched = true;
                     }
 
                     if (RemoveLabel)
                     {
-                        i.ExtensionData.RemoveLabel(Language);
-                        editComments.Add(String.Format("Removing label {0}", Language));
+                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, i.QId));
+                        i.RemoveLabel(Language);
                         touched = true;
                     }
 
-
                     if (!String.IsNullOrEmpty(SitelinkSite))
                     {
-                        i.ExtensionData.SetSitelink(SitelinkSite, SitelinkTitle);
-                        editComments.Add(String.Format("Setting sitelink {0}: {1} ", SitelinkSite, SitelinkTitle));
+                        WriteVerbose(String.Format("Setting sitelink {0}: {1} on {2}", SitelinkSite, SitelinkTitle, i.QId));
+                        i.SetSitelink(SitelinkSite, SitelinkTitle);
                         touched = true;
                     }
 
                     if (RemoveSitelink)
                     {
-                        i.ExtensionData.RemoveSitelink(SitelinkSite);
-                        editComments.Add(String.Format("Removing sitelink {0}", SitelinkSite));
+                        WriteVerbose(String.Format("Removing sitelink {0} on {1}", SitelinkSite,i.QId));
+                        i.RemoveSitelink(SitelinkSite);
                         touched = true;
                     }
 
                     if (touched)
                     {
-                        string comment = String.Join(" / ", editComments);
-
                         if (!DoNotSave)
                         {
-                            i.ExtensionData.Save(comment);
+                            string comment = i.Save();
                             WriteVerbose(comment);
                         }
-                        else
-                        {
-                            WriteVerbose(comment + " [not saving]");
-                        }
-
-                        i.RefreshFromExtensionData();
                     }
 
                     WriteObject(i, true);

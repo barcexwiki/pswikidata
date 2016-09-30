@@ -46,28 +46,20 @@ namespace PSWikidata
         protected override void ProcessRecord()
         {
             foreach (string a in Alias)
-            {
-                string comment = String.Format("Adding alias {0}: {1}", Language, a);
-
-                if (ShouldProcess(Item.QId, comment))
+            {             
+                if (ShouldProcess(Item.QId, String.Format("Add alias {0}: {1}", Language, a)))
                 {
-
-                    Item.ExtensionData.AddAlias(Language,a);
+                    Item.AddAlias(Language, a);
+                    WriteVerbose(String.Format("Add alias {0}: {1} on {2}", Language, a, Item.QId));
 
                     if (!DoNotSave)
                     {
-                        Item.ExtensionData.Save(comment);
+                        string comment = Item.Save();
                         WriteVerbose(comment);
                     }
-                    else
-                    {
-                        WriteVerbose(comment + " [not saving]");
-                    }
 
-                    Item.RefreshFromExtensionData();
                     WriteObject(Item, true);
                 }
-
             }
         }
 
