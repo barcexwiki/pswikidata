@@ -5,7 +5,7 @@ function Copy-WDLabel
                   ConfirmImpact='Medium')]
     [Alias("cplabel")]
     [OutputType([PSWikidata.PSWDItem])]
-    Param
+    param
     (
         # Item to be modified
         [Parameter(Mandatory=$true, 
@@ -31,27 +31,27 @@ function Copy-WDLabel
         [ValidateNotNullOrEmpty()]
         [Alias("dl")] 
         [string[]]
-        $DestinationLanguages
+        $DestinationLanguages,
+
+        [Parameter(Mandatory=$false)]
+        [switch]$DoNotSave = $false
     )
 
-    Begin
-    {
-    }
-    Process
+    process
     {
         foreach ($i in $Item)
         { 
             if ($pscmdlet.ShouldProcess($i.QId, "Copying labels from $SourceLanguage to $($DestinationLanguages -join " ")"))
             {               
 
-                $label = ($i.Labels|? Language -eq $SourceLanguage).Label
+                $label = ($i.Labels | Where-Object Language -eq $SourceLanguage).Label
 
                 if ($label)
                 {
                     foreach ($dl in $DestinationLanguages)
                     {
                         Write-Verbose "Copying label '$label' of $($i.QId) from [$SourceLanguage] to [$dl]"
-                        Set-WDItem -Item $i -Label $label -Language $dl -DoNotSave | Out-Null
+                        Set-WDItem -Item $i -Label $label -Language $dl -DoNotSave -ErrorAction Stop| Out-Null
                     }
                 }
                 else
@@ -59,17 +59,24 @@ function Copy-WDLabel
                     Write-Warning "$($i.QId) has no label for language $SourceLanguage"
                 } 
 
-                Save-WDItem -Item $Item | Out-Null
-
-                # sends the item to the output stream
-                $i
-            }
-
+                try
+                {
+                    if (!$DoNotSave)
+                    {                   
+                        Save-WDItem -Item $i -ErrorAction Stop | Out-Null
+                    }
+                    # sends the item to the output stream
+                    $i
+                } 
+                catch 
+                {
+                    Write-Error $_
+                }
+             }
         }
+
     }
-    End
-    {
-    }
+    
 }
 
 function Test-WDInstanceOf
@@ -94,7 +101,7 @@ function Test-WDInstanceOf
         $QId
     )
 
-    $statements = $Item.Claims | ? {$_.Property -eq "p31" -and $_.Value.Id -eq $QId}
+    $statements = $Item.Claims | Where-Object {$_.Property -eq "p31" -and $_.Value.Id -eq $QId}
 
     return $statements.Count -gt 0
 }
@@ -143,17 +150,17 @@ function Test-WDSex
     switch ($Sex)
     {
         'Female' { 
-            $sexStatements = $Item.Claims | ? {$_.Property -eq "p21" -and $_.Value.Id -eq "Q6581072"}
+            $sexStatements = $Item.Claims | Where-Object {$_.Property -eq "p21" -and $_.Value.Id -eq "Q6581072"}
          }
         'Male' {
-            $sexStatements = $Item.Claims | ? {$_.Property -eq "p21" -and $_.Value.Id -eq "q6581097"}
+            $sexStatements = $Item.Claims | Where-Object {$_.Property -eq "p21" -and $_.Value.Id -eq "q6581097"}
         }
     }
     
     return $sexStatements.Count -gt 0
 }
 
-function Set-WDRelatives
+function Set-WDRelative
 {
     [CmdletBinding(SupportsShouldProcess=$true, 
                   PositionalBinding=$false,
@@ -228,7 +235,7 @@ function Set-WDRelatives
                 {$allQids += $Father.QId;}
             $allQids += $i.QId;
 
-            if ($allQids | group | ? {$_.count -gt 1})
+            if ($allQids | Group-Object | Where-Object {$_.count -gt 1})
             {
                 throw "Parameters are inconsistent."
             }
@@ -404,10 +411,6 @@ function Set-WDHuman
 
     }
 
-    Begin
-    {
-        
-    }
     Process
     {
         foreach ($i in $Item)
@@ -453,7 +456,7 @@ function Set-WDHuman
                         'Male' { $sexQId = "q6581097" }
                     }
 
-                    $sexStatements = $Item.Claims | ? {$_.Property -eq "p21"}
+                    $sexStatements = $Item.Claims | Where-Object {$_.Property -eq "p21"}
                     if ($sexStatements.Count -le 1)
                     {
                         if ($sexStatements.Count -eq 1)
@@ -476,9 +479,6 @@ function Set-WDHuman
 
             $Item
         }
-    }
-    End
-    {
     }
 }
 
