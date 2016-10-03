@@ -9,9 +9,8 @@ using Wikibase;
 namespace PSWikidata
 {
     [Cmdlet(VerbsCommunications.Connect, "WDServer")]
-    public class ConnectWDServer: PSCmdlet
+    public class ConnectWDServer : PSCmdlet
     {
-
         [Parameter(
            Mandatory = true,
            Position = 0,
@@ -34,12 +33,12 @@ namespace PSWikidata
 
         protected override void BeginProcessing()
         {
-            WikibaseApi Api = new WikibaseApi(Url, "PSWikidata 0.0.1"); 
-            bool loggedIn = Api.login(Credential.UserName, Credential.GetNetworkCredential().Password);
+            WikibaseApi Api = new WikibaseApi(Url, "PSWikidata 0.0.1");
+            bool loggedIn = Api.Login(Credential.UserName, Credential.GetNetworkCredential().Password);
             if (loggedIn)
             {
                 EntityProvider p = new EntityProvider(Api);
-                PSWDSessionState state = new PSWDSessionState(Api,p);
+                PSWDSessionState state = new PSWDSessionState(Api, p);
                 this.SessionState.PSVariable.Set(new PSVariable("__WikidataState", state));
                 WriteDebug("Connected to Wikidata");
             }

@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace PSWikidata.DataValues
 {
-    class PSWDQuantityValue
+    internal class PSWDQuantityValue
     {
         public decimal Amount { get; set; }
         public decimal LowerBound { get; set; }
@@ -40,7 +40,7 @@ namespace PSWikidata.DataValues
             }
             if (minus == plus)
             {
-                return Amount + "±" + plus + unitSuffix;
+                return Amount + "\u00B1" + plus + unitSuffix;
             }
             return Amount + " +" + plus + " -" + minus + unitSuffix;
         }

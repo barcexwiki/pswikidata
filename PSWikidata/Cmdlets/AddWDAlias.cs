@@ -46,7 +46,7 @@ namespace PSWikidata
         protected override void ProcessRecord()
         {
             foreach (string a in Alias)
-            {             
+            {
                 if (ShouldProcess(Item.QId, String.Format("Add alias {0}: {1}", Language, a)))
                 {
                     Item.AddAlias(Language, a);
@@ -62,6 +62,5 @@ namespace PSWikidata
                 }
             }
         }
-
     }
 }

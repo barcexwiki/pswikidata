@@ -8,7 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
     [Cmdlet(VerbsCommon.Add, "WDReference",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
@@ -35,10 +34,8 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-
             if (ShouldProcess(Statement.ToString(), "Adding reference"))
             {
-
                 foreach (PSWDSnak snak in Snaks)
                 {
                     ((Statement)Statement.ExtensionData).AddReference(snak.ExtensionData);
@@ -60,7 +57,6 @@ namespace PSWikidata
             }
 
             WriteObject(Statement, true);
-
         }
 
 
@@ -68,9 +64,5 @@ namespace PSWikidata
         {
             base.EndProcessing();
         }
-
-
     }
-
-
 }

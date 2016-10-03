@@ -8,10 +8,8 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
     public abstract class PSWDValueNetCmdlet : PSWDNetCmdlet
     {
-
         [Parameter(Mandatory = true, HelpMessage = "The property has no value.", ParameterSetName = "novalue")]
         public SwitchParameter NoValue
         {
@@ -175,12 +173,12 @@ namespace PSWikidata
                 else if (SomeValue)
                 {
                     return SnakType.SomeValue;
-                } else
+                }
+                else
                 {
                     return SnakType.Value;
                 }
             }
         }
     }
-
 }

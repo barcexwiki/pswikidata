@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PSWikidata.DataValues
 {
-    class PSWDEntityIdValue
+    internal class PSWDEntityIdValue
     {
         public string Id { get; set; }
 
@@ -16,14 +16,13 @@ namespace PSWikidata.DataValues
             switch (e.EntityType)
             {
                 case Wikibase.EntityType.Item:
-                    this.Id = "q"+e.NumericId;
+                    this.Id = "q" + e.NumericId;
                     break;
 
                 case Wikibase.EntityType.Property:
                     this.Id = "p" + e.NumericId;
                     break;
             }
-
         }
 
         public override string ToString()

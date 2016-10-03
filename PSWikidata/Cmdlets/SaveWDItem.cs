@@ -20,7 +20,7 @@ namespace PSWikidata
         protected override void ProcessRecord()
         {
             foreach (PSWDItem i in Item)
-            {                
+            {
                 if (ShouldProcess(i.QId, "Save item"))
                 {
                     try
@@ -31,12 +31,11 @@ namespace PSWikidata
                     }
                     catch (Exception e)
                     {
-                        WriteError(new ErrorRecord(e,null, ErrorCategory.NotSpecified, i));
+                        WriteError(new ErrorRecord(e, null, ErrorCategory.NotSpecified, i));
                         continue;
                     }
                 }
             }
         }
-
     }
 }

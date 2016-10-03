@@ -8,7 +8,7 @@ using Wikibase.DataValues;
 
 namespace PSWikidata.DataValues
 {
-    class PSWDTimeValue
+    internal class PSWDTimeValue
     {
         public string Time { get; set; }
 

@@ -8,31 +8,30 @@ namespace PSWikidata
 {
     public class PSWDSitelink
     {
-        private string language;
-        private string title;
+        private string _language;
+        private string _title;
 
         internal PSWDSitelink(string language, string title)
         {
-            this.language = language;
-            this.title = title;               
+            _language = language;
+            _title = title;
         }
 
         public string Language
         {
-            get { return language; }
-            protected set { language = value; }
+            get { return _language; }
+            protected set { _language = value; }
         }
 
         public string Title
         {
-            get { return title; }
-            protected set { title = value; }
+            get { return _title; }
+            protected set { _title = value; }
         }
 
         public override string ToString()
         {
-            return language + ":" + title;
+            return _language + ":" + _title;
         }
-
     }
 }

@@ -47,7 +47,6 @@ namespace PSWikidata
         {
             foreach (string a in Alias)
             {
-
                 if (ShouldProcess(Item.QId, String.Format("Remove alias {0}: {1}", Language, a)))
                 {
                     try
@@ -57,9 +56,9 @@ namespace PSWikidata
 
                         if (!DoNotSave)
                         {
-                                string comment = Item.Save();
-                                WriteVerbose(comment);
-                        }                    
+                            string comment = Item.Save();
+                            WriteVerbose(comment);
+                        }
 
                         WriteObject(Item, true);
                     }

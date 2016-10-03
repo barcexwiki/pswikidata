@@ -66,7 +66,7 @@ namespace PSWikidata
                 string statementId = Statement.ExtensionData.Id;
 
                 this.Statement.ExtensionData.MainSnak = snak;
-                
+
 
                 if (!DoNotSave)
                 {
@@ -91,6 +91,5 @@ namespace PSWikidata
                 }
             }
         }
-
     }
 }

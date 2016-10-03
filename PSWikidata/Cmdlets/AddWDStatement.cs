@@ -8,7 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
     [Cmdlet(VerbsCommon.Add, "WDStatement",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
@@ -79,7 +78,6 @@ namespace PSWikidata
 
         private bool IsDuplicatedStatement(Wikibase.DataValues.DataValue dataValue)
         {
-            
             Claim[] claims = Item.ExtensionData.GetClaims(Property.ToUpper());
 
             var sameValueClaims = from c in claims
@@ -87,26 +85,23 @@ namespace PSWikidata
                                   select c;
 
             return sameValueClaims.Any();
-
         }
 
         protected override void ProcessRecord()
         {
-
             var dataValue = DataValue;
 
             if (Multiple || !IsDuplicatedStatement(dataValue))
             {
                 if (ShouldProcess(Item.QId, "Add statement"))
                 {
-
                     Snak snak = new Snak(SnakType,
                                     new EntityId(Property),
                                     dataValue
                                     );
 
                     PSWDStatement statement = Item.AddStatement(snak, Rank.Normal);
-                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue",Item.QId));
+                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Item.QId));
 
                     if (!DoNotSave)
                     {
@@ -124,9 +119,5 @@ namespace PSWikidata
             if (!OutputStatement)
                 WriteObject(Item, true);
         }
-
-
     }
-
-
 }

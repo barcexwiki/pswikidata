@@ -8,7 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
     [Cmdlet(VerbsCommon.Add, "WDQualifier",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
@@ -71,29 +70,25 @@ namespace PSWikidata
 
         private bool IsDuplicatedQualifier(Wikibase.DataValues.DataValue dataValue)
         {
-            
             Qualifier[] qualifiers = Claim.ExtensionData.GetQualifiers(Property.ToUpper());
 
             var sameValueQualifiers = from q in qualifiers
-                                  where q.DataValue.Equals(dataValue)
-                                  select q;
+                                      where q.DataValue.Equals(dataValue)
+                                      select q;
 
             return sameValueQualifiers.Any();
-
         }
 
         protected override void ProcessRecord()
         {
-
             var dataValue = DataValue;
 
             if (Multiple || !IsDuplicatedQualifier(dataValue))
             {
-
                 if (ShouldProcess(Claim.ToString(), "Add qualifier"))
                 {
                     Claim.AddQualifier(SnakType, Property, dataValue);
-                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue",Claim.Item.QId));
+                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Claim.Item.QId));
 
                     if (!DoNotSave)
                     {
@@ -104,7 +99,6 @@ namespace PSWikidata
             }
 
             WriteObject(Claim, true);
-
         }
 
 
@@ -112,9 +106,5 @@ namespace PSWikidata
         {
             base.EndProcessing();
         }
-
-
     }
-
-
 }

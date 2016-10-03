@@ -28,9 +28,9 @@ namespace PSWikidata
         private List<PSWDSitelink> _sitelinks = new List<PSWDSitelink>();
         private List<PSWDClaim> _claims = new List<PSWDClaim>();
         private List<LogEntry> _log = new List<LogEntry>();
-        private string qId;
+        private string _qId;
 
-        private Item extensionData;
+        private Item _extensionData;
 
         internal PSWDItem(Item item)
         {
@@ -40,7 +40,7 @@ namespace PSWikidata
 
         public string QId
         {
-            get { return qId; }
+            get { return _qId; }
         }
 
         public PSWDDescription[] Descriptions
@@ -70,29 +70,29 @@ namespace PSWikidata
 
         internal Item ExtensionData
         {
-            get { return extensionData; }
-            set { extensionData = value; }
+            get { return _extensionData; }
+            set { _extensionData = value; }
         }
 
-        internal void RefreshFromExtensionData() 
+        internal void RefreshFromExtensionData()
         {
             _descriptions.Clear();
             _labels.Clear();
             _aliases.Clear();
             _claims.Clear();
 
-            qId = ExtensionData.Id != null ?  ExtensionData.Id.ToString() : null;
+            _qId = ExtensionData.Id != null ? ExtensionData.Id.ToString() : null;
 
-            Dictionary<string,string> d = ExtensionData.GetDescriptions();
+            Dictionary<string, string> d = ExtensionData.GetDescriptions();
             foreach (string k in d.Keys)
             {
-                this._descriptions.Add(new PSWDDescription(k, d[k]));
+                _descriptions.Add(new PSWDDescription(k, d[k]));
             }
 
             Dictionary<string, string> l = ExtensionData.GetLabels();
             foreach (string k in l.Keys)
             {
-                this._labels.Add(new PSWDLabel(k, l[k]));
+                _labels.Add(new PSWDLabel(k, l[k]));
             }
 
             Dictionary<string, List<string>> a = ExtensionData.GetAliases();
@@ -100,28 +100,27 @@ namespace PSWikidata
             {
                 foreach (string i in a[k])
                 {
-                    this._aliases.Add(new PSWDLabel(k, i));
+                    _aliases.Add(new PSWDLabel(k, i));
                 }
             }
 
             Dictionary<string, string> sl = ExtensionData.GetSitelinks();
             foreach (string k in sl.Keys)
             {
-                this._sitelinks.Add(new PSWDSitelink(k, sl[k]));
+                _sitelinks.Add(new PSWDSitelink(k, sl[k]));
             }
 
             foreach (Wikibase.Claim c in ExtensionData.Claims)
             {
                 if (c is Wikibase.Statement)
                 {
-                    this._claims.Add(new PSWDStatement(this,(Statement)c));
+                    _claims.Add(new PSWDStatement(this, (Statement)c));
                 }
                 else
                 {
-                    this._claims.Add(new PSWDClaim(this,c));
+                    _claims.Add(new PSWDClaim(this, c));
                 }
             }
-        
         }
 
         internal PSWDStatement GetStatement(string Id)
@@ -133,7 +132,7 @@ namespace PSWikidata
             if (s.Any())
             {
                 return (PSWDStatement)s.First();
-            } 
+            }
             else
             {
                 return null;
@@ -179,7 +178,7 @@ namespace PSWikidata
         {
             ExtensionData.RemoveSitelink(site);
             RefreshFromExtensionData();
-            _log.Add(new LogEntry("RemoveSitelink", site,null));
+            _log.Add(new LogEntry("RemoveSitelink", site, null));
         }
 
         private string GetSaveComment()
@@ -235,7 +234,7 @@ namespace PSWikidata
             ExtensionData.Save(comment);
             RefreshFromExtensionData();
             _log.Clear();
-            return String.Format("Saved item {0}: {1}",QId,comment);
+            return String.Format("Saved item {0}: {1}", QId, comment);
         }
     }
 }

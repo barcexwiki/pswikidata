@@ -10,7 +10,6 @@ namespace PSWikidata
 {
     public class PSWDItemArgumentTransformationAttribute : ArgumentTransformationAttribute
     {
-
         private object ConvertArgumentElement(SessionState sessionState, object element)
         {
             if (element is string || element is PSObject && ((PSObject)element).BaseObject is string)
@@ -38,7 +37,7 @@ namespace PSWikidata
                     throw new Exception("Not connected to Wikidata");
                 }
 
-                Item item = (Item)provider.getEntityFromId(new EntityId(qId));
+                Item item = (Item)provider.GetEntityFromId(new EntityId(qId));
                 if (item != null)
                 {
                     return new PSWDItem(item);
@@ -51,7 +50,7 @@ namespace PSWikidata
             else
             {
                 return element;
-            }              
+            }
         }
 
         public override object Transform(EngineIntrinsics engineIntrinsics, object inputData)
@@ -77,11 +76,11 @@ namespace PSWikidata
                         outputData.Add(ConvertArgumentElement(engineIntrinsics.SessionState, e));
                     }
                     return outputData;
-                }              
+                }
                 else
-                    {
-                        return ConvertArgumentElement(engineIntrinsics.SessionState, inputData);
-                    }              
+                {
+                    return ConvertArgumentElement(engineIntrinsics.SessionState, inputData);
+                }
             }
             else
             {

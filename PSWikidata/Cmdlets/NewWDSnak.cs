@@ -8,7 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
     [Cmdlet(VerbsCommon.New, "WDSnak",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
@@ -31,7 +30,6 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-
             var dataValue = DataValue;
             PSWDSnak snak;
 
@@ -47,9 +45,5 @@ namespace PSWikidata
         {
             base.EndProcessing();
         }
-
-
     }
-
-
 }

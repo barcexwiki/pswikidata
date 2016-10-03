@@ -8,8 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
-
     [Cmdlet(VerbsCommon.Set, "WDItem",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
@@ -37,26 +35,26 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Removes the label")]
         public SwitchParameter RemoveLabel
         {
-            get { return removeLabel; }
-            set { removeLabel = value; }
+            get { return _removeLabel; }
+            set { _removeLabel = value; }
         }
-        private bool removeLabel;
+        private bool _removeLabel;
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the description")]
         public SwitchParameter RemoveDescription
         {
-            get { return removeDescription; }
-            set { removeDescription = value; }
+            get { return _removeDescription; }
+            set { _removeDescription = value; }
         }
-        private bool removeDescription;
+        private bool _removeDescription;
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the sitelink")]
         public SwitchParameter RemoveSitelink
         {
-            get { return removeSitelink; }
-            set { removeSitelink = value; }
+            get { return _removeSitelink; }
+            set { _removeSitelink = value; }
         }
-        private bool removeSitelink;
+        private bool _removeSitelink;
 
         [Parameter(Mandatory = false, HelpMessage = "Change the item but do not save the changes to Wikidata.")]
         public SwitchParameter DoNotSave
@@ -68,8 +66,7 @@ namespace PSWikidata
 
         protected override void BeginProcessing()
         {
-
-            Dictionary<String,object> parms = this.MyInvocation.BoundParameters;
+            Dictionary<String, object> parms = this.MyInvocation.BoundParameters;
 
             bool setAndRemoveLabel = (parms.ContainsKey("Label")
                                     & parms.ContainsKey("RemoveLabel"));
@@ -83,32 +80,32 @@ namespace PSWikidata
 
             if (setAndRemoveLabel)
                 this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Label cannot be set alongside RemoveLabel"),"BothLabelAndRemoveLabel", 
+                    new ArgumentException("Label cannot be set alongside RemoveLabel"), "BothLabelAndRemoveLabel",
                     ErrorCategory.InvalidArgument, null));
 
             if (setAndRemoveDescription)
                 this.ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Description cannot be set alongside RemoveDescription"), "BothLabelAndRemoveLabel",
-                    ErrorCategory.InvalidArgument, null));                                  
-                    
+                    ErrorCategory.InvalidArgument, null));
+
             if (setAndRemoveSitelink)
                 this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("SiteLinkTitle cannot be set alongside RemoveSitelink"),"BothSitelinkAndRemoveSitelink", 
+                    new ArgumentException("SiteLinkTitle cannot be set alongside RemoveSitelink"), "BothSitelinkAndRemoveSitelink",
                     ErrorCategory.InvalidArgument, null));
 
             if (labelButNoLanguage)
                 this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Language is required if Label is specified"),"LabelButNoLanguage", 
+                    new ArgumentException("Language is required if Label is specified"), "LabelButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
-            
+
             if (descriptionButNoLanguage)
                 this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Language is required if Description is specified"),"DescriptionButNoLanguage", 
+                    new ArgumentException("Language is required if Description is specified"), "DescriptionButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
 
             if (titleButnoSite)
                 this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("SitelinkSite is required if SitelinkTitle is specified"),"DescriptionButNoLanguage", 
+                    new ArgumentException("SitelinkSite is required if SitelinkTitle is specified"), "DescriptionButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
 
             base.BeginProcessing();
@@ -117,8 +114,7 @@ namespace PSWikidata
         protected override void ProcessRecord()
         {
             foreach (PSWDItem i in Item)
-            { 
-
+            {
                 if (ShouldProcess(i.QId, "Set label, description or sitelink"))
                 {
                     bool touched = false;
@@ -160,7 +156,7 @@ namespace PSWikidata
 
                     if (RemoveSitelink)
                     {
-                        WriteVerbose(String.Format("Removing sitelink {0} on {1}", SitelinkSite,i.QId));
+                        WriteVerbose(String.Format("Removing sitelink {0} on {1}", SitelinkSite, i.QId));
                         i.RemoveSitelink(SitelinkSite);
                         touched = true;
                     }
@@ -177,16 +173,14 @@ namespace PSWikidata
                     WriteObject(i, true);
                 }
             }
-
         }
 
-            
-        
+
+
 
         protected override void EndProcessing()
         {
             base.EndProcessing();
         }
-
     }
 }

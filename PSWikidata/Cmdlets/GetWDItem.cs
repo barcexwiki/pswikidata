@@ -11,8 +11,7 @@ namespace PSWikidata
     [Cmdlet(VerbsCommon.Get, "WDItem")]
     public class GetWDItem : PSWDNetCmdlet
     {
-
-        private string[] qIdCollection;
+        private string[] _qIdCollection;
         [Parameter(
            Mandatory = true,
            ValueFromPipelineByPropertyName = true,
@@ -22,8 +21,8 @@ namespace PSWikidata
         )]
         public string[] QId
         {
-            get { return qIdCollection; }
-            set { qIdCollection = value; }
+            get { return _qIdCollection; }
+            set { _qIdCollection = value; }
         }
 
         protected override void BeginProcessing()
@@ -33,10 +32,10 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            foreach (string q in qIdCollection)
+            foreach (string q in _qIdCollection)
             {
                 WriteVerbose("Getting item " + q);
-                Item item = (Item) provider.getEntityFromId(new EntityId(q));
+                Item item = (Item)provider.GetEntityFromId(new EntityId(q));
                 if (item != null)
                 {
                     WriteObject(new PSWDItem(item));
@@ -48,7 +47,5 @@ namespace PSWikidata
         {
             base.EndProcessing();
         }
-
     }
-
- }
+}

@@ -7,7 +7,7 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    class PSWDSessionState
+    internal class PSWDSessionState
     {
         internal PSWDSessionState(WikibaseApi api, EntityProvider entityProvider)
         {

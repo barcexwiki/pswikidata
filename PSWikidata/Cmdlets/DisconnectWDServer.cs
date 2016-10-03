@@ -9,12 +9,12 @@ using Wikibase;
 namespace PSWikidata
 {
     [Cmdlet(VerbsCommunications.Disconnect, "WDServer")]
-    public class DisconnectWDServer: PSCmdlet
+    public class DisconnectWDServer : PSCmdlet
     {
         protected override void BeginProcessing()
         {
             PSWDSessionState sessionState = (PSWDSessionState)this.SessionState.PSVariable.Get("__WikidataState").Value;
-            sessionState.Api.logout();
+            sessionState.Api.Logout();
             this.SessionState.PSVariable.Remove("__WikidataState");
             WriteDebug("Disconnected from Wikidata");
         }

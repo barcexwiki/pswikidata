@@ -8,8 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
-
     [Cmdlet(VerbsCommon.Get, "WDLabel",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.None)]
@@ -33,8 +31,7 @@ namespace PSWikidata
         protected override void ProcessRecord()
         {
             string label = Item.ExtensionData.GetLabel(Language);
-            if (label != null)  WriteObject(label);
+            if (label != null) WriteObject(label);
         }
-
     }
 }

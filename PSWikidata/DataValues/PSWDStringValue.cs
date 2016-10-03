@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace PSWikidata.DataValues
 {
-    class PSWDStringValue
+    internal class PSWDStringValue
     {
         public string Value { get; set; }
 
         internal PSWDStringValue(Wikibase.DataValues.StringValue s)
         {
-            this.Value = s.Value;          
+            this.Value = s.Value;
         }
 
         public override string ToString()

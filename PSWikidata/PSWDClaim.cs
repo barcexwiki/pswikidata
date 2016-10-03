@@ -24,8 +24,10 @@ namespace PSWikidata
         public string Property { get; set; }
         public Wikibase.SnakType Type { get; set; }
         public PSWDValueTypes ValueType { get; set; }
-        public object Value {
-            get {
+        public object Value
+        {
+            get
+            {
                 if (_dataValue != null)
                 {
                     return _dataValue;
@@ -34,7 +36,6 @@ namespace PSWikidata
                 {
                     return null;
                 }
-
             }
         }
         public PSWDSnak[] Qualifiers
@@ -46,7 +47,7 @@ namespace PSWikidata
         private List<PSWDSnak> _qualifiers = new List<PSWDSnak>();
         private object _dataValue;
 
-        internal Wikibase.Claim ExtensionData {get; set;}
+        internal Wikibase.Claim ExtensionData { get; set; }
 
         internal PSWDClaim(PSWDItem item, Wikibase.Claim claim)
         {
@@ -98,11 +99,10 @@ namespace PSWikidata
             }
 
             _qualifiers.Clear();
-            foreach ( Qualifier q in claim.Qualifiers)
+            foreach (Qualifier q in claim.Qualifiers)
             {
                 _qualifiers.Add(new PSWDSnak(q));
             }
-
         }
 
         internal void AddQualifier(SnakType type, string propertyId, DataValue dataValue)
@@ -110,6 +110,5 @@ namespace PSWikidata
             ExtensionData.AddQualifier(type, new EntityId(propertyId), dataValue);
             RefreshFromExtensionData();
         }
-
     }
 }

@@ -8,8 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
-
     [Cmdlet(VerbsCommon.Get, "WDDescription",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.None)]
@@ -32,9 +30,8 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string description = Item.ExtensionData.GetDescription(Language); 
-            if (description != null)  WriteObject(description);
+            string description = Item.ExtensionData.GetDescription(Language);
+            if (description != null) WriteObject(description);
         }
-
     }
 }

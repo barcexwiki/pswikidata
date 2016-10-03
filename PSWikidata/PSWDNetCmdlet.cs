@@ -8,7 +8,7 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    public abstract class PSWDNetCmdlet: PSCmdlet
+    public abstract class PSWDNetCmdlet : PSCmdlet
     {
         protected EntityProvider provider;
         internal PSWDSessionState state;

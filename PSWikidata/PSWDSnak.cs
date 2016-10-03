@@ -26,7 +26,6 @@ namespace PSWikidata
                 {
                     return null;
                 }
-
             }
         }
 
@@ -80,7 +79,6 @@ namespace PSWikidata
                 ValueType = PSWDValueTypes.Quantity;
                 _dataValue = new PSWDQuantityValue((QuantityValue)snak.DataValue);
             }
-
         }
     }
 }

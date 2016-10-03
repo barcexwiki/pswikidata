@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PSWikidata.DataValues
 {
-    class PSWDMonolingualTextValue
+    internal class PSWDMonolingualTextValue
     {
         public string Text { get; set; }
         public string Language { get; set; }

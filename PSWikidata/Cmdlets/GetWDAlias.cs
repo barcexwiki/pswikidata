@@ -8,8 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
-
     [Cmdlet(VerbsCommon.Get, "WDAlias",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.None)]
@@ -33,8 +31,7 @@ namespace PSWikidata
         protected override void ProcessRecord()
         {
             string[] aliases = Item.ExtensionData.GetAliases(Language);
-            if (aliases != null)  WriteObject(aliases.ToArray(),true);
+            if (aliases != null) WriteObject(aliases.ToArray(), true);
         }
-
     }
 }

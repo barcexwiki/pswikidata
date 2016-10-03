@@ -9,7 +9,6 @@ namespace PSWikidata
 {
     public class PSWDStatement : PSWDClaim
     {
-
         public Wikibase.Rank Rank { get; set; }
 
         internal PSWDStatement(PSWDItem item, Wikibase.Statement statement) : base(item, statement)

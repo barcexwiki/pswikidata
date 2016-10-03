@@ -52,6 +52,5 @@ namespace PSWikidata
                 WriteObject(Statement.Item, true);
             }
         }
-
     }
 }

@@ -8,8 +8,6 @@ using Wikibase;
 
 namespace PSWikidata
 {
-
-
     [Cmdlet(VerbsCommon.New, "WDItem",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.High)]
@@ -34,13 +32,12 @@ namespace PSWikidata
             }
         }
 
-            
-        
+
+
 
         protected override void EndProcessing()
         {
             base.EndProcessing();
         }
-
     }
 }
