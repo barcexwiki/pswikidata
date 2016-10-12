@@ -498,8 +498,7 @@ function Get-WDCountry
         [Parameter(Mandatory=$true, 
                    Position = 0,
                    ParameterSetName='Parameter Set 1')]
-        [V
-        ateNotNullOrEmpty()]
+        [ValidateNotNullOrEmpty()]
         [Alias("iso")] 
         [string]
         $ISO3166   
