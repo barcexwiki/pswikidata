@@ -28,8 +28,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PSWikidataTools.psd1" />
-    <Compile Include="PSWikidataTools.tests.ps1" />
-    <Compile Include="Script1.ps1" />
     <Compile Include="PSWikidataTools.psm1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
