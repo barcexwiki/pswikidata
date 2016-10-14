@@ -21,6 +21,7 @@ namespace PSWikidata
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be modified.", ParameterSetName = "somevalue")]
+        [PSWDItemArgumentTransformation]
         public PSWDItem Item { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]

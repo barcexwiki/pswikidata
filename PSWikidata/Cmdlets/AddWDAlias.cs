@@ -19,6 +19,7 @@ namespace PSWikidata
            Position = 1,
            HelpMessage = "Item to be modified."
         )]
+        [PSWDItemArgumentTransformation]
         public PSWDItem Item { get; set; }
 
         [Parameter(
