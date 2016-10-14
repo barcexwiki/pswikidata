@@ -1,0 +1,14 @@
+{
+	  "version": "1.0.0-*",
+	  "dependencies": {
+		"Wikibase.NET": "1.0.0-*"
+	  },
+	"frameworks": {
+		"netstandard1.6": {
+			"imports": [ "dnxcore50", "portable-net45+win8" ],
+			"dependencies": {
+				"Microsoft.PowerShell.SDK": "1.0.0-alpha10"
+			}
+		}
+	}
+}
