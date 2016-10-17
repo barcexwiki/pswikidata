@@ -80,6 +80,7 @@ namespace PSWikidata
             _labels.Clear();
             _aliases.Clear();
             _claims.Clear();
+            _sitelinks.Clear();
 
             _qId = ExtensionData.Id != null ? ExtensionData.Id.ToString() : null;
 
