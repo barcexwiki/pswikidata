@@ -347,7 +347,9 @@ function Set-WDHuman
     DynamicParam {
 
         $valueItemParameters = @{
+            "PlaceOfBirth" = "P19"
             "CauseOfDeath" = "P509"
+            "PlaceOfDeath" = "P20"
             "MannerOfDeath" = "P1196"
             "Occupation" = "P106"
             "CountryOfCitizenship" = "P27"
