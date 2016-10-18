@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Cmdlets\AddWDAlias.cs" />
     <Compile Include="Cmdlets\AddWDReference.cs" />
+    <Compile Include="Cmdlets\NewWDReference.cs" />
     <Compile Include="Cmdlets\NewWDSnak.cs" />
     <Compile Include="Cmdlets\AddWDQualifier.cs" />
     <Compile Include="Cmdlets\AddWDStatement.cs" />

@@ -25,5 +25,13 @@ namespace PSWikidata
                 _snaks.Add(new PSWDSnak(snak));
             }
         }
+
+        internal PSWDReference(IEnumerable<PSWDSnak> snaks)
+        {
+            foreach (PSWDSnak snak in snaks)
+            {
+                _snaks.Add(snak);
+            }
+        }
     }
 }
