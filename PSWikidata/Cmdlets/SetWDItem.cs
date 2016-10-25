@@ -69,11 +69,11 @@ namespace PSWikidata
             Dictionary<String, object> parms = this.MyInvocation.BoundParameters;
 
             bool setAndRemoveLabel = (parms.ContainsKey("Label")
-                                    & parms.ContainsKey("RemoveLabel"));
+                                    && parms.ContainsKey("RemoveLabel"));
             bool setAndRemoveDescription = (parms.ContainsKey("Description")
-                                    & parms.ContainsKey("RemoveDescription"));
+                                    && parms.ContainsKey("RemoveDescription"));
             bool setAndRemoveSitelink = (parms.ContainsKey("SitelinkTitle")
-                        & parms.ContainsKey("RemoveSitelink"));
+                        && parms.ContainsKey("RemoveSitelink"));
             bool labelButNoLanguage = (parms.ContainsKey("Label") & !parms.ContainsKey("Language"));
             bool descriptionButNoLanguage = (parms.ContainsKey("Description") & !parms.ContainsKey("Language"));
             bool titleButnoSite = (parms.ContainsKey("SitelinkTitle") & !parms.ContainsKey("SitelinkSite"));
@@ -147,7 +147,7 @@ namespace PSWikidata
                         touched = true;
                     }
 
-                    if (!String.IsNullOrEmpty(SitelinkSite))
+                    if (!String.IsNullOrEmpty(SitelinkTitle))
                     {
                         WriteVerbose(String.Format("Setting sitelink {0}: {1} on {2}", SitelinkSite, SitelinkTitle, i.QId));
                         i.SetSitelink(SitelinkSite, SitelinkTitle);
