@@ -17,6 +17,7 @@ namespace PSWikidata
         public PSWDStatement Statement { get; set; }
 
         [Parameter(Mandatory = true, ValueFromPipeline = false, HelpMessage = "Snaks that make the reference.")]
+        [ValidateNotNull()]
         public PSWDSnak[] Snaks { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the reference but do not save the changes to Wikidata.")]
@@ -36,12 +37,19 @@ namespace PSWikidata
         {
             if (ShouldProcess(Statement.ToString(), "Adding reference"))
             {
+                List<Snak> referenceSnaks = new List<Snak>();
+
                 foreach (PSWDSnak snak in Snaks)
                 {
-                    ((Statement)Statement.ExtensionData).AddReference(snak.ExtensionData);
+                    referenceSnaks.Add(snak.ExtensionData);
                 }
 
-                string comment = String.Format("Adding references");
+                if (referenceSnaks.Any())
+                { 
+                    ((Statement)Statement.ExtensionData).AddReference(referenceSnaks);
+                }
+
+                string comment = String.Format("Adding reference");
 
                 if (!DoNotSave)
                 {
