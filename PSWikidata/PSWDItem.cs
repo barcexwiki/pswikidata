@@ -29,6 +29,7 @@ namespace PSWikidata
         private List<PSWDClaim> _claims = new List<PSWDClaim>();
         private List<LogEntry> _log = new List<LogEntry>();
         private string _qId;
+        private string _status;
 
         private Item _extensionData;
 
@@ -36,6 +37,15 @@ namespace PSWikidata
         {
             ExtensionData = item;
             RefreshFromExtensionData();
+        }
+
+        internal PSWDItem(WikibaseApi api) : this(new Item(api))
+        {
+        }
+
+        public string Status
+        {
+            get { return _status; }
         }
 
         public string QId
@@ -122,6 +132,8 @@ namespace PSWikidata
                     _claims.Add(new PSWDClaim(this, c));
                 }
             }
+
+            _status = ExtensionData.Status.ToString();
         }
 
         internal PSWDStatement GetStatement(string Id)
@@ -228,6 +240,14 @@ namespace PSWikidata
             _log.Add(new LogEntry("AddStatement", snak.PropertyId.ToString(), null));
             return GetStatement(s.Id);
         }
+
+        public void Delete()
+        {
+            ExtensionData.Delete();
+            RefreshFromExtensionData();
+            _log.Add(new LogEntry("Delete", QId, null));
+        }
+
 
         internal string Save()
         {

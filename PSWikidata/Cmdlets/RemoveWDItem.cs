@@ -8,17 +8,21 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    [Cmdlet(VerbsCommon.New, "WDItem",
+    [Cmdlet(VerbsCommon.Remove, "WDItem",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.High)]
-    public class NewWDItem : PSWDNetCmdlet
+    public class RemoveWDItem : PSWDNetCmdlet
     {
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
+        [Parameter(
+           Mandatory = true,
+           ValueFromPipeline = true,
+           Position = 1,
+           HelpMessage = "Item to be modified."
+        )]
+        [PSWDItemArgumentTransformation]
+        public PSWDItem Item { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Create the item but do not save the changes to Wikidata.")]
+        [Parameter(Mandatory = false, HelpMessage = "Mark the item for deletion but do not save the changes to Wikidata.")]
         public SwitchParameter DoNotSave
         {
             get { return _doNotSave; }
@@ -28,26 +32,18 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            if (ShouldProcess("new item", "Create"))
+            if (ShouldProcess(Item.QId, "remove item"))
             {
-                PSWDItem i = new PSWDItem(state.Api);
+                Item.Delete();
 
                 if (!DoNotSave)
                 {
-                    string comment = i.Save();
+                    string comment = Item.Save();
                     WriteVerbose(comment);
                 }
-
-                WriteObject(i, true);
+                
+                WriteObject(Item, true);
             }
-        }
-
-
-
-
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
         }
     }
 }

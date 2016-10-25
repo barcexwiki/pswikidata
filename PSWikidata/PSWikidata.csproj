@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmdlets\RemoveWDItem.cs" />
     <Compile Include="Cmdlets\AddWDAlias.cs" />
     <Compile Include="Cmdlets\AddWDReference.cs" />
     <Compile Include="Cmdlets\NewWDReference.cs" />
