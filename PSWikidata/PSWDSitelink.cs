@@ -8,19 +8,19 @@ namespace PSWikidata
 {
     public class PSWDSitelink
     {
-        private string _language;
+        private string _site;
         private string _title;
 
         internal PSWDSitelink(string language, string title)
         {
-            _language = language;
+            _site = language;
             _title = title;
         }
 
-        public string Language
+        public string Site
         {
-            get { return _language; }
-            protected set { _language = value; }
+            get { return _site; }
+            protected set { _site = value; }
         }
 
         public string Title
@@ -31,7 +31,7 @@ namespace PSWikidata
 
         public override string ToString()
         {
-            return _language + ":" + _title;
+            return _site + ":" + _title;
         }
     }
 }
