@@ -49,16 +49,10 @@ namespace PSWikidata
                     ((Statement)Statement.ExtensionData).AddReference(referenceSnaks);
                 }
 
-                string comment = String.Format("Adding reference");
-
                 if (!DoNotSave)
                 {
-                    Statement.ExtensionData.Entity.Save(comment);
+                    string comment = Statement.Item.Save();
                     WriteVerbose(comment);
-                }
-                else
-                {
-                    WriteVerbose(comment + " [not saving]");
                 }
 
                 Statement.RefreshFromExtensionData();
