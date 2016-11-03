@@ -417,7 +417,7 @@ function Set-WDHuman
     {
         foreach ($i in $Item)
         {
-            if ($pscmdlet.ShouldProcess("Target", "Operation"))
+            if ($pscmdlet.ShouldProcess($i.QId, "Set-WDHuman"))
             {
                 if (!(Test-WDHuman $i))
                 {
@@ -458,7 +458,7 @@ function Set-WDHuman
                         'Male' { $sexQId = "q6581097" }
                     }
 
-                    $sexStatements = $Item.Claims | Where-Object {$_.Property -eq "p21"}
+                    $sexStatements = $i.Claims | Where-Object {$_.Property -eq "p21"}
                     if ($sexStatements.Count -le 1)
                     {
                         if ($sexStatements.Count -eq 1)
@@ -479,7 +479,7 @@ function Set-WDHuman
 
             }
 
-            $Item
+            $i
         }
     }
 }
