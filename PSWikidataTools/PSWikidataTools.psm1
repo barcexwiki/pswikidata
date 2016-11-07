@@ -257,7 +257,6 @@ function Set-WDRelative
 
               if ($pscmdlet.MyInvocation.BoundParameters["Spouse"])
               {
-                  $spouse = Get-WDItem $Spouse -ErrorAction Stop 
                   Add-WDStatement -Item $i -Property p26 -ValueItem $Spouse -ErrorAction Stop | Out-Null
                   Add-WDStatement -Item $Spouse -Property p26 -ValueItem $i -ErrorAction Stop | Out-Null
               }
