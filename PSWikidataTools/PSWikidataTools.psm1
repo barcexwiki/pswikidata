@@ -576,6 +576,54 @@ WHERE
     }
 }
 
+function Get-WDItemFromImdb
+{
+
+ 
+    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
+                  PositionalBinding=$true,
+                  ConfirmImpact='Low')]
+    [OutputType([PSWikidata.PSWDItem])]
+    Param
+    (
+         # Item to be modified
+        [Parameter(Mandatory=$true, 
+                   Position = 0,
+                   ValueFromPipeline=$true,
+                   ParameterSetName='Parameter Set 1')]
+        [ValidateNotNullOrEmpty()]
+        [Alias("imdb")] 
+        [string[]]
+        $ImdbId   
+    )
+
+
+    Process
+    {
+        foreach($id in $ImdbId)
+        {
+            $id = $Id.ToLower()
+
+            $query= @"
+SELECT ?actor
+WHERE
+{
+    ?actor  wdt:P345 "$id"
+}
+"@
+           $escapedQuery = [System.Uri]::EscapeDataString($query)
+           $uri = "https://query.wikidata.org/sparql?query=$escapedQuery&format=json"
+           $restOutput = Invoke-RestMethod -Method Get -Uri $uri
+                    
+           if ($restOutput.results.bindings.actor.value -match "^http://www.wikidata.org/entity/(Q.*)$")
+           {
+               $qId = $Matches[1]
+               Get-WDItem -QId $qId
+           }
+       }
+    }
+}
+
 function ConvertTo-WDTimeValueString
 {
 
@@ -600,5 +648,75 @@ function ConvertTo-WDTimeValueString
             $result = "+" + $result;
         }
         Write-Output $result
+    }
+}
+
+function Add-WDCastMember
+{
+    [CmdletBinding()]
+    param 
+    (
+        #Movie (item)
+        [Parameter(Mandatory= $true,ValueFromPipeline=$true)]
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem[]]$Item, 
+
+        #Actors and actresses (items)
+        [Parameter(Mandatory= $true)]
+        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDItem[]]$CastMember,
+
+        #Source
+        [ValidateSet("IMDb", "ESwiki", "ENwiki")]
+        [string[]]$Source
+    );
+    begin
+    {
+        switch($Source)
+        {
+            {"ESwiki" -in $_} {$esWikiItem = Get-WDItem q8449}
+            {"ENwiki" -in $_} {$enWikiItem = Get-WDItem q328}
+            {"IMDb" -in $_} {$imdbItem = Get-WdItem q37312}
+        }    
+    }
+    process
+    {    
+        foreach ($i in $Item) 
+        {
+            if (($i.claims | ? {$_.Property -eq "p31" -and $_.Value.Id -eq "q11424"}).Count -lt 1)
+            {
+                Write-Error "$($i.QId) is not a movie";
+                break;
+            }
+
+            foreach ($member in $CastMember)
+            {
+                if (Test-WDHuman -Item $member)
+                {
+                    $statement = $i | Add-WDStatement -Property p161 -ValueItem $member  -DoNotSave   -OutputStatement     
+                } 
+                else
+                {
+                    Write-Warning "$($member.QId) is not a human being"
+                }
+                if ($statement -ne $null) 
+                {
+                    switch($Source)
+                    {
+                        {"ESwiki" -in $_} {Add-WDReference -Statement $statement -Snaks (New-WDSnak -Property p143 -ValueItem $esWikiItem) | Out-Null}
+                        {"ENwiki" -in $_} {Add-WDReference -Statement $statement -Snaks (New-WDSnak -Property p143 -ValueItem $enWikiItem) | Out-Null}
+                        {"IMDb" -in $_}   {Add-WDReference -Statement $statement -Snaks (New-WDSnak -Property p248 -ValueItem $imdbItem) | Out-Null}
+                    }    
+                    Write-Verbose "Processed $($member.QId)"
+                } else 
+                {
+                    Write-Verbose "Skipped $($member.QId) $($i.QId)"
+                }        
+            }
+        }
+    }
+    end
+    {
+        Write-Output $Item
     }
 }
