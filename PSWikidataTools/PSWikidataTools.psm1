@@ -668,7 +668,11 @@ function Add-WDCastMember
 
         #Source
         [ValidateSet("IMDb", "ESwiki", "ENwiki")]
-        [string[]]$Source
+        [string[]]$Source,
+
+        #Access date
+        [ValidateNotNull()]
+        [DateTime]$AccessDate
     );
     begin
     {
@@ -701,12 +705,21 @@ function Add-WDCastMember
                 }
                 if ($statement -ne $null) 
                 {
+                    $referenceSnaks = @()
                     switch($Source)
                     {
-                        {"ESwiki" -in $_} {Add-WDReference -Statement $statement -Snaks (New-WDSnak -Property p143 -ValueItem $esWikiItem) | Out-Null}
-                        {"ENwiki" -in $_} {Add-WDReference -Statement $statement -Snaks (New-WDSnak -Property p143 -ValueItem $enWikiItem) | Out-Null}
-                        {"IMDb" -in $_}   {Add-WDReference -Statement $statement -Snaks (New-WDSnak -Property p248 -ValueItem $imdbItem) | Out-Null}
+                        {"ESwiki" -in $_} { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $esWikiItem }
+                        {"ENwiki" -in $_} { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $enWikiItem }
+                        {"IMDb" -in $_}   { $referenceSnaks += New-WDSnak -Property p248 -ValueItem $imdbItem }
                     }    
+                    if ($referenceSnaks.Count -gt 0)
+                    {
+                        if ($AccessDate) 
+                        { 
+                            $referenceSnaks += New-WDSnak -Property p813 -ValueTime (ConvertTo-WDTimeValueString $AccessDate) -ValueTimePrecision Day -ValueCalendarModel GregorianCalendar
+                        }
+                        Add-WDReference -Statement $statement -Snaks $referenceSnaks | Out-Null
+                    }
                     Write-Verbose "Processed $($member.QId)"
                 } else 
                 {
