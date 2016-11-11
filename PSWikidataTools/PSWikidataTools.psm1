@@ -690,7 +690,7 @@ function Add-WDCastMember
             if (($i.claims | ? {$_.Property -eq "p31" -and $_.Value.Id -eq "q11424"}).Count -lt 1)
             {
                 Write-Error "$($i.QId) is not a movie";
-                break;
+                continue;
             }
 
             foreach ($member in $CastMember)
@@ -701,7 +701,8 @@ function Add-WDCastMember
                 } 
                 else
                 {
-                    Write-Warning "$($member.QId) is not a human being"
+                    Write-Error "$($member.QId) is not a human being"
+                    continue;
                 }
                 if ($statement -ne $null) 
                 {
