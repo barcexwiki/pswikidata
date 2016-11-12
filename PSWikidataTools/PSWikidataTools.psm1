@@ -614,8 +614,15 @@ WHERE
            $escapedQuery = [System.Uri]::EscapeDataString($query)
            $uri = "https://query.wikidata.org/sparql?query=$escapedQuery&format=json"
            $restOutput = Invoke-RestMethod -Method Get -Uri $uri
-                    
-           if ($restOutput.results.bindings.actor.value -match "^http://www.wikidata.org/entity/(Q.*)$")
+      
+           if ($restOutput.results.bindings.actor.Count -gt 1) 
+           {
+                Write-Warning "More than one wikidata item for $id $($restOutput.results.bindings.actor.Value)"
+           }              
+
+           $entityUrl = $restOutput.results.bindings.actor.value | Select-Object -First 1
+
+           if (($entityUrl -match "^http://www.wikidata.org/entity/(Q.*)$") -eq $true)
            {
                $qId = $Matches[1]
                Get-WDItem -QId $qId
