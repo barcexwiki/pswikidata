@@ -658,6 +658,41 @@ function ConvertTo-WDTimeValueString
     }
 }
 
+function _hasIMDBReference
+{
+    param ($Statement)
+
+    foreach ($r in $Statement.references)
+    {
+        $s = $r.Snaks  | ? {($_.Property -eq "p248" -and $_.Value.Id -eq "q37312") -or ($_.Property -eq "p854" -and $_.Value.Value -match 'http://(.*\.)?imdb\.com/')}
+
+        if ($s) {
+            return $true
+        }
+    }
+
+    return $false
+
+}
+
+function _hasWikiReference
+{
+    param ($Statement,$WikiQId)
+
+    foreach ($r in $Statement.references)
+    {
+        $s = $r.Snaks  | ? {($_.Property -eq "p248" -and $_.Value.Id -eq $WikiQId)}
+
+        if ($s) {
+            return $true
+        }
+    }
+
+    return $false
+
+}
+
+
 function Add-WDCastMember
 {
     [CmdletBinding()]
@@ -704,21 +739,37 @@ function Add-WDCastMember
             {
                 if (Test-WDHuman -Item $member)
                 {
-                    $statement = $i | Add-WDStatement -Property p161 -ValueItem $member  -DoNotSave   -OutputStatement     
+                    $statement = $null
+
+                    $existingClaims = $i.Claims | Where-Object {$_.Property -eq "p161" -and $_.Value.Id -eq $member.QId} 
+
+                    switch ($existingClaims.Count)
+                    {
+                        0 { $statement = $i | Add-WDStatement -Property p161 -ValueItem $member  -DoNotSave   -OutputStatement }
+                        1 { $statement = $existingClaims[0] }                            
+                        default 
+                        { 
+                            Write-Error "$($member.QId) is in multiple cast memeber claims"
+                            continue
+                        }     
+                    }                                        
                 } 
                 else
                 {
                     Write-Error "$($member.QId) is not a human being"
-                    continue;
+                    continue
                 }
                 if ($statement -ne $null) 
                 {
                     $referenceSnaks = @()
                     switch($Source)
                     {
-                        {"ESwiki" -in $_} { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $esWikiItem }
-                        {"ENwiki" -in $_} { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $enWikiItem }
-                        {"IMDb" -in $_}   { $referenceSnaks += New-WDSnak -Property p248 -ValueItem $imdbItem }
+                        {"ESwiki" -in $_ -and !(_hasWikiReference -Statement $statement -WikiQId $esWikiItem.QId )} 
+                            { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $esWikiItem }
+                        {"ENwiki" -in $_ -and !(_hasWikiReference -Statement $statement -WikiQId $enWikiItem.QId )} 
+                            { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $enWikiItem }
+                        {"IMDb" -in $_ -and !(_hasIMDBReference -Statement $statement)}   
+                            { $referenceSnaks += New-WDSnak -Property p248 -ValueItem $imdbItem }
                     }    
                     if ($referenceSnaks.Count -gt 0)
                     {
@@ -726,10 +777,16 @@ function Add-WDCastMember
                         { 
                             $referenceSnaks += New-WDSnak -Property p813 -ValueTime (ConvertTo-WDTimeValueString $AccessDate) -ValueTimePrecision Day -ValueCalendarModel GregorianCalendar
                         }
-                        Add-WDReference -Statement $statement -Snaks $referenceSnaks | Out-Null
+                        Add-WDReference -Statement $statement -Snaks $referenceSnaks  | Out-Null
                     }
-                    Write-Verbose "Processed $($member.QId)"
-                } else 
+
+                    if ($i.Status -eq "Changed")
+                    {
+                        Save-WDItem -Item $i
+                    }
+                    Write-Verbose "Processed $($member.QId)"                
+                } 
+                else 
                 {
                     Write-Verbose "Skipped $($member.QId) $($i.QId)"
                 }        
