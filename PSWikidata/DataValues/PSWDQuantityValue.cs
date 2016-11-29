@@ -11,8 +11,8 @@ namespace PSWikidata.DataValues
     internal class PSWDQuantityValue
     {
         public decimal Amount { get; set; }
-        public decimal LowerBound { get; set; }
-        public decimal UpperBound { get; set; }
+        public decimal? LowerBound { get; set; }
+        public decimal? UpperBound { get; set; }
         public string Unit { get; set; }
 
         internal PSWDQuantityValue(Wikibase.DataValues.QuantityValue q)
@@ -31,8 +31,8 @@ namespace PSWikidata.DataValues
 
 
 
-            decimal minus = Math.Abs(Amount - LowerBound);
-            decimal plus = Math.Abs(Amount - UpperBound);
+            decimal minus = LowerBound == null ? 0 : Math.Abs(Amount - LowerBound.Value);
+            decimal plus = UpperBound == null ? 0 : Math.Abs(Amount - UpperBound.Value);
 
             if (minus == plus && plus == 0)
             {
