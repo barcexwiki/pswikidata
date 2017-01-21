@@ -216,7 +216,7 @@ function Set-WDRelative
         [ValidateNotNullOrEmpty()]
         [PSWikidata.PSWDItemArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
-        $Sibligs
+        $Siblings
     )
 
     Process
@@ -228,7 +228,7 @@ function Set-WDRelative
             if ($pscmdlet.MyInvocation.BoundParameters["Children"]) 
                 { $allQids += $Children.Qid;}
             if ($pscmdlet.MyInvocation.BoundParameters["Siblings"]) 
-                { $allQids += $Sibligs.QId;}
+                { $allQids += $Siblings.QId;}
             if ($pscmdlet.MyInvocation.BoundParameters["Spouse"]) 
                 {$allQids += $Spouse.QId;}
             if ($pscmdlet.MyInvocation.BoundParameters["Father"]) 
@@ -262,7 +262,7 @@ function Set-WDRelative
               }
 
 
-              foreach ($s in $Sibligs)
+              foreach ($s in $Siblings)
               {                  
                   setSibling $i $s
                   setSibling $s $i
@@ -305,14 +305,7 @@ function Set-WDRelative
 
 function setSibling ([PSWikidata.PSWDItem]$a, [PSWikidata.PSWDItem] $b)
 {
-    if (Test-WDSex -Item $b -Sex Male) {
-        Add-WDStatement -Item $a -Property "p7" -ValueItem $b.QId | Out-Null
-    } 
-    elseif (Test-WDSex -Item $b -Sex Female)  {
-        Add-WDStatement -Item $a -Property "p9" -ValueItem $b.QId | Out-Null
-    } else {
-        throw "The sex of the sibling is unknown"
-    }
+    Add-WDStatement -Item $a -Property "p3373" -ValueItem $b | Out-Null
 }
 
 
