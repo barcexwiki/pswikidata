@@ -722,7 +722,7 @@ function Add-WDCastMember
     {    
         foreach ($i in $Item) 
         {
-            if (($i.claims | ? {$_.Property -eq "p31" -and $_.Value.Id -eq "q11424"}).Count -lt 1)
+            if (($i.claims | ? {$_.Property -eq "p31" -and $_.Value.Id -in ("q11424","q506240")}).Count -lt 1)
             {
                 Write-Error "$($i.QId) is not a movie";
                 continue;
