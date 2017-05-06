@@ -76,6 +76,7 @@ FunctionsToExport = @(
     'Get-WDCountry',
     'Get-WDLanguage',
     'Get-WDItemFromImdb',
+    'Get-WDItemFromIdentifier',
     'Add-WDCastMember',
     'ConvertTo-WDTimeValueString')
 

@@ -569,6 +569,67 @@ WHERE
     }
 }
 
+function Get-WDItemFromIdentifier
+{
+
+ 
+    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
+                  PositionalBinding=$true,
+                  ConfirmImpact='Low')]
+    [OutputType([PSWikidata.PSWDItem])]
+    Param
+    (
+         # Item to be modified
+        [Parameter(Mandatory=$true, 
+                   Position = 0,
+                   ValueFromPipeline=$true,
+                   ParameterSetName='Parameter Set 1')]
+        [ValidateNotNullOrEmpty()]
+        [Alias("id")] 
+        [string[]]
+        $Identifier,
+        [ValidateNotNullOrEmpty()]
+        [ValidatePattern('^p[0-9]+$')]
+        [Alias("p")] 
+        [string]
+        $Property
+    )
+
+
+    Process
+    {
+        foreach($id in $Identifier)
+        {
+            $id = $id.ToLower()
+
+            $query= @"
+SELECT ?i
+WHERE
+{
+    ?i  wdt:$($Property.ToUpper()) "$id"
+}
+"@
+           $escapedQuery = [System.Uri]::EscapeDataString($query)
+           $uri = "https://query.wikidata.org/sparql?query=$escapedQuery&format=json"
+           $restOutput = Invoke-RestMethod -Method Get -Uri $uri
+      
+           if ($restOutput.results.bindings.i.Count -gt 1) 
+           {
+                Write-Warning "More than one wikidata item for $id $($restOutput.results.bindings.i.Value)"
+           }              
+
+           $entityUrl = $restOutput.results.bindings.i.Value | Select-Object -First 1
+                     
+           if (($entityUrl -match "^http://www.wikidata.org/entity/(Q.*)$") -eq $true)
+           {
+               $qId = $Matches[1]
+               Get-WDItem -QId $qId
+           }
+       }
+    }
+}
+
+
 function Get-WDItemFromImdb
 {
 
@@ -595,32 +656,8 @@ function Get-WDItemFromImdb
     {
         foreach($id in $ImdbId)
         {
-            $id = $Id.ToLower()
-
-            $query= @"
-SELECT ?actor
-WHERE
-{
-    ?actor  wdt:P345 "$id"
-}
-"@
-           $escapedQuery = [System.Uri]::EscapeDataString($query)
-           $uri = "https://query.wikidata.org/sparql?query=$escapedQuery&format=json"
-           $restOutput = Invoke-RestMethod -Method Get -Uri $uri
-      
-           if ($restOutput.results.bindings.actor.Count -gt 1) 
-           {
-                Write-Warning "More than one wikidata item for $id $($restOutput.results.bindings.actor.Value)"
-           }              
-
-           $entityUrl = $restOutput.results.bindings.actor.value | Select-Object -First 1
-
-           if (($entityUrl -match "^http://www.wikidata.org/entity/(Q.*)$") -eq $true)
-           {
-               $qId = $Matches[1]
-               Get-WDItem -QId $qId
-           }
-       }
+            Get-WDItemFromIdentifier -Property P345 -Identifier $id
+        }
     }
 }
 
