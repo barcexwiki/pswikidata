@@ -17,6 +17,7 @@
 		(this is still .NET Standard 1.6, but a newer version of its constituent libraries)
 	-->
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>

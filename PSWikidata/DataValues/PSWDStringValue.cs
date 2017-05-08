@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PSWikidata.DataValues
 {
-    internal class PSWDStringValue
+    public class PSWDStringValue
     {
         public string Value { get; set; }
 

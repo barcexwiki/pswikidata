@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace PSWikidata.DataValues
 {
-    internal class PSWDQuantityValue
+    public class PSWDQuantityValue
     {
         public decimal Amount { get; set; }
         public decimal? LowerBound { get; set; }

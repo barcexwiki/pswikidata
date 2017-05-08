@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PSWikidata.DataValues
 {
-    internal class PSWDGlobeCoordinateValue
+    public class PSWDGlobeCoordinateValue
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
