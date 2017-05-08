@@ -705,6 +705,24 @@ function _hasIMDBReference
 
 }
 
+function _hasCinenacionalReference
+{
+    param ($Statement)
+
+    foreach ($r in $Statement.references)
+    {
+        $s = $r.Snaks  | ? {($_.Property -eq "p248" -and $_.Value.Id -eq "q3610461") -or ($_.Property -eq "p854" -and $_.Value.Value -match 'http://(.*\.)?cinenacional\.com/')}
+
+        if ($s) {
+            return $true
+        }
+    }
+
+    return $false
+
+}
+
+
 function _hasWikiReference
 {
     param ($Statement,$WikiQId)
@@ -739,7 +757,7 @@ function Add-WDCastMember
         [PSWikidata.PSWDItem[]]$CastMember,
 
         #Source
-        [ValidateSet("IMDb", "ESwiki", "ENwiki")]
+        [ValidateSet("IMDb", "ESwiki", "ENwiki", "cinenacional")]
         [string[]]$Source,
 
         #Access date
@@ -753,13 +771,14 @@ function Add-WDCastMember
             {"ESwiki" -in $_} {$esWikiItem = Get-WDItem q8449}
             {"ENwiki" -in $_} {$enWikiItem = Get-WDItem q328}
             {"IMDb" -in $_} {$imdbItem = Get-WdItem q37312}
+            {"cinenacional" -in $_} {$cinenacionalItem = Get-WDItem q3610461}
         }    
     }
     process
     {    
         foreach ($i in $Item) 
         {
-            if (($i.claims | ? {$_.Property -eq "p31" -and $_.Value.Id -in ("q11424","q506240")}).Count -lt 1)
+            if (($i.Claims | ? {$_.Property -eq "p31" -and $_.Value.Id -in ("q11424","q506240")}).Count -lt 1)
             {
                 Write-Error "$($i.QId) is not a movie";
                 continue;
@@ -800,6 +819,8 @@ function Add-WDCastMember
                             { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $enWikiItem }
                         {"IMDb" -in $_ -and !(_hasIMDBReference -Statement $statement)}   
                             { $referenceSnaks += New-WDSnak -Property p248 -ValueItem $imdbItem }
+                        {"cinenacional" -in $_ -and !(_hasCinenacionalReference -Statement $statement)}   
+                            { $referenceSnaks += New-WDSnak -Property p248 -ValueItem $cinenacionalItem }
                     }    
                     if ($referenceSnaks.Count -gt 0)
                     {
