@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net45</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -10,14 +10,6 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!--
-		PowerShell core requires the NETStandard 1.6.1 package
-		(this is still .NET Standard 1.6, but a newer version of its constituent libraries)
-	-->
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
-    <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,10 +20,10 @@
     <PackageReference Include="Microsoft.PowerShell.5.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
-  <!-- Powershell Core v6.0.0-alpha13 -->
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.0-alpha17" />
-    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.2" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+   <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.0-beta.1" /> 
+    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.0.0-beta.1" />
+    <PackageReference Include="Microsoft.WSMan.Management" Version="6.0.0-beta.1"/>
   </ItemGroup>
 
 </Project>
