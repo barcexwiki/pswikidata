@@ -10,7 +10,9 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+     <DebugType>portable</DebugType>
   </PropertyGroup>
+   
 
   <ItemGroup>
     <ProjectReference Include="..\..\wikibase.net\Wikibase.NET\Wikibase.NET.csproj" />
