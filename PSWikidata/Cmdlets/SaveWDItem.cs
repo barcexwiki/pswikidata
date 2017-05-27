@@ -13,7 +13,7 @@ namespace PSWikidata
         ConfirmImpact = ConfirmImpact.Medium)]
     public class SaveWDItem : PSWDNetCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, HelpMessage = "Item to be saved.")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be saved.")]
         [PSWDItemArgumentTransformation]
         public PSWDItem[] Item { get; set; }
 

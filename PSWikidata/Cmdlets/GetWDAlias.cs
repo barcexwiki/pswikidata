@@ -16,7 +16,7 @@ namespace PSWikidata
         [Parameter(
            Mandatory = true,
            ValueFromPipeline = true,
-           Position = 1,
+           Position = 0,
            HelpMessage = "Item to be read."
         )]
         [PSWDItemArgumentTransformation]
