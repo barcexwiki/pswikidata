@@ -7,9 +7,9 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    public class PSWDPreferences
+    public class PSWDOptions
     {
-        public PSWDPreferences()
+        public PSWDOptions()
         {
             
         }

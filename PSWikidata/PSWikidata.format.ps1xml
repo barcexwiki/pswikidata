@@ -23,7 +23,7 @@ class WDInfo {
 $_lines = @()
 
 $_languages = @($_.Labels.Language) + @($_.Descriptions.Language) + @($_.Aliases.Language) | `
-  Sort-Object -Unique | Where-Object {$_ -in $PSWDPreferences.PreferredDisplayLanguages } 
+  Sort-Object -Unique | Where-Object {$_ -in $PSWDOptions.PreferredDisplayLanguages } 
 
 
 $_lines += "QId: $($_.QId) ($($_.Status))"
@@ -41,7 +41,7 @@ foreach ($l in $_languages) {
  
 $_lines += $_tableLines | Format-Table Language, Label, Description, Aliases -AutoSize -Wrap | Out-String 
 
-$_sites = $_.Sitelinks | Where-Object { $_.Site -in $PSWDPreferences.PreferredDisplaySites } | Sort-Object Site
+$_sites = $_.Sitelinks | Where-Object { $_.Site -in $PSWDOptions.PreferredDisplaySites } | Sort-Object Site
 
 $_lines += $_sites | Format-Table -AutoSize -Wrap | Out-String 
 
