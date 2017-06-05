@@ -170,7 +170,8 @@ function Set-WDRelative
     (
          # Item to be modified
         [Parameter(Mandatory=$true, 
-                   ValueFromPipeline=$true)]
+                   ValueFromPipeline=$true,
+                   Position = 0)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
