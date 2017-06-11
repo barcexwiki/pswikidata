@@ -13,8 +13,7 @@ namespace PSWikidata
     {
         [Parameter(
            Mandatory = true,
-           Position = 0,
-           HelpMessage = "Credentials to login to Wikidata."
+           Position = 0
         )]
         public PSCredential Credential { get; set; }
 
@@ -22,8 +21,7 @@ namespace PSWikidata
 
         [Parameter(
            Mandatory = false,
-           Position = 1,
-           HelpMessage = "API URL."
+           Position = 1
         )]
         public string ApiUrl
         {

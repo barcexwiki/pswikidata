@@ -7,36 +7,38 @@ schema: 2.0.0
 # Disconnect-WDServer
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Closes the current session to Wikidata servers.
 
 ## SYNTAX
 
 ```
-Disconnect-WDServer
+Disconnect-WDServer [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Closes the current session to Wikidata servers wich was opened with Connect-WDServer.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Disconnect-WDSertver
 ```
 
-{{ Add example description here }}
+Closes the session.
 
 ## PARAMETERS
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### None
 
-
 ## OUTPUTS
 
-### System.Object
+### None
 
 ## NOTES
 
