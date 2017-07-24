@@ -7,32 +7,32 @@ schema: 2.0.0
 # Add-WDStatement
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Adds an statement to an item.
 
 ## SYNTAX
 
 ### item
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave]
- -ValueItem <PSWDItem> [-WhatIf] [-Confirm]
+ -ValueItem <PSWDItem> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### monolingual
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave]
- -ValueText <String> -ValueLanguage <String> [-WhatIf] [-Confirm]
+ -ValueText <String> -ValueLanguage <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### string
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave]
- -ValueString <String> [-WhatIf] [-Confirm]
+ -ValueString <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### quantity
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> -ValueAmount <Decimal> [-ValuePlusMinus <Decimal>]
- [-ValueUnit <String>] [-WhatIf] [-Confirm]
+ [-ValueUnit <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### time
@@ -40,38 +40,60 @@ Add-WDStatement [-Item] <PSWDItem> -Property <String> -ValueAmount <Decimal> [-V
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave]
  -ValueTime <String> [-ValueTimeZoneOffset <Int32>] [-ValueBefore <Int32>] [-ValueAfter <Int32>]
  [-ValueCalendarModel <CalendarModel>] [-ValueTimePrecision <TimeValuePrecision>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ### globecoordinate
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave]
  -ValueLatitude <Double> -ValueLongitude <Decimal> [-ValueCoordinatePrecision <Decimal>] [-ValueGlobe <Globe>]
- [-WhatIf] [-Confirm]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### novalue
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave] [-NoValue]
- [-WhatIf] [-Confirm]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### somevalue
 ```
 Add-WDStatement [-Item] <PSWDItem> -Property <String> [-Multiple] [-OutputStatement] [-DoNotSave] [-SomeValue]
- [-WhatIf] [-Confirm]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Adds an statement to an item.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Add-WDStatement -Item Q33258952 -Property p18 -ValueString "IAAF World Challenge - Meeting Madrid 2017 - 170714 19
+3212.jpg"
+
+QId: q33258952 (Loaded)
+Labels: 2   Descriptions: 2   Aliases: 0   Sitelinks: 0   Claims: 5
+
+Language Label         Description   Aliases
+-------- -----         -----------   -------
+en       Santiago Cova Cuban athlete
+es       Santiago Cova atleta cubano
 ```
 
-{{ Add example description here }}
+### Example 2
+```
+PS C:\> Add-WDStatement -Item Q33258952 -Property p31 -ValueItem q5
+
+QId: q33258952 (Loaded)
+Labels: 2   Descriptions: 2   Aliases: 0   Sitelinks: 0   Claims: 1
+
+Language Label         Description   Aliases
+-------- -----         -----------   -------
+en       Santiago Cova Cuban athlete
+es       Santiago Cova atleta cubano
+```
+
 
 ## PARAMETERS
 
@@ -471,14 +493,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### PSWikidata.PSWDItem
 
-
 ## OUTPUTS
 
-### System.Object
+### PSWikidata.PSWDItem
 
 ## NOTES
 
