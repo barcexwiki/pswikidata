@@ -7,25 +7,24 @@ schema: 2.0.0
 # Get-WDLabel
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Retrieves the label of an item in a specific language.
 
 ## SYNTAX
 
 ```
-Get-WDLabel [-Item] <PSWDItem> [-Language] <String> [-WhatIf] [-Confirm]
+Get-WDLabel [-Item] <PSWDItem> [-Language] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Retrieves the label of an item in a specific language.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Get-WDLabel -Item q1 -Language en
+universe
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -45,7 +44,7 @@ Accept wildcard characters: False
 ```
 
 ### -Item
-Item to be read.
+Item to get the label from.
 
 ```yaml
 Type: PSWDItem
@@ -60,7 +59,7 @@ Accept wildcard characters: False
 ```
 
 ### -Language
-Language to be used.
+Language of the label to be retrieved.
 
 ```yaml
 Type: String
@@ -90,14 +89,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### PSWikidata.PSWDItem
 
-
 ## OUTPUTS
 
-### System.Object
+### String
 
 ## NOTES
 
