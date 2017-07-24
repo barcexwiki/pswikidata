@@ -11,6 +11,7 @@ namespace PSWikidata
     [Cmdlet(VerbsCommon.New, "WDItem",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.High)]
+    [OutputType(typeof(PSWDItem))]
     public class NewWDItem : PSWDNetCmdlet
     {
         protected override void BeginProcessing()
@@ -18,7 +19,7 @@ namespace PSWikidata
             base.BeginProcessing();
         }
 
-        [Parameter(Mandatory = false, HelpMessage = "Create the item but do not save the changes to Wikidata.")]
+        [Parameter(Mandatory = false)]
         public SwitchParameter DoNotSave
         {
             get { return _doNotSave; }
@@ -41,9 +42,6 @@ namespace PSWikidata
                 WriteObject(i, true);
             }
         }
-
-
-
 
         protected override void EndProcessing()
         {
