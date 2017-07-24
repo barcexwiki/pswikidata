@@ -7,25 +7,28 @@ schema: 2.0.0
 # Get-WDAlias
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Retrieves a list of alias for an item in a specific language.
 
 ## SYNTAX
 
 ```
-Get-WDAlias [-Item] <PSWDItem> [-Language] <String> [-WhatIf] [-Confirm]
+Get-WDAlias [-Item] <PSWDItem> [-Language] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Retrieves a list of alias for an item in a specific language.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Get-WDAlias q1 en
+space
+Cosmos
+outer space
+universe (class)
+universe, a
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -45,7 +48,7 @@ Accept wildcard characters: False
 ```
 
 ### -Item
-Item to be read.
+Item to get the aliases from.
 
 ```yaml
 Type: PSWDItem
@@ -60,7 +63,7 @@ Accept wildcard characters: False
 ```
 
 ### -Language
-Language to be used.
+Language of the aliases to be retrieved.
 
 ```yaml
 Type: String
@@ -90,10 +93,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### PSWikidata.PSWDItem
-
 
 ## OUTPUTS
 
