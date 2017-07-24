@@ -9,6 +9,7 @@ using Wikibase;
 namespace PSWikidata
 {
     [Cmdlet(VerbsCommon.Get, "WDItem")]
+    [OutputType(typeof(PSWDItem[]))]
     public class GetWDItem : PSWDNetCmdlet
     {
         private string[] _qIdCollection;
@@ -17,7 +18,6 @@ namespace PSWikidata
            ValueFromPipelineByPropertyName = true,
            ValueFromPipeline = true,
            Position = 0,
-           HelpMessage = "Q identifier for the item.",
            ParameterSetName = "qid"
         )]
         public string[] QId
