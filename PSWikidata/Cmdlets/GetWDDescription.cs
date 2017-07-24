@@ -11,21 +11,20 @@ namespace PSWikidata
     [Cmdlet(VerbsCommon.Get, "WDDescription",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.None)]
+    [OutputType(typeof(string))]
     public class GetWDDescription : PSCmdlet
     {
         [Parameter(
            Mandatory = true,
            ValueFromPipeline = true,
-           Position = 0,
-           HelpMessage = "Item to be read."
+           Position = 0
         )]
         [PSWDItemArgumentTransformation]
         public PSWDItem Item { get; set; }
 
         [Parameter(
            Mandatory = true,
-           Position = 2,
-           HelpMessage = "Language to be used."
+           Position = 1
         )]
         public string Language { get; set; }
 

@@ -7,25 +7,24 @@ schema: 2.0.0
 # Get-WDDescription
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Retrieves the description of an item in a specific language.
 
 ## SYNTAX
 
 ```
-Get-WDDescription [-Item] <PSWDItem> [-Language] <String> [-WhatIf] [-Confirm]
+Get-WDDescription [-Item] <PSWDItem> [-Language] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Retrieves the description of an item in a specific language.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Get-WDDescription -Item q13 -Language en
+fear of the number 13
 ```
-
-{{ Add example description here }}
 
 ## PARAMETERS
 
@@ -45,7 +44,7 @@ Accept wildcard characters: False
 ```
 
 ### -Item
-Item to be read.
+Item to get the description from.
 
 ```yaml
 Type: PSWDItem
@@ -60,7 +59,7 @@ Accept wildcard characters: False
 ```
 
 ### -Language
-Language to be used.
+Language of the description to be retrieved.
 
 ```yaml
 Type: String
@@ -90,14 +89,16 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### PSWikidata.PSWDItem
 
-
 ## OUTPUTS
 
-### System.Object
+### String
 
 ## NOTES
 
