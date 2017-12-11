@@ -31,7 +31,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string title = Item.ExtensionData.GetSitelink(Site);
+            string title = ((Item)(Item.ExtensionData)).GetSitelink(Site);
             if (title != null) WriteObject(title);
         }
     }

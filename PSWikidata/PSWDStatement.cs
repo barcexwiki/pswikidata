@@ -11,7 +11,7 @@ namespace PSWikidata
     {
         public Wikibase.Rank Rank { get; set; }
 
-        internal PSWDStatement(PSWDItem item, Wikibase.Statement statement) : base(item, statement)
+        internal PSWDStatement(PSWDEntity item, Wikibase.Statement statement) : base(item, statement)
         {
             Rank = statement.Rank;
         }
