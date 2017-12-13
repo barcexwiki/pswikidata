@@ -14,7 +14,7 @@ namespace PSWikidata
     public class SaveWDProperty : PSWDNetCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property to be saved.")]
-        [PSWDPropertyArgumentTransformation]
+        [PSWDEntityArgumentTransformationAttribute]
         public PSWDProperty[] Property { get; set; }
 
         protected override void ProcessRecord()

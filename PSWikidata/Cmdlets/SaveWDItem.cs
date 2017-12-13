@@ -14,7 +14,7 @@ namespace PSWikidata
     public class SaveWDItem : PSWDNetCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be saved.")]
-        [PSWDItemArgumentTransformation]
+        [PSWDEntityArgumentTransformationAttribute]
         public PSWDItem[] Item { get; set; }
 
         protected override void ProcessRecord()

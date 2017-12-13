@@ -14,7 +14,7 @@ namespace PSWikidata
     public class SetWDItem : PSWDNetCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.")]
-        [PSWDItemArgumentTransformation]
+        [PSWDEntityArgumentTransformationAttribute]
         public PSWDItem[] Item { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Language to be used.")]

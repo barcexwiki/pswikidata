@@ -19,7 +19,7 @@ namespace PSWikidata
            Position = 0,
            HelpMessage = "Item to be read."
         )]
-        [PSWDItemArgumentTransformation]
+        [PSWDEntityArgumentTransformation]
         public PSWDItem Item { get; set; }
 
         [Parameter(

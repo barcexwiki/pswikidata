@@ -27,7 +27,7 @@ namespace PSWikidata
         private bool _someValue;
 
         [Parameter(Mandatory = true, HelpMessage = "Item that will be the value of the property.", ParameterSetName = "item")]
-        [PSWDItemArgumentTransformationAttribute]
+        [PSWDEntityArgumentTransformationAttribute]
         public PSWDItem ValueItem { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Text that will be the value of the property.", ParameterSetName = "monolingual")]

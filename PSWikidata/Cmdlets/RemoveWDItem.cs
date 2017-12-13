@@ -19,7 +19,7 @@ namespace PSWikidata
            Position = 0,
            HelpMessage = "Item to be modified."
         )]
-        [PSWDItemArgumentTransformation]
+        [PSWDEntityArgumentTransformationAttribute]
         public PSWDItem Item { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Mark the item for deletion but do not save the changes to Wikidata.")]

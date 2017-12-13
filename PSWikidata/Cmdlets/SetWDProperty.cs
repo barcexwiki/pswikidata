@@ -14,7 +14,7 @@ namespace PSWikidata
     public class SetWDProperty : PSWDNetCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property to be modified.")]
-        [PSWDPropertyArgumentTransformation]
+        [PSWDEntityArgumentTransformationAttribute]
         public PSWDProperty[] Property { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Language to be used.")]
