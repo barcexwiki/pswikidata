@@ -26,7 +26,7 @@ $_languages = @($_.Labels.Language) + @($_.Descriptions.Language) + @($_.Aliases
   Sort-Object -Unique | Where-Object {$_ -in $PSWDOptions.PreferredDisplayLanguages } 
 
 
-$_lines += "QId: $($_.QId) ($($_.Status))"
+$_lines += "Id: $($_.Id) ($($_.Status))"
 $_lines += "Labels: $([int]$_.Labels.Count)   Descriptions: $([int]$_.Descriptions.Count)   Aliases: $([int]$_.Aliases.Count)   Sitelinks: $([int]$_.Sitelinks.Count)   Claims: $([int]$_.Claims.Count)"
 
 $_tableLines = @()

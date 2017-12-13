@@ -41,7 +41,7 @@ function Copy-WDLabel
     {
         foreach ($i in $Item)
         { 
-            if ($pscmdlet.ShouldProcess($i.QId, "Copying labels from $SourceLanguage to $($DestinationLanguages -join " ")"))
+            if ($pscmdlet.ShouldProcess($i.Id, "Copying labels from $SourceLanguage to $($DestinationLanguages -join " ")"))
             {               
 
                 $label = ($i.Labels | Where-Object Language -eq $SourceLanguage).Label
@@ -50,13 +50,13 @@ function Copy-WDLabel
                 {
                     foreach ($dl in $DestinationLanguages)
                     {
-                        Write-Verbose "Copying label '$label' of $($i.QId) from [$SourceLanguage] to [$dl]"
+                        Write-Verbose "Copying label '$label' of $($i.Id) from [$SourceLanguage] to [$dl]"
                         Set-WDItem -Item $i -Label $label -Language $dl -DoNotSave -ErrorAction Stop| Out-Null
                     }
                 }
                 else
                 {
-                    Write-Warning "$($i.QId) has no label for language $SourceLanguage"
+                    Write-Warning "$($i.Id) has no label for language $SourceLanguage"
                 } 
 
                 try
@@ -227,21 +227,21 @@ function Set-WDRelative
             # checks that there are no duplicate Qids
             $allQids = @();
             if ($pscmdlet.MyInvocation.BoundParameters["Children"]) 
-                { $allQids += $Children.Qid;}
+                { $allQids += $Children.Id;}
             if ($pscmdlet.MyInvocation.BoundParameters["Siblings"]) 
-                { $allQids += $Siblings.QId;}
+                { $allQids += $Siblings.Id;}
             if ($pscmdlet.MyInvocation.BoundParameters["Spouse"]) 
-                {$allQids += $Spouse.QId;}
+                {$allQids += $Spouse.Id;}
             if ($pscmdlet.MyInvocation.BoundParameters["Father"]) 
-                {$allQids += $Father.QId;}
-            $allQids += $i.QId;
+                {$allQids += $Father.Id;}
+            $allQids += $i.Id;
 
             if ($allQids | Group-Object | Where-Object {$_.count -gt 1})
             {
                 throw "Parameters are inconsistent."
             }
 
-            if ($pscmdlet.ShouldProcess($i.QId, "Set relatives"))
+            if ($pscmdlet.ShouldProcess($i.Id, "Set relatives"))
             {
         
               if ($pscmdlet.MyInvocation.BoundParameters["Mother"])
@@ -272,7 +272,7 @@ function Set-WDRelative
 
               if ($pscmdlet.MyInvocation.BoundParameters["Children"])
               {
-                  $ChildrenQId = $Children.QId | Sort-Object | Get-Unique
+                  $ChildrenQId = $Children.Id | Sort-Object | Get-Unique
                   $children = $ChildrenQId | Get-WDItem -ErrorAction Stop 
 
                   foreach ($child in $Children)
@@ -290,7 +290,7 @@ function Set-WDRelative
                       }
                   
                       # Children are sibling between them
-                      $siblings = $children | Where-Object {$_.QId -ne $child.QId}
+                      $siblings = $children | Where-Object {$_.Id -ne $child.Id}
                       foreach ($s in $siblings) 
                       {
                         setSibling $child $s
@@ -411,7 +411,7 @@ function Set-WDHuman
     {
         foreach ($i in $Item)
         {
-            if ($pscmdlet.ShouldProcess($i.QId, "Set-WDHuman"))
+            if ($pscmdlet.ShouldProcess($i.Id, "Set-WDHuman"))
             {
                 if (!(Test-WDHuman $i))
                 {
@@ -782,7 +782,7 @@ function Add-WDCastMember
         {
             if (($i.Claims | Where-Object {$_.Property -eq "p31" -and $_.Value.Id -in ("q11424","q506240")}).Count -lt 1)
             {
-                Write-Error "$($i.QId) is not a movie";
+                Write-Error "$($i.Id) is not a movie";
                 continue;
             }
 
@@ -792,7 +792,7 @@ function Add-WDCastMember
                 {
                     $statement = $null
 
-                    $existingClaims = $i.Claims | Where-Object {$_.Property -eq "p161" -and $_.Value.Id -eq $member.QId} 
+                    $existingClaims = $i.Claims | Where-Object {$_.Property -eq "p161" -and $_.Value.Id -eq $member.Id} 
 
                     switch ($existingClaims.Count)
                     {
@@ -800,14 +800,14 @@ function Add-WDCastMember
                         1 { $statement = $existingClaims[0] }                            
                         default 
                         { 
-                            Write-Error "$($member.QId) is in multiple cast memeber claims"
+                            Write-Error "$($member.Id) is in multiple cast memeber claims"
                             continue
                         }     
                     }                                        
                 } 
                 else
                 {
-                    Write-Error "$($member.QId) is not a human being"
+                    Write-Error "$($member.Id) is not a human being"
                     continue
                 }
                 if ($statement -ne $null) 
@@ -815,9 +815,9 @@ function Add-WDCastMember
                     $referenceSnaks = @()
                     switch($Source)
                     {
-                        {"ESwiki" -in $_ -and !(_hasWikiReference -Statement $statement -WikiQId $esWikiItem.QId )} 
+                        {"ESwiki" -in $_ -and !(_hasWikiReference -Statement $statement -WikiQId $esWikiItem.Id )} 
                             { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $esWikiItem }
-                        {"ENwiki" -in $_ -and !(_hasWikiReference -Statement $statement -WikiQId $enWikiItem.QId )} 
+                        {"ENwiki" -in $_ -and !(_hasWikiReference -Statement $statement -WikiQId $enWikiItem.Id )} 
                             { $referenceSnaks += New-WDSnak -Property p143 -ValueItem $enWikiItem }
                         {"IMDb" -in $_ -and !(_hasIMDBReference -Statement $statement)}   
                             { $referenceSnaks += New-WDSnak -Property p248 -ValueItem $imdbItem }
@@ -837,11 +837,11 @@ function Add-WDCastMember
                     {
                         Save-WDItem -Item $i
                     }
-                    Write-Verbose "Processed $($member.QId)"                
+                    Write-Verbose "Processed $($member.Id)"                
                 } 
                 else 
                 {
-                    Write-Verbose "Skipped $($member.QId) $($i.QId)"
+                    Write-Verbose "Skipped $($member.Id) $($i.Id)"
                 }        
             }
         }
