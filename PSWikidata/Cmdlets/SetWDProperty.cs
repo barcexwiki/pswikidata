@@ -88,34 +88,34 @@ namespace PSWikidata
         {
             foreach (PSWDProperty p in Property)
             {
-                if (ShouldProcess(p.QId, "Set label, description or sitelink"))
+                if (ShouldProcess(p.Id, "Set label, description or sitelink"))
                 {
                     bool touched = false;
 
                     if (!String.IsNullOrEmpty(Description))
                     {
-                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, p.QId));
+                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, p.Id));
                         p.SetDescription(Language, Description);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(Label))
                     {
-                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, p.QId));
+                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, p.Id));
                         p.SetLabel(Language, Label);
                         touched = true;
                     }
 
                     if (RemoveDescription)
                     {
-                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, p.QId));
+                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, p.Id));
                         p.RemoveDescription(Language);
                         touched = true;
                     }
 
                     if (RemoveLabel)
                     {
-                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, p.QId));
+                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, p.Id));
                         p.RemoveLabel(Language);
                         touched = true;
                     }

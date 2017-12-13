@@ -27,7 +27,7 @@ namespace PSWikidata
         private List<PSWDLabel> _aliases = new List<PSWDLabel>();
         private List<PSWDClaim> _claims = new List<PSWDClaim>();
         protected List<LogEntry> _log = new List<LogEntry>();
-        private string _qId;
+        private string _id;
         private string _status;
 
         private Entity _extensionData;
@@ -47,9 +47,9 @@ namespace PSWikidata
             get { return _status; }
         }
 
-        public string QId
+        public string Id
         {
-            get { return _qId; }
+            get { return _id; }
         }
 
         public PSWDDescription[] Descriptions
@@ -85,7 +85,7 @@ namespace PSWikidata
             _aliases.Clear();
             _claims.Clear();
 
-            _qId = ExtensionData.Id != null ? ExtensionData.Id.ToString() : null;
+            _id = ExtensionData.Id != null ? ExtensionData.Id.ToString() : null;
 
             Dictionary<string, string> d = ExtensionData.GetDescriptions();
             foreach (string k in d.Keys)
@@ -220,7 +220,7 @@ namespace PSWikidata
         {
             ExtensionData.Delete();
             RefreshFromExtensionData();
-            _log.Add(new LogEntry("Delete", QId, null));
+            _log.Add(new LogEntry("Delete", Id, null));
         }
 
 
@@ -230,7 +230,7 @@ namespace PSWikidata
             ExtensionData.Save(comment);
             RefreshFromExtensionData();
             _log.Clear();
-            return String.Format("Saved {0} {1}: {2} ", entityType, QId, comment);
+            return String.Format("Saved {0} {1}: {2} ", entityType, Id, comment);
         }
 
         internal virtual string Save()

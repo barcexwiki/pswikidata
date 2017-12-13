@@ -137,7 +137,7 @@ namespace PSWikidata
                         dataValue = null;
                         break;
                     case "item":
-                        dataValue = new Wikibase.DataValues.EntityIdValue(new EntityId(ValueItem.QId));
+                        dataValue = new Wikibase.DataValues.EntityIdValue(new EntityId(ValueItem.Id));
                         break;
                     case "monolingual":
                         dataValue = new Wikibase.DataValues.MonolingualTextValue(ValueText, ValueLanguage);

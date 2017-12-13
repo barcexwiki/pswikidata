@@ -49,12 +49,12 @@ namespace PSWikidata
         {
             foreach (string a in Alias)
             {
-                if (ShouldProcess(Entity.QId, String.Format("Remove alias {0}: {1}", Language, a)))
+                if (ShouldProcess(Entity.Id, String.Format("Remove alias {0}: {1}", Language, a)))
                 {
                     try
                     {
                         Entity.RemoveAlias(Language, a);
-                        WriteVerbose(String.Format("Remove alias {0}: {1} on {2}", Language, a, Entity.QId));
+                        WriteVerbose(String.Format("Remove alias {0}: {1} on {2}", Language, a, Entity.Id));
 
                         if (!DoNotSave)
                         {

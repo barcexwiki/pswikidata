@@ -88,7 +88,7 @@ namespace PSWikidata
                 if (ShouldProcess(Claim.ToString(), "Add qualifier"))
                 {
                     Claim.AddQualifier(SnakType, Property, dataValue);
-                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Claim.Item.QId));
+                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Claim.Item.Id));
 
                     if (!DoNotSave)
                     {

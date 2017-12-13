@@ -95,7 +95,7 @@ namespace PSWikidata
 
             if (Multiple || !IsDuplicatedStatement(dataValue))
             {
-                if (ShouldProcess(Entity.QId, "Add statement"))
+                if (ShouldProcess(Entity.Id, "Add statement"))
                 {
                     Snak snak = new Snak(SnakType,
                                     new EntityId(Property),
@@ -103,7 +103,7 @@ namespace PSWikidata
                                     );
 
                     PSWDStatement statement = Entity.AddStatement(snak, Rank.Normal);
-                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Entity.QId));
+                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Entity.Id));
 
                     if (!DoNotSave)
                     {

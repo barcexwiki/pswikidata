@@ -32,7 +32,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            if (ShouldProcess(Item.QId, "remove item"))
+            if (ShouldProcess(Item.Id, "remove item"))
             {
                 Item.Delete();
 

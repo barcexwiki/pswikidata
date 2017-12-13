@@ -49,10 +49,10 @@ namespace PSWikidata
         {
             foreach (string a in Alias)
             {
-                if (ShouldProcess(Entity.QId, String.Format("Add alias {0}: {1}", Language, a)))
+                if (ShouldProcess(Entity.Id, String.Format("Add alias {0}: {1}", Language, a)))
                 {
                     Entity.AddAlias(Language, a);
-                    WriteVerbose(String.Format("Add alias {0}: {1} on {2}", Language, a, Entity.QId));
+                    WriteVerbose(String.Format("Add alias {0}: {1} on {2}", Language, a, Entity.Id));
 
                     if (!DoNotSave)
                     {

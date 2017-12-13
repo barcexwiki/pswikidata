@@ -21,7 +21,7 @@ namespace PSWikidata
         {
             foreach (PSWDProperty p in Property)
             {
-                if (ShouldProcess(p.QId, "Save property"))
+                if (ShouldProcess(p.Id, "Save property"))
                 {
                     try
                     {

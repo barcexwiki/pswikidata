@@ -115,48 +115,48 @@ namespace PSWikidata
         {
             foreach (PSWDItem i in Item)
             {
-                if (ShouldProcess(i.QId, "Set label, description or sitelink"))
+                if (ShouldProcess(i.Id, "Set label, description or sitelink"))
                 {
                     bool touched = false;
 
                     if (!String.IsNullOrEmpty(Description))
                     {
-                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, i.QId));
+                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, i.Id));
                         i.SetDescription(Language, Description);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(Label))
                     {
-                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, i.QId));
+                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, i.Id));
                         i.SetLabel(Language, Label);
                         touched = true;
                     }
 
                     if (RemoveDescription)
                     {
-                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, i.QId));
+                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, i.Id));
                         i.RemoveDescription(Language);
                         touched = true;
                     }
 
                     if (RemoveLabel)
                     {
-                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, i.QId));
+                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, i.Id));
                         i.RemoveLabel(Language);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(SitelinkTitle))
                     {
-                        WriteVerbose(String.Format("Setting sitelink {0}: {1} on {2}", SitelinkSite, SitelinkTitle, i.QId));
+                        WriteVerbose(String.Format("Setting sitelink {0}: {1} on {2}", SitelinkSite, SitelinkTitle, i.Id));
                         i.SetSitelink(SitelinkSite, SitelinkTitle);
                         touched = true;
                     }
 
                     if (RemoveSitelink)
                     {
-                        WriteVerbose(String.Format("Removing sitelink {0} on {1}", SitelinkSite, i.QId));
+                        WriteVerbose(String.Format("Removing sitelink {0} on {1}", SitelinkSite, i.Id));
                         i.RemoveSitelink(SitelinkSite);
                         touched = true;
                     }

@@ -21,7 +21,7 @@ namespace PSWikidata
         {
             foreach (PSWDItem i in Item)
             {
-                if (ShouldProcess(i.QId, "Save item"))
+                if (ShouldProcess(i.Id, "Save item"))
                 {
                     try
                     {
