@@ -13,7 +13,7 @@ function Copy-WDLabel
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Item,
 
@@ -89,7 +89,7 @@ function Test-WDInstanceOf
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Item,
 
@@ -116,7 +116,7 @@ function Test-WDHuman
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Item
     )
@@ -136,7 +136,7 @@ function Test-WDSex
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Item,
 
@@ -175,7 +175,7 @@ function Set-WDRelative
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Item,
 
@@ -183,7 +183,7 @@ function Set-WDRelative
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Mother,
 
@@ -191,7 +191,7 @@ function Set-WDRelative
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Father,
 
@@ -199,7 +199,7 @@ function Set-WDRelative
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem]
         $Spouse,
 
@@ -207,7 +207,7 @@ function Set-WDRelative
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Children,
 
@@ -215,7 +215,7 @@ function Set-WDRelative
         [Parameter(Mandatory= $false)]
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Siblings
     )
@@ -325,7 +325,7 @@ function Set-WDHuman
         [ValidateNotNull()]
         [ValidateNotNullOrEmpty()]
         [Alias("i")] 
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]
         $Item,
 
@@ -381,7 +381,7 @@ function Set-WDHuman
              $attribute = New-Object System.Management.Automation.ValidateNotNullOrEmptyAttribute
              $attributeCollection.Add($attribute)
 
-             $attribute = New-Object PSWikidata.PSWDItemArgumentTransformationAttribute
+             $attribute = New-Object PSWikidata.PSWDEntityArgumentTransformationAttribute
              $attributeCollection.Add($attribute)
          
              $param = New-Object System.Management.Automation.RuntimeDefinedParameter($paramName, [PSWikidata.PSWDItem], $attributeCollection)
@@ -696,7 +696,7 @@ function _hasIMDBReference
 
     foreach ($r in $Statement.references)
     {
-        $s = $r.Snaks  | ? {($_.Property -eq "p248" -and $_.Value.Id -eq "q37312") -or ($_.Property -eq "p854" -and $_.Value.Value -match 'http://(.*\.)?imdb\.com/')}
+        $s = $r.Snaks  | Where-Object {($_.Property -eq "p248" -and $_.Value.Id -eq "q37312") -or ($_.Property -eq "p854" -and $_.Value.Value -match 'http://(.*\.)?imdb\.com/')}
 
         if ($s) {
             return $true
@@ -713,7 +713,7 @@ function _hasCinenacionalReference
 
     foreach ($r in $Statement.references)
     {
-        $s = $r.Snaks  | ? {($_.Property -eq "p248" -and $_.Value.Id -eq "q3610461") -or ($_.Property -eq "p854" -and $_.Value.Value -match 'http://(.*\.)?cinenacional\.com/')}
+        $s = $r.Snaks  | Where-Object {($_.Property -eq "p248" -and $_.Value.Id -eq "q3610461") -or ($_.Property -eq "p854" -and $_.Value.Value -match 'http://(.*\.)?cinenacional\.com/')}
 
         if ($s) {
             return $true
@@ -731,7 +731,7 @@ function _hasWikiReference
 
     foreach ($r in $Statement.references)
     {
-        $s = $r.Snaks  | ? {($_.Property -eq "p248" -and $_.Value.Id -eq $WikiQId)}
+        $s = $r.Snaks  | Where-Object {($_.Property -eq "p248" -and $_.Value.Id -eq $WikiQId)}
 
         if ($s) {
             return $true
@@ -750,12 +750,12 @@ function Add-WDCastMember
     (
         #Movie (item)
         [Parameter(Mandatory= $true,ValueFromPipeline=$true)]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]$Item, 
 
         #Actors and actresses (items)
         [Parameter(Mandatory= $true)]
-        [PSWikidata.PSWDItemArgumentTransformation()]
+        [PSWikidata.PSWDEntityArgumentTransformation()]
         [PSWikidata.PSWDItem[]]$CastMember,
 
         #Source
@@ -780,7 +780,7 @@ function Add-WDCastMember
     {    
         foreach ($i in $Item) 
         {
-            if (($i.Claims | ? {$_.Property -eq "p31" -and $_.Value.Id -in ("q11424","q506240")}).Count -lt 1)
+            if (($i.Claims | Where-Object {$_.Property -eq "p31" -and $_.Value.Id -in ("q11424","q506240")}).Count -lt 1)
             {
                 Write-Error "$($i.QId) is not a movie";
                 continue;
