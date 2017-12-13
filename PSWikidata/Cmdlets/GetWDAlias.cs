@@ -17,10 +17,11 @@ namespace PSWikidata
            Mandatory = true,
            ValueFromPipeline = true,
            Position = 0,
-           HelpMessage = "Item to be read."
+           HelpMessage = "Property or item to be read."
         )]
-        [PSWDItemArgumentTransformation]
-        public PSWDItem Item { get; set; }
+        [PSWDEntityArgumentTransformation]
+        [Alias("Item", "Property")]
+        public PSWDEntity Entity { get; set; }
 
         [Parameter(
            Mandatory = true,
@@ -31,7 +32,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string[] aliases = Item.ExtensionData.GetAliases(Language);
+            string[] aliases = Entity.ExtensionData.GetAliases(Language);
             if (aliases != null) WriteObject(aliases.ToArray(), true);
         }
     }

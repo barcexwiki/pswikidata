@@ -17,10 +17,11 @@ namespace PSWikidata
            Mandatory = true,
            ValueFromPipeline = true,
            Position = 0,
-           HelpMessage = "Item to be read."
+           HelpMessage = "Property or item to be read."
         )]
-        [PSWDItemArgumentTransformation]
-        public PSWDItem Item { get; set; }
+        [PSWDEntityArgumentTransformation]
+        [Alias("Item", "Property")]
+        public PSWDEntity Entity { get; set; }
 
         [Parameter(
            Mandatory = true,
@@ -31,7 +32,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string label = Item.ExtensionData.GetLabel(Language);
+            string label = Entity.ExtensionData.GetLabel(Language);
             if (label != null) WriteObject(label);
         }
     }

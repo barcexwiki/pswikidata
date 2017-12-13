@@ -17,10 +17,11 @@ namespace PSWikidata
            Mandatory = true,
            ValueFromPipeline = true,
            Position = 0,
-           HelpMessage = "Item to be modified."
+           HelpMessage = "Property or item to be modified."
         )]
-        [PSWDItemArgumentTransformation]
-        public PSWDItem Item { get; set; }
+        [PSWDEntityArgumentTransformation]
+        [Alias("Item","Property")]
+        public PSWDEntity Entity { get; set; }
 
         [Parameter(
            Mandatory = true,
@@ -48,24 +49,24 @@ namespace PSWikidata
         {
             foreach (string a in Alias)
             {
-                if (ShouldProcess(Item.QId, String.Format("Remove alias {0}: {1}", Language, a)))
+                if (ShouldProcess(Entity.QId, String.Format("Remove alias {0}: {1}", Language, a)))
                 {
                     try
                     {
-                        Item.RemoveAlias(Language, a);
-                        WriteVerbose(String.Format("Remove alias {0}: {1} on {2}", Language, a, Item.QId));
+                        Entity.RemoveAlias(Language, a);
+                        WriteVerbose(String.Format("Remove alias {0}: {1} on {2}", Language, a, Entity.QId));
 
                         if (!DoNotSave)
                         {
-                            string comment = Item.Save();
+                            string comment = Entity.Save();
                             WriteVerbose(comment);
                         }
 
-                        WriteObject(Item, true);
+                        WriteObject(Entity, true);
                     }
                     catch (Exception e)
                     {
-                        WriteError(new ErrorRecord(e, null, ErrorCategory.NotSpecified, Item));
+                        WriteError(new ErrorRecord(e, null, ErrorCategory.NotSpecified, Entity));
                     }
                 }
             }

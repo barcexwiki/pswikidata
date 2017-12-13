@@ -13,16 +13,17 @@ namespace PSWikidata
         ConfirmImpact = ConfirmImpact.Medium)]
     public class AddWDStatement : PSWDValueNetCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "item")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "monolingual")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "string")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "quantity")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "time")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "globecoordinate")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "novalue")]
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.", ParameterSetName = "somevalue")]
-        [PSWDItemArgumentTransformation]
-        public PSWDItem Item { get; set; }
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "item")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "monolingual")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "string")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "quantity")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "time")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "globecoordinate")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "novalue")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "somevalue")]
+        [PSWDEntityArgumentTransformation]
+        [Alias("Item")]
+        public PSWDEntity Entity { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "monolingual")]
@@ -79,7 +80,7 @@ namespace PSWikidata
 
         private bool IsDuplicatedStatement(Wikibase.DataValues.DataValue dataValue)
         {
-            Claim[] claims = Item.ExtensionData.GetClaims(Property.ToUpper());
+            Claim[] claims = Entity.ExtensionData.GetClaims(Property.ToUpper());
 
             var sameValueClaims = from c in claims
                                   where c.MainSnak.DataValue.Equals(dataValue)
@@ -94,19 +95,19 @@ namespace PSWikidata
 
             if (Multiple || !IsDuplicatedStatement(dataValue))
             {
-                if (ShouldProcess(Item.QId, "Add statement"))
+                if (ShouldProcess(Entity.QId, "Add statement"))
                 {
                     Snak snak = new Snak(SnakType,
                                     new EntityId(Property),
                                     dataValue
                                     );
 
-                    PSWDStatement statement = Item.AddStatement(snak, Rank.Normal);
-                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Item.QId));
+                    PSWDStatement statement = Entity.AddStatement(snak, Rank.Normal);
+                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Entity.QId));
 
                     if (!DoNotSave)
                     {
-                        string comment = Item.Save();
+                        string comment = Entity.Save();
                         WriteVerbose(comment);
                     }
 
@@ -118,7 +119,7 @@ namespace PSWikidata
             }
 
             if (!OutputStatement)
-                WriteObject(Item, true);
+                WriteObject(Entity, true);
         }
     }
 }
