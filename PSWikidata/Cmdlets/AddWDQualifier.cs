@@ -31,7 +31,8 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "somevalue")]
-        public string Property { get; set; }
+        [PSWDEntityArgumentTransformation]
+        public PSWDProperty Property { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "monolingual")]
@@ -40,12 +41,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier even if there is already a qualifier for this property.", ParameterSetName = "somevalue")]
-        public SwitchParameter Multiple
-        {
-            get { return _multiple; }
-            set { _multiple = value; }
-        }
-        private bool _multiple;
+        public SwitchParameter Multiple {get; set;}
 
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "monolingual")]
@@ -54,23 +50,11 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Add the qualifier but do not save the changes to Wikidata.", ParameterSetName = "somevalue")]
-        public SwitchParameter DoNotSave
+        public SwitchParameter DoNotSave {get; set;}
+
+         private bool IsDuplicatedQualifier(Wikibase.DataValues.DataValue dataValue)
         {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
-
-
-
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
-
-        private bool IsDuplicatedQualifier(Wikibase.DataValues.DataValue dataValue)
-        {
-            Qualifier[] qualifiers = Claim.ExtensionData.GetQualifiers(Property.ToUpper());
+            Qualifier[] qualifiers = Claim.ExtensionData.GetQualifiers(Property.Id.ToUpper());
 
             var sameValueQualifiers = from q in qualifiers
                                       where q.DataValue.Equals(dataValue)
@@ -87,8 +71,8 @@ namespace PSWikidata
             {
                 if (ShouldProcess(Claim.ToString(), "Add qualifier"))
                 {
-                    Claim.AddQualifier(SnakType, Property, dataValue);
-                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Claim.Item.Id));
+                    Claim.AddQualifier(SnakType, Property.Id, dataValue);
+                    WriteVerbose(String.Format("Adding qualifier {0} {1} on {2}", Property.Id, dataValue != null ? dataValue.ToString() : "unknown/novalue", Claim.Item.Id));
 
                     if (!DoNotSave)
                     {
@@ -101,10 +85,5 @@ namespace PSWikidata
             WriteObject(Claim, true);
         }
 
-
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }

@@ -33,7 +33,8 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "somevalue")]
-        public string Property { get; set; }
+        [PSWDEntityArgumentTransformation]
+        public PSWDProperty Property { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "monolingual")]
@@ -42,12 +43,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "somevalue")]
-        public SwitchParameter Multiple
-        {
-            get { return _multiple; }
-            set { _multiple = value; }
-        }
-        private bool _multiple;
+        public SwitchParameter Multiple {get; set;}       
 
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "monolingual")]
@@ -56,12 +52,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "somevalue")]
-        public SwitchParameter OutputStatement
-        {
-            get { return _outputStatement; }
-            set { _outputStatement = value; }
-        }
-        private bool _outputStatement;
+        public SwitchParameter OutputStatement {get; set;}
 
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "monolingual")]
@@ -70,17 +61,11 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "somevalue")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
-
+        public SwitchParameter DoNotSave {get; set;}
 
         private bool IsDuplicatedStatement(Wikibase.DataValues.DataValue dataValue)
         {
-            Claim[] claims = Entity.ExtensionData.GetClaims(Property.ToUpper());
+            Claim[] claims = Entity.ExtensionData.GetClaims(Property.Id.ToUpper());
 
             var sameValueClaims = from c in claims
                                   where c.MainSnak.DataValue.Equals(dataValue)
@@ -98,12 +83,12 @@ namespace PSWikidata
                 if (ShouldProcess(Entity.Id, "Add statement"))
                 {
                     Snak snak = new Snak(SnakType,
-                                    new EntityId(Property),
+                                    new EntityId(Property.Id),
                                     dataValue
                                     );
 
                     PSWDStatement statement = Entity.AddStatement(snak, Rank.Normal);
-                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property, dataValue != null ? dataValue.ToString() : "unknown/novalue", Entity.Id));
+                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property.Id, dataValue != null ? dataValue.ToString() : "unknown/novalue", Entity.Id));
 
                     if (!DoNotSave)
                     {

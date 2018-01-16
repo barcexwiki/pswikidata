@@ -21,12 +21,8 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "somevalue")]
-        public string Property { get; set; }
-
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
+        [PSWDEntityArgumentTransformation]
+        public PSWDProperty Property { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -35,15 +31,10 @@ namespace PSWikidata
 
             if (ShouldProcess("new snak", "Creating Snak"))
             {
-                snak = new PSWDSnak(new Snak(SnakType, new EntityId(Property), DataValue));
+                snak = new PSWDSnak(new Snak(SnakType, new EntityId(Property.Id), DataValue));
                 WriteObject(snak, true);
             }
         }
 
-
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }
