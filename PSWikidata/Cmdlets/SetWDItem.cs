@@ -26,11 +26,8 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Label to be set.")]
         public string Label { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Site of the sitelink")]
-        public string SitelinkSite { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = "Title on the specified SitelinkSite")]
-        public string SitelinkTitle { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "Sitelink")]
+        public PSWDSitelink Sitelink { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the label")]
         public SwitchParameter RemoveLabel
@@ -49,12 +46,7 @@ namespace PSWikidata
         private bool _removeDescription;
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the sitelink")]
-        public SwitchParameter RemoveSitelink
-        {
-            get { return _removeSitelink; }
-            set { _removeSitelink = value; }
-        }
-        private bool _removeSitelink;
+        public string RemoveSitelink {get; set;}
 
         [Parameter(Mandatory = false, HelpMessage = "Change the item but do not save the changes to Wikidata.")]
         public SwitchParameter DoNotSave
@@ -72,11 +64,10 @@ namespace PSWikidata
                                     && parms.ContainsKey("RemoveLabel"));
             bool setAndRemoveDescription = (parms.ContainsKey("Description")
                                     && parms.ContainsKey("RemoveDescription"));
-            bool setAndRemoveSitelink = (parms.ContainsKey("SitelinkTitle")
+            bool setAndRemoveSitelink = (parms.ContainsKey("Sitelink")
                         && parms.ContainsKey("RemoveSitelink"));
             bool labelButNoLanguage = (parms.ContainsKey("Label") & !parms.ContainsKey("Language"));
             bool descriptionButNoLanguage = (parms.ContainsKey("Description") & !parms.ContainsKey("Language"));
-            bool titleButnoSite = (parms.ContainsKey("SitelinkTitle") & !parms.ContainsKey("SitelinkSite"));
 
             if (setAndRemoveLabel)
                 this.ThrowTerminatingError(new ErrorRecord(
@@ -90,7 +81,7 @@ namespace PSWikidata
 
             if (setAndRemoveSitelink)
                 this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("SiteLinkTitle cannot be set alongside RemoveSitelink"), "BothSitelinkAndRemoveSitelink",
+                    new ArgumentException("SiteLink cannot be set alongside RemoveSitelink"), "BothSitelinkAndRemoveSitelink",
                     ErrorCategory.InvalidArgument, null));
 
             if (labelButNoLanguage)
@@ -101,11 +92,6 @@ namespace PSWikidata
             if (descriptionButNoLanguage)
                 this.ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Language is required if Description is specified"), "DescriptionButNoLanguage",
-                    ErrorCategory.InvalidArgument, null));
-
-            if (titleButnoSite)
-                this.ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("SitelinkSite is required if SitelinkTitle is specified"), "DescriptionButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
 
             base.BeginProcessing();
@@ -121,43 +107,43 @@ namespace PSWikidata
 
                     if (!String.IsNullOrEmpty(Description))
                     {
-                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, i.Id));
+                        WriteVerbose($"Setting description {Language}: {Description} on {i.Id}");
                         i.SetDescription(Language, Description);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(Label))
                     {
-                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, i.Id));
+                        WriteVerbose($"Setting label {Language}: {Label} on {i.Id}");
                         i.SetLabel(Language, Label);
                         touched = true;
                     }
 
                     if (RemoveDescription)
                     {
-                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, i.Id));
+                        WriteVerbose($"Removing description {Language} on {i.Id}");
                         i.RemoveDescription(Language);
                         touched = true;
                     }
 
                     if (RemoveLabel)
                     {
-                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, i.Id));
+                        WriteVerbose($"Removing label {Language} on {i.Id}");
                         i.RemoveLabel(Language);
                         touched = true;
                     }
 
-                    if (!String.IsNullOrEmpty(SitelinkTitle))
+                    if (Sitelink != null)
                     {
-                        WriteVerbose(String.Format("Setting sitelink {0}: {1} on {2}", SitelinkSite, SitelinkTitle, i.Id));
-                        i.SetSitelink(SitelinkSite, SitelinkTitle);
+                        WriteVerbose($"Setting sitelink {Sitelink.Site} {Sitelink.Title} on {i.Id}");
+                        i.SetSitelink(Sitelink);
                         touched = true;
                     }
 
-                    if (RemoveSitelink)
+                    if (!String.IsNullOrEmpty(RemoveSitelink))
                     {
-                        WriteVerbose(String.Format("Removing sitelink {0} on {1}", SitelinkSite, i.Id));
-                        i.RemoveSitelink(SitelinkSite);
+                        WriteVerbose($"Removing sitelink {RemoveSitelink} on {i.Id}");
+                        i.RemoveSitelink(RemoveSitelink);
                         touched = true;
                     }
 

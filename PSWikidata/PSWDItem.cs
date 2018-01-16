@@ -25,11 +25,12 @@ namespace PSWikidata
             get { return _sitelinks.ToArray(); }
         }
 
-        internal void SetSitelink(string site, string title)
+        internal void SetSitelink(PSWDSitelink sitelink)
         {
-            ((Item)ExtensionData).SetSitelink(site, title);
+            var badges = sitelink.Badges.Select( x => new EntityId(x) );
+            ((Item)ExtensionData).SetSitelink(sitelink.Site, sitelink.Title, badges);
             RefreshFromExtensionData();
-            _log.Add(new LogEntry("SetSitelink", site, title));
+            _log.Add(new LogEntry("SetSitelink", sitelink.Site, sitelink.Title));
         }
 
         internal void RemoveSitelink(string site)
@@ -39,15 +40,22 @@ namespace PSWikidata
             _log.Add(new LogEntry("RemoveSitelink", site, null));
         }
 
+        internal PSWDSitelink GetSitelink(string site)
+        {
+            Sitelink sitelink = ((Item)(ExtensionData)).GetSitelink(site);
+            return new PSWDSitelink(sitelink);
+        }
+
         internal override void RefreshFromExtensionData()
         {
             base.RefreshFromExtensionData();
             _sitelinks.Clear();
 
-            Dictionary<string, string> sl = ((Item)ExtensionData).GetSitelinks();
+            Dictionary<string, Sitelink> sl = ((Item)ExtensionData).GetSitelinks();
             foreach (string k in sl.Keys)
             {
-                _sitelinks.Add(new PSWDSitelink(k, sl[k]));
+                var badges = sl[k].Badges.Select( x => x.PrefixedId );
+                _sitelinks.Add(new PSWDSitelink(k, sl[k].Title, badges));
             }
         }
 

@@ -8,10 +8,10 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    [Cmdlet(VerbsCommon.Get, "WDSitelinkTitle",
+    [Cmdlet(VerbsCommon.Get, "WDSitelink",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.None)]
-    public class GetWDSitelinkTitle: PSCmdlet
+    public class GetWDSitelink: PSCmdlet
     {
         [Parameter(
            Mandatory = true,
@@ -31,8 +31,8 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string title = ((Item)(Item.ExtensionData)).GetSitelink(Site);
-            if (title != null) WriteObject(title);
+            PSWDSitelink sitelink = Item.GetSitelink(Site);            
+            if (sitelink != null) WriteObject(sitelink);
         }
     }
 }
