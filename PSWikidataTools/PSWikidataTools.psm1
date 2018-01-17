@@ -273,7 +273,7 @@ function Set-WDRelative
               if ($pscmdlet.MyInvocation.BoundParameters["Children"])
               {
                   $ChildrenQId = $Children.Id | Sort-Object | Get-Unique
-                  $children = $ChildrenQId | Get-WDItem -ErrorAction Stop 
+                  $children = $ChildrenQId | Get-WDEntity -ErrorAction Stop 
 
                   foreach ($child in $Children)
                   {
@@ -520,7 +520,7 @@ WHERE
        if ($restOutput.results.bindings.country.value -match "^http://www.wikidata.org/entity/(Q.*)$")
        {
            $qId = $Matches[1]
-           Get-WDItem -QId $qId
+           Get-WDEntity -Id $qId
        }
     }
 }
@@ -566,7 +566,7 @@ WHERE
        if ($restOutput.results.bindings.country.value -match "^http://www.wikidata.org/entity/(Q.*)$")
        {
            $qId = $Matches[1]
-           Get-WDItem -QId $qId
+           Get-WDEntity -Id $qId
        }
     }
 }
@@ -625,7 +625,7 @@ WHERE
            if (($entityUrl -match "^http://www.wikidata.org/entity/(Q.*)$") -eq $true)
            {
                $qId = $Matches[1]
-               Get-WDItem -QId $qId
+               Get-WDEntity -Id $qId
            }
        }
     }
@@ -770,10 +770,10 @@ function Add-WDCastMember
     {
         switch($Source)
         {
-            {"ESwiki" -in $_} {$esWikiItem = Get-WDItem q8449}
-            {"ENwiki" -in $_} {$enWikiItem = Get-WDItem q328}
-            {"IMDb" -in $_} {$imdbItem = Get-WdItem q37312}
-            {"cinenacional" -in $_} {$cinenacionalItem = Get-WDItem q3610461}
+            {"ESwiki" -in $_} {$esWikiItem = Get-WDEntity q8449}
+            {"ENwiki" -in $_} {$enWikiItem = Get-WDEntity q328}
+            {"IMDb" -in $_} {$imdbItem = Get-WDEntity q37312}
+            {"cinenacional" -in $_} {$cinenacionalItem = Get-WDEntity q3610461}
         }    
     }
     process

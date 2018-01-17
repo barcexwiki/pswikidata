@@ -8,23 +8,19 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    [Cmdlet(VerbsCommon.Get, "WDItem")]
-    public class GetWDItem : PSWDNetCmdlet
+    [Cmdlet(VerbsCommon.Get, "WDEntity")]
+    public class GetWDEntity : PSWDNetCmdlet
     {
-        private string[] _qIdCollection;
+
         [Parameter(
            Mandatory = true,
            ValueFromPipelineByPropertyName = true,
            ValueFromPipeline = true,
            Position = 0,
-           HelpMessage = "Q identifier for the item.",
-           ParameterSetName = "qid"
+           HelpMessage = "Q/P identifier for the item.",
+           ParameterSetName = "id"
         )]
-        public string[] QId
-        {
-            get { return _qIdCollection; }
-            set { _qIdCollection = value; }
-        }
+        public string[] Id {get; set;}
 
         [Parameter(Mandatory = true, HelpMessage = "Site of the sitelink", ParameterSetName = "sitelink")]
         public string SitelinkSite { get; set; }
@@ -32,33 +28,28 @@ namespace PSWikidata
         [Parameter(Mandatory = true, HelpMessage = "Title on the specified SitelinkSite", ParameterSetName = "sitelink")]
         public string SitelinkTitle { get; set; }
 
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
-
         protected override void ProcessRecord()
         {
-            Item item;
+            Entity entity;
 
             switch (ParameterSetName)
             {
-                case "qid":
-                    foreach (string q in _qIdCollection)
+                case "id":
+                    foreach (string id in Id)
                     {
-                        WriteVerbose("Getting item " + q);
-                        item = (Item)provider.GetEntityFromId(new EntityId(q));
-                        if (item != null)
+                        WriteVerbose("Getting entity " + id);
+                        entity = provider.GetEntityFromId(new EntityId(id));
+                        if (entity != null)
                         {
-                            WriteObject(new PSWDItem(item));
+                            WriteObject(PSWDEntity.GetPSWDEntity(entity));
                         }
                     }
                     break;
                 case "sitelink":
-                    item = (Item)provider.GetEntityFromSitelink(SitelinkSite, SitelinkTitle);
-                    if (item != null)
+                    entity = provider.GetEntityFromSitelink(SitelinkSite, SitelinkTitle);
+                    if (entity != null)
                     {
-                        WriteObject(new PSWDItem(item));
+                        WriteObject(PSWDEntity.GetPSWDEntity(entity));
                     }
                     break;
                 default:
@@ -67,9 +58,5 @@ namespace PSWikidata
 
         }
 
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }

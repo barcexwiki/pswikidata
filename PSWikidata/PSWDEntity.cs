@@ -7,7 +7,7 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    public class PSWDEntity
+    public abstract class PSWDEntity
     {
         protected struct LogEntry
         {
@@ -20,6 +20,21 @@ namespace PSWikidata
             public string operation;
             public string language;
             public string value;
+        }
+
+        internal static PSWDEntity GetPSWDEntity(Entity entity)
+        {
+            switch(entity) {
+                case Item c: 
+                    return new PSWDItem(c);
+                case Property p: 
+                    return new PSWDProperty(p);
+                default:
+                    throw new ArgumentException("Unknown object type",nameof(entity));
+                case null:
+                    throw new ArgumentNullException(nameof(entity));
+            }
+            
         }
 
         private List<PSWDDescription> _descriptions = new List<PSWDDescription>();
@@ -36,10 +51,6 @@ namespace PSWikidata
         {
             ExtensionData = entity;
             RefreshFromExtensionData();
-        }
-
-        internal PSWDEntity(WikibaseApi api) : this(new Item(api))
-        {
         }
 
         public string Status
