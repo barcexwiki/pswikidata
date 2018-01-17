@@ -16,11 +16,11 @@ namespace PSWikidata.DataValues
             switch (e.EntityType)
             {
                 case Wikibase.EntityType.Item:
-                    this.Id = "q" + e.NumericId;
+                    Id = "q" + e.NumericId;
                     break;
 
                 case Wikibase.EntityType.Property:
-                    this.Id = "p" + e.NumericId;
+                    Id = "p" + e.NumericId;
                     break;
             }
         }

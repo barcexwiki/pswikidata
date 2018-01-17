@@ -22,17 +22,11 @@ namespace PSWikidata
         public PSWDStatement Statement { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Remove the statement but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
-
+        public SwitchParameter DoNotSave {get; set;}
 
         protected override void ProcessRecord()
         {
-            string comment = String.Format("Removing statement");
+            string comment = "Removing statement";
 
             if (ShouldProcess(Statement.ToString(), comment))
             {

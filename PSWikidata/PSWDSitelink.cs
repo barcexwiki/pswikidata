@@ -8,41 +8,24 @@ namespace PSWikidata
 {
     public class PSWDSitelink
     {
-        private string _site;
-        private string _title;
-
-        private HashSet<string> _badges =  new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private HashSet<string> _badges = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         internal Wikibase.Sitelink ExtensionData { get; set; }
 
-        public string Site
-        {
-            get { return _site; }
-            protected set { _site = value; }
-        }
+        public string Site { get; protected set; }
 
-        public string Title
-        {
-            get { return _title; }
-            protected set { _title = value; }
-        }
+        public string Title { get; protected set; }
 
-        public IEnumerable<string> Badges
-        {
-            get { return _badges.ToArray(); }
-        }
+        public IEnumerable<string> Badges { get => _badges.ToArray(); }
 
-        public override string ToString()
-        {
-            return _site + ":" + _title;
-        }
+        public override string ToString() => $"{Site}:{Title}";
 
-        internal PSWDSitelink(string site, string title, IEnumerable<string> badges = null )
+        internal PSWDSitelink(string site, string title, IEnumerable<string> badges = null)
         {
-            _site = site;
-            _title = title;
+            Site = site;
+            Title = title;
 
-            if (badges != null) 
+            if (badges != null)
             {
                 foreach (string b in badges)
                 {
@@ -53,7 +36,7 @@ namespace PSWikidata
 
         internal PSWDSitelink(Wikibase.Sitelink sitelink)
         {
-            this.ExtensionData = sitelink;
+            ExtensionData = sitelink;
             RefreshFromExtensionData(sitelink);
         }
 

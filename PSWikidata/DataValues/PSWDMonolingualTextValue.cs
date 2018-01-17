@@ -14,13 +14,10 @@ namespace PSWikidata.DataValues
 
         internal PSWDMonolingualTextValue(Wikibase.DataValues.MonolingualTextValue s)
         {
-            this.Text = s.Text;
-            this.Language = s.Language;
+            Text = s.Text;
+            Language = s.Language;
         }
 
-        public override string ToString()
-        {
-            return String.Format("[{0}]{1}", Language, Text);
-        }
+        public override string ToString() => $"[{Language}]{Text}";
     }
 }

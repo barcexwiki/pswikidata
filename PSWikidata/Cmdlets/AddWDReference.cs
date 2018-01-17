@@ -21,17 +21,7 @@ namespace PSWikidata
         public PSWDSnak[] Snaks { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the reference but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
-
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
+        public SwitchParameter DoNotSave { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -45,7 +35,7 @@ namespace PSWikidata
                 }
 
                 if (referenceSnaks.Any())
-                { 
+                {
                     ((Statement)Statement.ExtensionData).AddReference(referenceSnaks);
                 }
 
@@ -62,9 +52,5 @@ namespace PSWikidata
         }
 
 
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }

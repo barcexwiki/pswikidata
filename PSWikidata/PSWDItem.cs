@@ -20,10 +20,7 @@ namespace PSWikidata
         {
         }
 
-        public PSWDSitelink[] SiteLinks
-        {
-            get { return _sitelinks.ToArray(); }
-        }
+        public PSWDSitelink[] SiteLinks { get => _sitelinks.ToArray(); }
 
         internal void SetSitelink(PSWDSitelink sitelink)
         {
@@ -59,9 +56,6 @@ namespace PSWikidata
             }
         }
 
-        internal override string Save()
-        {
-            return base.Save("item");            
-        }
+        internal override string Save() => base.Save("item");
     }
 }

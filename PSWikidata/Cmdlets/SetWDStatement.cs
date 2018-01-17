@@ -52,7 +52,7 @@ namespace PSWikidata
 
         protected override void ProcessRecord()
         {
-            string comment = String.Format("Modifying statement");
+            string comment = "Modifying statement";
 
             if (ShouldProcess(Statement.ToString(), "modify statement"))
             {
@@ -65,8 +65,7 @@ namespace PSWikidata
 
                 string statementId = Statement.ExtensionData.Id;
 
-                this.Statement.ExtensionData.MainSnak = snak;
-
+                Statement.ExtensionData.MainSnak = snak;
 
                 if (!DoNotSave)
                 {

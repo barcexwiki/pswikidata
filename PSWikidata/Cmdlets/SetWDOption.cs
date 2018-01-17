@@ -12,19 +12,19 @@ namespace PSWikidata
         {
             PSWDOptions options;
 
-            PSVariable optionsVariable = this.SessionState.PSVariable.Get("PSWDOptions");
+            PSVariable optionsVariable = SessionState.PSVariable.Get("PSWDOptions");
 
             if (optionsVariable == null)
             {
                 options = new PSWDOptions();
-                this.SessionState.PSVariable.Set("PSWDOptions", options);
+                SessionState.PSVariable.Set("PSWDOptions", options);
             }
             else
             {
                 options = (PSWDOptions)optionsVariable.Value;
             }
 
-            if (this.MyInvocation.BoundParameters.ContainsKey("PreferredDisplayLanguages"))
+            if (MyInvocation.BoundParameters.ContainsKey("PreferredDisplayLanguages"))
             {
                 options.PreferredDisplayLanguages = PreferredDisplayLanguages;
             }

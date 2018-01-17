@@ -15,7 +15,7 @@ namespace PSWikidata
 
         protected override void BeginProcessing()
         {
-            PSVariable stateVariable = this.SessionState.PSVariable.Get("__WikidataState");
+            PSVariable stateVariable = SessionState.PSVariable.Get("__WikidataState");
 
             if (stateVariable != null)
             {
@@ -24,7 +24,7 @@ namespace PSWikidata
             }
             else
             {
-                throw new Exception("Not connected to Wikidata");
+                throw new Exception("Not connected to wikibase server");
             }
         }
     }

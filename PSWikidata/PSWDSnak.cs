@@ -14,28 +14,13 @@ namespace PSWikidata
         public string Property { get; set; }
         public Wikibase.SnakType Type { get; set; }
         public PSWDValueTypes ValueType { get; set; }
-        public object Value
-        {
-            get
-            {
-                if (_dataValue != null)
-                {
-                    return _dataValue;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private object _dataValue;
+        public object Value { get; private set; }
 
         internal Wikibase.Snak ExtensionData { get; set; }
 
         internal PSWDSnak(Wikibase.Snak snak)
         {
-            this.ExtensionData = snak;
+            ExtensionData = snak;
             RefreshFromExtensionData(snak);
         }
 
@@ -47,37 +32,37 @@ namespace PSWikidata
             if (snak.DataValue is StringValue)
             {
                 ValueType = PSWDValueTypes.String;
-                _dataValue = new PSWDStringValue((StringValue)snak.DataValue);
+                Value = new PSWDStringValue((StringValue)snak.DataValue);
             }
 
             if (snak.DataValue is EntityIdValue)
             {
                 ValueType = PSWDValueTypes.EntityId;
-                _dataValue = new PSWDEntityIdValue((EntityIdValue)snak.DataValue);
+                Value = new PSWDEntityIdValue((EntityIdValue)snak.DataValue);
             }
 
             if (snak.DataValue is GlobeCoordinateValue)
             {
                 ValueType = PSWDValueTypes.GlobeCoordinate;
-                _dataValue = new PSWDGlobeCoordinateValue((GlobeCoordinateValue)snak.DataValue);
+                Value = new PSWDGlobeCoordinateValue((GlobeCoordinateValue)snak.DataValue);
             }
 
             if (snak.DataValue is TimeValue)
             {
                 ValueType = PSWDValueTypes.Time;
-                _dataValue = new PSWDTimeValue((TimeValue)snak.DataValue);
+                Value = new PSWDTimeValue((TimeValue)snak.DataValue);
             }
 
             if (snak.DataValue is MonolingualTextValue)
             {
                 ValueType = PSWDValueTypes.MonolingualText;
-                _dataValue = new PSWDMonolingualTextValue((MonolingualTextValue)snak.DataValue);
+                Value = new PSWDMonolingualTextValue((MonolingualTextValue)snak.DataValue);
             }
 
             if (snak.DataValue is QuantityValue)
             {
                 ValueType = PSWDValueTypes.Quantity;
-                _dataValue = new PSWDQuantityValue((QuantityValue)snak.DataValue);
+                Value = new PSWDQuantityValue((QuantityValue)snak.DataValue);
             }
         }
     }

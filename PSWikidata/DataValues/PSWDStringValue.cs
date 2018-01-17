@@ -13,7 +13,7 @@ namespace PSWikidata.DataValues
 
         internal PSWDStringValue(Wikibase.DataValues.StringValue s)
         {
-            this.Value = s.Value;
+            Value = s.Value;
         }
 
         public override string ToString()

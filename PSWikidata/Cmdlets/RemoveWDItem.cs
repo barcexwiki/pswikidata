@@ -23,12 +23,7 @@ namespace PSWikidata
         public PSWDItem Item { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Mark the item for deletion but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
+        public SwitchParameter DoNotSave { get; set; }
 
         protected override void ProcessRecord()
         {

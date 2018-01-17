@@ -38,23 +38,18 @@ namespace PSWikidata
         public string[] Alias { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Remove the alias but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
+        public SwitchParameter DoNotSave {get; set;}
 
         protected override void ProcessRecord()
         {
             foreach (string a in Alias)
             {
-                if (ShouldProcess(Entity.Id, String.Format("Remove alias {0}: {1}", Language, a)))
+                if (ShouldProcess(Entity.Id, $"Remove alias {Language}: {a}"))
                 {
                     try
                     {
                         Entity.RemoveAlias(Language, a);
-                        WriteVerbose(String.Format("Remove alias {0}: {1} on {2}", Language, a, Entity.Id));
+                        WriteVerbose($"Remove alias {Language}: {a} on {Entity.Id}");
 
                         if (!DoNotSave)
                         {

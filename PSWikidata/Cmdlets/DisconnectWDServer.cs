@@ -13,9 +13,9 @@ namespace PSWikidata
     {
         protected override void BeginProcessing()
         {
-            PSWDSessionState sessionState = (PSWDSessionState)this.SessionState.PSVariable.Get("__WikidataState").Value;
+            PSWDSessionState sessionState = (PSWDSessionState)SessionState.PSVariable.Get("__WikidataState").Value;
             sessionState.Api.Logout();
-            this.SessionState.PSVariable.Remove("__WikidataState");
+            SessionState.PSVariable.Remove("__WikidataState");
             WriteDebug("Disconnected from Wikidata");
         }
     }

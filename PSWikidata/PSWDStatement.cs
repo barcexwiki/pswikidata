@@ -16,10 +16,8 @@ namespace PSWikidata
             Rank = statement.Rank;
         }
 
-        public PSWDReference[] References
-        {
-            get { return _references.ToArray(); }
-        }
+        public PSWDReference[] References { get => _references.ToArray(); }
+
 
         private List<PSWDReference> _references = new List<PSWDReference>();
 

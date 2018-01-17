@@ -24,13 +24,14 @@ namespace PSWikidata
 
         internal static PSWDEntity GetPSWDEntity(Entity entity)
         {
-            switch(entity) {
+            switch (entity)
+            {
                 case Item c: 
                     return new PSWDItem(c);
                 case Property p: 
                     return new PSWDProperty(p);
                 default:
-                    throw new ArgumentException("Unknown object type",nameof(entity));
+                    throw new ArgumentException("Unknown object type", nameof(entity));
                 case null:
                     throw new ArgumentNullException(nameof(entity));
             }
@@ -42,10 +43,6 @@ namespace PSWikidata
         private List<PSWDLabel> _aliases = new List<PSWDLabel>();
         private List<PSWDClaim> _claims = new List<PSWDClaim>();
         protected List<LogEntry> _log = new List<LogEntry>();
-        private string _id;
-        private string _status;
-
-        private Entity _extensionData;
 
         internal PSWDEntity(Entity entity)
         {
@@ -53,41 +50,19 @@ namespace PSWikidata
             RefreshFromExtensionData();
         }
 
-        public string Status
-        {
-            get { return _status; }
-        }
+        public string Status { get; private set; }
 
-        public string Id
-        {
-            get { return _id; }
-        }
+        public string Id { get; private set; }
 
-        public PSWDDescription[] Descriptions
-        {
-            get { return _descriptions.ToArray(); }
-        }
+        public PSWDDescription[] Descriptions { get => _descriptions.ToArray(); }
 
-        public PSWDLabel[] Labels
-        {
-            get { return _labels.ToArray(); }
-        }
+        public PSWDLabel[] Labels { get => _labels.ToArray(); }
 
-        public PSWDLabel[] Aliases
-        {
-            get { return _aliases.ToArray(); }
-        }
+        public PSWDLabel[] Aliases { get => _aliases.ToArray(); }
 
-        public PSWDClaim[] Claims
-        {
-            get { return _claims.ToArray(); }
-        }
+        public PSWDClaim[] Claims { get => _claims.ToArray(); }
 
-        internal Entity ExtensionData
-        {
-            get { return _extensionData; }
-            set { _extensionData = value; }
-        }
+        internal Entity ExtensionData { get; set; }
 
         internal virtual void RefreshFromExtensionData()
         {
@@ -96,7 +71,7 @@ namespace PSWikidata
             _aliases.Clear();
             _claims.Clear();
 
-            _id = ExtensionData.Id != null ? ExtensionData.Id.ToString() : null;
+            Id = ExtensionData.Id != null ? ExtensionData.Id.ToString() : null;
 
             Dictionary<string, string> d = ExtensionData.GetDescriptions();
             foreach (string k in d.Keys)
@@ -131,7 +106,7 @@ namespace PSWikidata
                 }
             }
 
-            _status = ExtensionData.Status.ToString();
+            Status = ExtensionData.Status.ToString();
         }
 
         internal PSWDStatement GetStatement(string Id)
@@ -140,14 +115,7 @@ namespace PSWikidata
                     where c.ExtensionData.Id == Id
                     select c;
 
-            if (s.Any())
-            {
-                return (PSWDStatement)s.First();
-            }
-            else
-            {
-                return null;
-            }
+            return s.Any() ? (PSWDStatement)s.First() : null;
         }
 
         internal void SetDescription(string language, string description)
@@ -178,8 +146,6 @@ namespace PSWikidata
             _log.Add(new LogEntry("RemoveLabel", language, null));
         }
 
-
-
         private string GetSaveComment()
         {
             string output = null;
@@ -196,11 +162,10 @@ namespace PSWikidata
                 List<string> comments = new List<string>();
                 foreach (var entry in operationGroup)
                 {
-                    comments.Add(String.Format("{0}", entry.language));
+                    comments.Add(entry.language);
                 }
                 output += String.Join(" ", comments);
             }
-
 
             return output;
         }
@@ -234,20 +199,15 @@ namespace PSWikidata
             _log.Add(new LogEntry("Delete", Id, null));
         }
 
-
         internal virtual string Save(string entityType)
         {
             string comment = GetSaveComment();
             ExtensionData.Save(comment);
             RefreshFromExtensionData();
             _log.Clear();
-            return String.Format("Saved {0} {1}: {2} ", entityType, Id, comment);
+            return $"Saved {entityType} {Id}: {comment} ";
         }
 
-        internal virtual string Save()
-        {
-            throw new InvalidOperationException("PSWDItem Save() cannot be called.");
-        }
-        
+        internal virtual string Save() => throw new InvalidOperationException("PSWDEntity Save() cannot be called.");       
     }
 }

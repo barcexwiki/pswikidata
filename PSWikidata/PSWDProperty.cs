@@ -45,22 +45,16 @@ namespace PSWikidata
             {"math", PSWDDataType.Math}
         };
 
-        private PSWDDataType _dataType;
-
         internal PSWDProperty(Property item) : base(item)
         {
         }
 
         internal PSWDProperty(WikibaseApi api, PSWDDataType dataType) : this(new Property(api, dataTypeStringIdentifiers[dataType]))
         {
-            _dataType = dataType;
+            DataType = dataType;
         }
 
-        public PSWDDataType DataType
-        {
-            get { return _dataType; }
-        }
-
+        public PSWDDataType DataType { get; private set; }
 
         internal override void RefreshFromExtensionData()
         {
@@ -68,7 +62,7 @@ namespace PSWikidata
 
             try
             {
-                _dataType = dataTypeEnumIdentifiers[((Property)ExtensionData).DataType];
+                DataType = dataTypeEnumIdentifiers[((Property)ExtensionData).DataType];
             }
             catch (KeyNotFoundException)
             {
@@ -76,9 +70,6 @@ namespace PSWikidata
             }
         }
 
-        internal override string Save()
-        {
-            return base.Save("property");
-        }
+        internal override string Save() => base.Save("property");
     }
 }

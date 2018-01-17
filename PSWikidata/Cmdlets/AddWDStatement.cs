@@ -88,7 +88,7 @@ namespace PSWikidata
                                     );
 
                     PSWDStatement statement = Entity.AddStatement(snak, Rank.Normal);
-                    WriteVerbose(String.Format("Adding statement {0} {1} on {2}", Property.Id, dataValue != null ? dataValue.ToString() : "unknown/novalue", Entity.Id));
+                    WriteVerbose($"Adding statement {Property.Id} {(dataValue != null ? dataValue.ToString() : "unknown/novalue")} on {Entity.Id}");
 
                     if (!DoNotSave)
                     {

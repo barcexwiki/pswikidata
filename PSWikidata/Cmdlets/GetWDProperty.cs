@@ -11,7 +11,7 @@ namespace PSWikidata
     [Cmdlet(VerbsCommon.Get, "WDProperty")]
     public class GetWDProperty : PSWDNetCmdlet
     {
-        private string[] _pIdCollection;
+
         [Parameter(
            Mandatory = true,
            ValueFromPipelineByPropertyName = true,
@@ -20,16 +20,7 @@ namespace PSWikidata
            HelpMessage = "P identifier for the item.",
            ParameterSetName = "pid"
         )]
-        public string[] PId
-        {
-            get { return _pIdCollection; }
-            set { _pIdCollection = value; }
-        }
-
-         protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
+        public string[] PId {get; set;}
 
         protected override void ProcessRecord()
         {
@@ -38,7 +29,7 @@ namespace PSWikidata
             switch (ParameterSetName)
             {
                 case "pid":
-                    foreach (string p in _pIdCollection)
+                    foreach (string p in PId)
                     {
                         WriteVerbose("Getting property " + p);
                         property = (Property)provider.GetEntityFromId(new EntityId(p));
@@ -54,9 +45,5 @@ namespace PSWikidata
 
         }
 
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }

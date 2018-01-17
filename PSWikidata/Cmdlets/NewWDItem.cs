@@ -13,18 +13,9 @@ namespace PSWikidata
         ConfirmImpact = ConfirmImpact.High)]
     public class NewWDItem : PSWDNetCmdlet
     {
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
 
         [Parameter(Mandatory = false, HelpMessage = "Create the item but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
+        public SwitchParameter DoNotSave {get; set;}
 
         protected override void ProcessRecord()
         {
@@ -42,12 +33,5 @@ namespace PSWikidata
             }
         }
 
-
-
-
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }

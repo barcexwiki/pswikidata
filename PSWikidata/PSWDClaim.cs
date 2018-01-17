@@ -24,28 +24,13 @@ namespace PSWikidata
         public string Property { get; set; }
         public Wikibase.SnakType Type { get; set; }
         public PSWDValueTypes ValueType { get; set; }
-        public object Value
-        {
-            get
-            {
-                if (_dataValue != null)
-                {
-                    return _dataValue;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-        public PSWDSnak[] Qualifiers
-        {
-            get { return _qualifiers.ToArray(); }
-        }
+        public object Value { get; private set;}
+
+        public PSWDSnak[] Qualifiers { get => _qualifiers.ToArray(); }
+
         internal PSWDEntity Item { get; set; }
 
         private List<PSWDSnak> _qualifiers = new List<PSWDSnak>();
-        private object _dataValue;
 
         internal Wikibase.Claim ExtensionData { get; set; }
 
@@ -65,37 +50,37 @@ namespace PSWikidata
             if (claim.MainSnak.DataValue is StringValue)
             {
                 ValueType = PSWDValueTypes.String;
-                _dataValue = new PSWDStringValue((StringValue)claim.MainSnak.DataValue);
+                Value = new PSWDStringValue((StringValue)claim.MainSnak.DataValue);
             }
 
             if (claim.MainSnak.DataValue is EntityIdValue)
             {
                 ValueType = PSWDValueTypes.EntityId;
-                _dataValue = new PSWDEntityIdValue((EntityIdValue)claim.MainSnak.DataValue);
+                Value = new PSWDEntityIdValue((EntityIdValue)claim.MainSnak.DataValue);
             }
 
             if (claim.MainSnak.DataValue is GlobeCoordinateValue)
             {
                 ValueType = PSWDValueTypes.GlobeCoordinate;
-                _dataValue = new PSWDGlobeCoordinateValue((GlobeCoordinateValue)claim.MainSnak.DataValue);
+                Value = new PSWDGlobeCoordinateValue((GlobeCoordinateValue)claim.MainSnak.DataValue);
             }
 
             if (claim.MainSnak.DataValue is TimeValue)
             {
                 ValueType = PSWDValueTypes.Time;
-                _dataValue = new PSWDTimeValue((TimeValue)claim.MainSnak.DataValue);
+                Value = new PSWDTimeValue((TimeValue)claim.MainSnak.DataValue);
             }
 
             if (claim.MainSnak.DataValue is MonolingualTextValue)
             {
                 ValueType = PSWDValueTypes.MonolingualText;
-                _dataValue = new PSWDMonolingualTextValue((MonolingualTextValue)claim.MainSnak.DataValue);
+                Value = new PSWDMonolingualTextValue((MonolingualTextValue)claim.MainSnak.DataValue);
             }
 
             if (claim.MainSnak.DataValue is QuantityValue)
             {
                 ValueType = PSWDValueTypes.Quantity;
-                _dataValue = new PSWDQuantityValue((QuantityValue)claim.MainSnak.DataValue);
+                Value = new PSWDQuantityValue((QuantityValue)claim.MainSnak.DataValue);
             }
 
             _qualifiers.Clear();

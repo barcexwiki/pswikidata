@@ -18,18 +18,12 @@ namespace PSWikidata
         )]
         public PSCredential Credential { get; set; }
 
-        private string _apiUrl = "https://www.wikidata.org/w/api.php";
-
         [Parameter(
            Mandatory = false,
            Position = 1,
            HelpMessage = "API URL."
         )]
-        public string ApiUrl
-        {
-            get { return _apiUrl; }
-            set { _apiUrl = value; }
-        }
+        public string ApiUrl {get; set;} =  "https://www.wikidata.org/w/api.php";
 
         protected override void BeginProcessing()
         {
@@ -39,7 +33,7 @@ namespace PSWikidata
             {
                 EntityProvider p = new EntityProvider(Api);
                 PSWDSessionState state = new PSWDSessionState(Api, p);
-                this.SessionState.PSVariable.Set(new PSVariable("__WikidataState", state));
+                SessionState.PSVariable.Set(new PSVariable("__WikidataState", state));
                 WriteDebug("Connected to Wikidata");
             }
             else

@@ -8,30 +8,18 @@ namespace PSWikidata
 {
     public class PSWDLabel
     {
-        private string _language;
-        private string _label;
 
         internal PSWDLabel(string language, string label)
         {
-            _language = language;
-            _label = label;
+            Language = language;
+            Label = label;
         }
 
-        public string Language
-        {
-            get { return _language; }
-            protected set { _language = value; }
-        }
+        public string Language { get; protected set; }
 
-        public string Label
-        {
-            get { return _label; }
-            protected set { _label = value; }
-        }
+        public string Label { get; protected set; }
 
-        public override string ToString()
-        {
-            return _language + ":" + _label;
-        }
+        public override string ToString() => $"{Language}:{Label}";
+        
     }
 }

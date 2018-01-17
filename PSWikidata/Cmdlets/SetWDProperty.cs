@@ -43,16 +43,11 @@ namespace PSWikidata
         private bool _removeDescription;
 
         [Parameter(Mandatory = false, HelpMessage = "Change the item but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
+        public SwitchParameter DoNotSave { get; set; }
 
         protected override void BeginProcessing()
         {
-            Dictionary<String, object> parms = this.MyInvocation.BoundParameters;
+            Dictionary<String, object> parms = MyInvocation.BoundParameters;
 
             bool setAndRemoveLabel = (parms.ContainsKey("Label")
                                     && parms.ContainsKey("RemoveLabel"));
@@ -62,22 +57,22 @@ namespace PSWikidata
             bool descriptionButNoLanguage = (parms.ContainsKey("Description") & !parms.ContainsKey("Language"));
 
             if (setAndRemoveLabel)
-                this.ThrowTerminatingError(new ErrorRecord(
+                ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Label cannot be set alongside RemoveLabel"), "BothLabelAndRemoveLabel",
                     ErrorCategory.InvalidArgument, null));
 
             if (setAndRemoveDescription)
-                this.ThrowTerminatingError(new ErrorRecord(
+                ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Description cannot be set alongside RemoveDescription"), "BothLabelAndRemoveLabel",
                     ErrorCategory.InvalidArgument, null));
 
             if (labelButNoLanguage)
-                this.ThrowTerminatingError(new ErrorRecord(
+                ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Language is required if Label is specified"), "LabelButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
 
             if (descriptionButNoLanguage)
-                this.ThrowTerminatingError(new ErrorRecord(
+                ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Language is required if Description is specified"), "DescriptionButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
 
@@ -94,28 +89,28 @@ namespace PSWikidata
 
                     if (!String.IsNullOrEmpty(Description))
                     {
-                        WriteVerbose(String.Format("Setting description {0}: {1} on {2}", Language, Description, p.Id));
+                        WriteVerbose($"Setting description {Language}: {Description} on {p.Id}");
                         p.SetDescription(Language, Description);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(Label))
                     {
-                        WriteVerbose(String.Format("Setting label {0}: {1} on {2}", Language, Label, p.Id));
+                        WriteVerbose($"Setting label {Language}: {Label} on {p.Id}");
                         p.SetLabel(Language, Label);
                         touched = true;
                     }
 
                     if (RemoveDescription)
                     {
-                        WriteVerbose(String.Format("Removing description {0} on {1}", Language, p.Id));
+                        WriteVerbose($"Removing description {Language} on {p.Id}");
                         p.RemoveDescription(Language);
                         touched = true;
                     }
 
                     if (RemoveLabel)
                     {
-                        WriteVerbose(String.Format("Removing label {0} on {1}", Language, p.Id));
+                        WriteVerbose($"Removing label {Language} on {p.Id}");
                         p.RemoveLabel(Language);
                         touched = true;
                     }
@@ -134,9 +129,5 @@ namespace PSWikidata
             }
         }
 
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
     }
 }

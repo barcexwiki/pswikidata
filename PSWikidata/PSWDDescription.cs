@@ -8,30 +8,18 @@ namespace PSWikidata
 {
     public class PSWDDescription
     {
-        private string _language;
-        private string _description;
 
         internal PSWDDescription(string language, string description)
         {
-            _language = language;
-            _description = description;
+            Language = language;
+            Description = description;
         }
 
-        public string Language
-        {
-            get { return _language; }
-            protected set { _language = value; }
-        }
+        public string Language { get; protected set; }
 
-        public string Description
-        {
-            get { return _description; }
-            protected set { _description = value; }
-        }
+        public string Description { get; protected set; }
 
-        public override string ToString()
-        {
-            return _language + ":" + _description;
-        }
+        public override string ToString() => $"{Language}:{Description}";
+
     }
 }

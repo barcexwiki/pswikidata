@@ -11,10 +11,7 @@ namespace PSWikidata
 {
     public class PSWDReference
     {
-        public PSWDSnak[] Snaks
-        {
-            get { return _snaks.ToArray(); }
-        }
+        public PSWDSnak[] Snaks { get => _snaks.ToArray(); }
 
         private List<PSWDSnak> _snaks = new List<PSWDSnak>();
 

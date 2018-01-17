@@ -10,10 +10,11 @@ namespace PSWikidata
     public class PSWDOptions
     {
         public PSWDOptions()
-        {
-            
+        {      
         }
+
         public string[] PreferredDisplayLanguages { get; set; }
+
         public string[] PreferredDisplaySites { get; set; }
     }
 }

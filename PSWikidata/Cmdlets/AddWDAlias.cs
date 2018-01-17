@@ -38,21 +38,16 @@ namespace PSWikidata
         public string[] Alias { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Add the alias but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
+        public SwitchParameter DoNotSave {get; set;}
 
         protected override void ProcessRecord()
         {
             foreach (string a in Alias)
             {
-                if (ShouldProcess(Entity.Id, String.Format("Add alias {0}: {1}", Language, a)))
+                if (ShouldProcess(Entity.Id, $"Add alias {Language}: {a}"))
                 {
                     Entity.AddAlias(Language, a);
-                    WriteVerbose(String.Format("Add alias {0}: {1} on {2}", Language, a, Entity.Id));
+                    WriteVerbose($"Add alias {Language}: {a} on {Entity.Id}");
 
                     if (!DoNotSave)
                     {
