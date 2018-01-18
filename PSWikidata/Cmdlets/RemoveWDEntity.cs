@@ -8,36 +8,36 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    [Cmdlet(VerbsCommon.Remove, "WDItem",
+    [Cmdlet(VerbsCommon.Remove, "WDEntity",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.High)]
-    public class RemoveWDItem : PSWDNetCmdlet
+    public class RemoveWDEntity : PSWDNetCmdlet
     {
         [Parameter(
            Mandatory = true,
            ValueFromPipeline = true,
            Position = 0,
-           HelpMessage = "Item to be modified."
+           HelpMessage = "Entity to be deleted."
         )]
         [PSWDEntityArgumentTransformationAttribute]
-        public PSWDItem Item { get; set; }
+        public PSWDEntity Entity { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Mark the item for deletion but do not save the changes to Wikidata.")]
+        [Parameter(Mandatory = false, HelpMessage = "Mark the entity for deletion but do not save the changes to Wikidata.")]
         public SwitchParameter DoNotSave { get; set; }
 
         protected override void ProcessRecord()
         {
-            if (ShouldProcess(Item.Id, "remove item"))
+            if (ShouldProcess(Entity.Id, "remove entity"))
             {
-                Item.Delete();
+                Entity.Delete();
 
                 if (!DoNotSave)
                 {
-                    string comment = Item.Save();
+                    string comment = Entity.Save();
                     WriteVerbose(comment);
                 }
                 
-                WriteObject(Item, true);
+                WriteObject(Entity, true);
             }
         }
     }
