@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,30 +8,30 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    [Cmdlet(VerbsData.Save, "WDProperty",
+    [Cmdlet(VerbsData.Save, "WDEntity",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
-    public class SaveWDProperty : PSWDNetCmdlet
+    public class SaveWDEntity : PSWDNetCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property to be saved.")]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Entity to be saved.")]
         [PSWDEntityArgumentTransformationAttribute]
-        public PSWDProperty[] Property { get; set; }
+        public PSWDEntity[] Entity { get; set; }
 
         protected override void ProcessRecord()
         {
-            foreach (PSWDProperty p in Property)
+            foreach (PSWDEntity entity in Entity)
             {
-                if (ShouldProcess(p.Id, "Save property"))
+                if (ShouldProcess(entity.Id, "Save entity"))
                 {
                     try
                     {
-                        string comment = p.Save();
+                        string comment = entity.Save();
                         WriteVerbose(comment);
-                        WriteObject(p, true);
+                        WriteObject(entity, true);
                     }
                     catch (Exception e)
                     {
-                        WriteError(new ErrorRecord(e, null, ErrorCategory.NotSpecified, p));
+                        WriteError(new ErrorRecord(e, null, ErrorCategory.NotSpecified, entity));
                         continue;
                     }
                 }
