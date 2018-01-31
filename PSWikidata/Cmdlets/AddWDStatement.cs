@@ -22,7 +22,6 @@ namespace PSWikidata
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property or item to be modified.", ParameterSetName = "somevalue")]
         [PSWDEntityArgumentTransformation]
-        [Alias("Item")]
         public PSWDEntity Entity { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Property for the statement.", ParameterSetName = "item")]
@@ -39,6 +38,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "string")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "time")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement even if there is already an statement for this property.", ParameterSetName = "novalue")]
@@ -49,6 +49,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "string")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "time")]
+        [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Outputs the new statement instead of the modified item.", ParameterSetName = "somevalue")]
@@ -58,6 +59,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "monolingual")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "string")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "time")]
+        [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "quantity")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Add the statement but do not save the changes to Wikidata.", ParameterSetName = "somevalue")]

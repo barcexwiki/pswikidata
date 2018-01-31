@@ -22,9 +22,6 @@ namespace PSWikidata.DataValues
             Precision = c.Precision;
         }
 
-        public override string ToString()
-        {
-            return $"({Latitude},{Longitude}) {Globe}";
-        }
+        public override string ToString() => $"({Latitude},{Longitude}) {Globe}";
     }
 }

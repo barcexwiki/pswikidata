@@ -11,7 +11,7 @@ namespace PSWikidata
     public class PSWDProperty : PSWDEntity
     {
 
-        static Dictionary<PSWDDataType, string> dataTypeStringIdentifiers = new Dictionary<PSWDDataType, string>()
+        private static readonly Dictionary<PSWDDataType, string> s_dataTypeStringIdentifiers = new Dictionary<PSWDDataType, string>()
         {
             {PSWDDataType.CommonsMedia,"commonsMedia"},
             {PSWDDataType.GeoShape,"geo-shape"},
@@ -28,7 +28,7 @@ namespace PSWikidata
             {PSWDDataType.Math,"math"}
         };
 
-        static Dictionary<string, PSWDDataType> dataTypeEnumIdentifiers = new Dictionary<string, PSWDDataType>()
+        private static readonly Dictionary<string, PSWDDataType> s_dataTypeEnumIdentifiers = new Dictionary<string, PSWDDataType>()
         {
             {"commonsMedia", PSWDDataType.CommonsMedia},
             {"geo-shape", PSWDDataType.GeoShape},
@@ -49,7 +49,7 @@ namespace PSWikidata
         {
         }
 
-        internal PSWDProperty(WikibaseApi api, PSWDDataType dataType) : this(new Property(api, dataTypeStringIdentifiers[dataType]))
+        internal PSWDProperty(WikibaseApi api, PSWDDataType dataType) : this(new Property(api, s_dataTypeStringIdentifiers[dataType]))
         {
             DataType = dataType;
         }
@@ -62,7 +62,7 @@ namespace PSWikidata
 
             try
             {
-                DataType = dataTypeEnumIdentifiers[((Property)ExtensionData).DataType];
+                DataType = s_dataTypeEnumIdentifiers[((Property)ExtensionData).DataType];
             }
             catch (KeyNotFoundException)
             {

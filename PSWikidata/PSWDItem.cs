@@ -10,7 +10,7 @@ namespace PSWikidata
     public class PSWDItem : PSWDEntity
     {
 
-        private List<PSWDSitelink> _sitelinks = new List<PSWDSitelink>();
+        private readonly List<PSWDSitelink> _sitelinks = new List<PSWDSitelink>();
 
         internal PSWDItem(Item item) : base(item) 
         {

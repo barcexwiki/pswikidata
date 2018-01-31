@@ -8,7 +8,7 @@ namespace PSWikidata
 {
     public class PSWDSitelink
     {
-        private HashSet<string> _badges = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _badges = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         internal Wikibase.Sitelink ExtensionData { get; set; }
 

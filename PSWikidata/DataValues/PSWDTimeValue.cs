@@ -96,9 +96,6 @@ namespace PSWikidata.DataValues
             Hour = t.Second;
         }
 
-        public override string ToString()
-        {
-            return Time;
-        }
+        public override string ToString() => Time;
     }
 }

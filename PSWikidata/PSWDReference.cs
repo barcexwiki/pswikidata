@@ -13,7 +13,7 @@ namespace PSWikidata
     {
         public PSWDSnak[] Snaks { get => _snaks.ToArray(); }
 
-        private List<PSWDSnak> _snaks = new List<PSWDSnak>();
+        private readonly List<PSWDSnak> _snaks = new List<PSWDSnak>();
 
         internal PSWDReference(Reference reference)
         {

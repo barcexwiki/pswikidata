@@ -8,14 +8,8 @@ using Wikibase;
 
 namespace PSWikidata
 {
-    [Cmdlet(VerbsCommon.Set, "WDProperty",
-        SupportsShouldProcess = true,
-        ConfirmImpact = ConfirmImpact.Medium)]
-    public class SetWDProperty : PSWDNetCmdlet
+    public abstract class PSWDSetEntityCommonCmdlet : PSWDNetCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Property to be modified.")]
-        [PSWDEntityArgumentTransformationAttribute]
-        public PSWDProperty[] Property { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Language to be used.")]
         public string Language { get; set; }
@@ -27,25 +21,15 @@ namespace PSWikidata
         public string Label { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the label")]
-        public SwitchParameter RemoveLabel
-        {
-            get { return _removeLabel; }
-            set { _removeLabel = value; }
-        }
-        private bool _removeLabel;
+        public SwitchParameter RemoveLabel { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the description")]
-        public SwitchParameter RemoveDescription
-        {
-            get { return _removeDescription; }
-            set { _removeDescription = value; }
-        }
-        private bool _removeDescription;
+        public SwitchParameter RemoveDescription { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Change the item but do not save the changes to Wikidata.")]
         public SwitchParameter DoNotSave { get; set; }
 
-        protected override void BeginProcessing()
+        protected void CheckEntityParameters()
         {
             Dictionary<String, object> parms = MyInvocation.BoundParameters;
 
@@ -53,6 +37,8 @@ namespace PSWikidata
                                     && parms.ContainsKey("RemoveLabel"));
             bool setAndRemoveDescription = (parms.ContainsKey("Description")
                                     && parms.ContainsKey("RemoveDescription"));
+            bool setAndRemoveSitelink = (parms.ContainsKey("Sitelink")
+                        && parms.ContainsKey("RemoveSitelink"));
             bool labelButNoLanguage = (parms.ContainsKey("Label") & !parms.ContainsKey("Language"));
             bool descriptionButNoLanguage = (parms.ContainsKey("Description") & !parms.ContainsKey("Language"));
 
@@ -75,59 +61,44 @@ namespace PSWikidata
                 ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("Language is required if Description is specified"), "DescriptionButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
-
-            base.BeginProcessing();
         }
 
-        protected override void ProcessRecord()
+        protected bool ProcessEntity(PSWDEntity entity)
         {
-            foreach (PSWDProperty p in Property)
-            {
-                if (ShouldProcess(p.Id, "Set label, description or sitelink"))
-                {
-                    bool touched = false;
-
+                    bool touched = false; 
+                    
                     if (!String.IsNullOrEmpty(Description))
                     {
-                        WriteVerbose($"Setting description {Language}: {Description} on {p.Id}");
-                        p.SetDescription(Language, Description);
+                        WriteVerbose($"Setting description {Language}: {Description} on {entity.Id}");
+                        entity.SetDescription(Language, Description);
                         touched = true;
                     }
 
                     if (!String.IsNullOrEmpty(Label))
                     {
-                        WriteVerbose($"Setting label {Language}: {Label} on {p.Id}");
-                        p.SetLabel(Language, Label);
+                        WriteVerbose($"Setting label {Language}: {Label} on {entity.Id}");
+                        entity.SetLabel(Language, Label);
                         touched = true;
                     }
 
                     if (RemoveDescription)
                     {
-                        WriteVerbose($"Removing description {Language} on {p.Id}");
-                        p.RemoveDescription(Language);
+                        WriteVerbose($"Removing description {Language} on {entity.Id}");
+                        entity.RemoveDescription(Language);
                         touched = true;
                     }
 
                     if (RemoveLabel)
                     {
-                        WriteVerbose($"Removing label {Language} on {p.Id}");
-                        p.RemoveLabel(Language);
+                        WriteVerbose($"Removing label {Language} on {entity.Id}");
+                        entity.RemoveLabel(Language);
                         touched = true;
                     }
 
-                    if (touched)
-                    {
-                        if (!DoNotSave)
-                        {
-                            string comment = p.Save();
-                            WriteVerbose(comment);
-                        }
-                    }
-
-                    WriteObject(p, true);
-                }
-            }
+                    return touched;
         }
+
+
 
     }
 }

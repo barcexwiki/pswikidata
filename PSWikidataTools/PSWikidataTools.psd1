@@ -68,7 +68,6 @@ RequiredModules = @('PSWikidata')
 # Functions to export from this module
 FunctionsToExport = @(
     'Set-WDRelative',
-    'Copy-WDLabel',
     'Test-WDSex',
     'Test-WDInstanceOf',
     'Test-WDHuman',
@@ -77,8 +76,7 @@ FunctionsToExport = @(
     'Get-WDLanguage',
     'Get-WDItemFromImdb',
     'Get-WDItemFromIdentifier',
-    'Add-WDCastMember',
-    'ConvertTo-WDTimeValueString')
+    'Add-WDCastMember')
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'

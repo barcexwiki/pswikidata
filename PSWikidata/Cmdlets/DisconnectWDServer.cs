@@ -13,10 +13,10 @@ namespace PSWikidata
     {
         protected override void BeginProcessing()
         {
-            PSWDSessionState sessionState = (PSWDSessionState)SessionState.PSVariable.Get("__WikidataState").Value;
+            PSWDSessionState sessionState = (PSWDSessionState)SessionState.PSVariable.Get("Global:__WikidataState").Value;
             sessionState.Api.Logout();
-            SessionState.PSVariable.Remove("__WikidataState");
-            WriteDebug("Disconnected from Wikidata");
+            SessionState.PSVariable.Set("Global:__WikidataState", null);
+            WriteDebug("Disconnected from server");
         }
     }
 }

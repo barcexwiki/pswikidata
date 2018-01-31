@@ -1,84 +1,3 @@
-function Copy-WDLabel
-{
-    [CmdletBinding(SupportsShouldProcess=$true, 
-                  PositionalBinding=$false,
-                  ConfirmImpact='Medium')]
-    [Alias("cplabel")]
-    [OutputType([PSWikidata.PSWDItem])]
-    param
-    (
-        # Item to be modified
-        [Parameter(Mandatory=$true, 
-                   ValueFromPipeline=$true)]
-        [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]
-        [Alias("i")] 
-        [PSWikidata.PSWDEntityArgumentTransformation()]
-        [PSWikidata.PSWDItem[]]
-        $Item,
-
-        # Source language
-        [Parameter(Mandatory=$true)]
-        [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]
-        [Alias("sl")] 
-        [string]
-        $SourceLanguage,
-
-        # Destination languages
-        [Parameter(Mandatory=$true)]
-        [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]
-        [Alias("dl")] 
-        [string[]]
-        $DestinationLanguages,
-
-        [Parameter(Mandatory=$false)]
-        [switch]$DoNotSave = $false
-    )
-
-    process
-    {
-        foreach ($i in $Item)
-        { 
-            if ($pscmdlet.ShouldProcess($i.Id, "Copying labels from $SourceLanguage to $($DestinationLanguages -join " ")"))
-            {               
-
-                $label = ($i.Labels | Where-Object Language -eq $SourceLanguage).Label
-
-                if ($label)
-                {
-                    foreach ($dl in $DestinationLanguages)
-                    {
-                        Write-Verbose "Copying label '$label' of $($i.Id) from [$SourceLanguage] to [$dl]"
-                        Set-WDItem -Item $i -Label $label -Language $dl -DoNotSave -ErrorAction Stop| Out-Null
-                    }
-                }
-                else
-                {
-                    Write-Warning "$($i.Id) has no label for language $SourceLanguage"
-                } 
-
-                try
-                {
-                    if (!$DoNotSave)
-                    {                   
-                        Save-WDItem -Item $i -ErrorAction Stop | Out-Null
-                    }
-                    # sends the item to the output stream
-                    $i
-                } 
-                catch 
-                {
-                    Write-Error $_
-                }
-             }
-        }
-
-    }
-    
-}
-
 function Test-WDInstanceOf
 {
     param
@@ -88,10 +7,9 @@ function Test-WDInstanceOf
         [Parameter(Mandatory=$true, 
                    ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
-        [Alias("i")] 
         [PSWikidata.PSWDEntityArgumentTransformation()]
-        [PSWikidata.PSWDItem]
-        $Item,
+        [PSWikidata.PSWDEntity]
+        $Entity,
 
         [Parameter(Mandatory=$true, 
                    ValueFromPipeline=$false)]
@@ -101,7 +19,7 @@ function Test-WDInstanceOf
         $QId
     )
 
-    $statements = $Item.Claims | Where-Object {$_.Property -eq "p31" -and $_.Value.Id -eq $QId}
+    $statements = $Entity.Claims | Where-Object {$_.Property -eq "p31" -and $_.Value.Id -eq $QId}
 
     return $statements.Count -gt 0
 }
@@ -122,7 +40,7 @@ function Test-WDHuman
     )
 
 
-    return Test-WDInstanceOf -Item $Item -QId "Q5"
+    return Test-WDInstanceOf -Entity $Item -QId "Q5"
 }
 
 
@@ -246,20 +164,20 @@ function Set-WDRelative
         
               if ($pscmdlet.MyInvocation.BoundParameters["Mother"])
               {                  
-                  Add-WDStatement -Item $i -Property p25 -ValueItem $Mother -ErrorAction Stop | Out-Null
-                  Add-WDStatement -Item $Mother -Property p40 -ValueItem $i -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Entity $i -Property p25 -ValueItem $Mother -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Entity $Mother -Property p40 -ValueItem $i -ErrorAction Stop | Out-Null
               }
 
               if ($pscmdlet.MyInvocation.BoundParameters["Father"])
               {
-                  Add-WDStatement -Item $i -Property p22 -ValueItem $Father -ErrorAction Stop | Out-Null
-                  Add-WDStatement -Item $Father -Property p40 -ValueItem $i -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Entity $i -Property p22 -ValueItem $Father -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Entity $Father -Property p40 -ValueItem $i -ErrorAction Stop | Out-Null
               }
 
               if ($pscmdlet.MyInvocation.BoundParameters["Spouse"])
               {
-                  Add-WDStatement -Item $i -Property p26 -ValueItem $Spouse -ErrorAction Stop | Out-Null
-                  Add-WDStatement -Item $Spouse -Property p26 -ValueItem $i -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Entity $i -Property p26 -ValueItem $Spouse -ErrorAction Stop | Out-Null
+                  Add-WDStatement -Entity $Spouse -Property p26 -ValueItem $i -ErrorAction Stop | Out-Null
               }
 
 
@@ -278,13 +196,13 @@ function Set-WDRelative
                   foreach ($child in $Children)
                   {
 
-                      Add-WDStatement -Item $i -Property p40 -ValueItem $child -ErrorAction Stop | Out-Null
+                      Add-WDStatement -Entity $i -Property p40 -ValueItem $child -ErrorAction Stop | Out-Null
 
                       if (Test-WDSex -Item $i -Sex Male) {
-                          Add-WDStatement -Item $child -Property p22 -ValueItem $i -ErrorAction Stop | Out-Null
+                          Add-WDStatement -Entity $child -Property p22 -ValueItem $i -ErrorAction Stop | Out-Null
                       } 
                       elseif (Test-WDSex -Item $i -Sex Female)  {
-                          Add-WDStatement -Item $child -Property P25 -ValueItem $i -ErrorAction Stop | Out-Null
+                          Add-WDStatement -Entity $child -Property P25 -ValueItem $i -ErrorAction Stop | Out-Null
                       } else {
                           throw "The sex of the parent is unknown"
                       }
@@ -306,7 +224,7 @@ function Set-WDRelative
 
 function setSibling ([PSWikidata.PSWDItem]$a, [PSWikidata.PSWDItem] $b)
 {
-    Add-WDStatement -Item $a -Property "p3373" -ValueItem $b | Out-Null
+    Add-WDStatement -Entity $a -Property "p3373" -ValueItem $b | Out-Null
 }
 
 
@@ -402,22 +320,25 @@ function Set-WDHuman
              $paramDictionary.Add($paramName, $param)
         }
 
-
         return $paramDictionary
-
     }
 
     Process
     {
+        $pInstanceOf = $null;
+        $qHuman = $null;
+                
         foreach ($i in $Item)
         {
+            if (!$pInstanceOf) { $pInstanceOf = Get-WDEntity -Entity p31 }
+            if (!$qHuman) { $qHuman = Get-WDEntity -Entity q5 }
             if ($pscmdlet.ShouldProcess($i.Id, "Set-WDHuman"))
             {
                 if (!(Test-WDHuman $i))
                 {
                     if ($SetInstanceOf)
                     {
-                        Add-WDStatement -Item $i -Property p31 -ValueItem Q5 -ErrorAction Stop | Out-Null
+                        Add-WDStatement -Entity $i -Property $pInstanceOf -ValueItem $qHuman -ErrorAction Stop | Out-Null
                     } 
                     else
                     {
@@ -430,7 +351,7 @@ function Set-WDHuman
                     $parameterValue = $pscmdlet.MyInvocation.BoundParameters[$parameterName]
                     if ($parameterValue)
                     {
-                        Add-WDStatement -Item $i -Property $valueItemParameters[$parameterName] -ValueItem $parameterValue -ErrorAction Stop | Out-Null
+                        Add-WDStatement -Entity $i -Property $valueItemParameters[$parameterName] -ValueItem $parameterValue -ErrorAction Stop | Out-Null
                     }                    
                 }
 
@@ -440,7 +361,7 @@ function Set-WDHuman
                     $parameterValue = $pscmdlet.MyInvocation.BoundParameters[$parameterName]
                     if ($parameterValue)
                     {
-                        Add-WDStatement -Item $i -Property $stringParameters[$parameterName] -ValueString $parameterValue -ErrorAction Stop | Out-Null
+                        Add-WDStatement -Entity $i -Property $stringParameters[$parameterName] -ValueString $parameterValue -ErrorAction Stop | Out-Null
                     }                    
                 }
 
@@ -461,7 +382,7 @@ function Set-WDHuman
                         } 
                         else
                         {
-                            Add-WDStatement -Item $i -Property p21 -ValueItem $sexQId -ErrorAction Stop | Out-Null
+                            Add-WDStatement -Entity $i -Property p21 -ValueItem $sexQId -ErrorAction Stop | Out-Null
                         }
                     }
                     else 
@@ -477,8 +398,6 @@ function Set-WDHuman
         }
     }
 }
-
-
 
 function Get-WDCountry
 {
@@ -663,32 +582,6 @@ function Get-WDItemFromImdb
     }
 }
 
-function ConvertTo-WDTimeValueString
-{
-
-    [CmdletBinding(PositionalBinding=$true,
-                  ConfirmImpact='Low')]
-    [OutputType([string])]
-    Param
-    (
-         # Item to be modified
-        [Parameter(Mandatory=$true, 
-                   Position = 0)]
-        [ValidateNotNullOrEmpty()]
-        [System.DateTime]
-        $Date
-    )
-
-    Process
-    {
-        $result = [String]::Format("{0:0000}-{1:00}-{2:00}T{3:00}:{4:00}:{5:00}Z", $date.Year, $date.Month, $date.Day, $date.Hour, $date.Minute, $date.Second);
-        if ($date.year -gt 0) 
-        {
-            $result = "+" + $result;
-        }
-        Write-Output $result
-    }
-}
 
 function _hasIMDBReference
 {
@@ -835,7 +728,7 @@ function Add-WDCastMember
 
                     if ($i.Status -eq "Changed")
                     {
-                        Save-WDItem -Item $i
+                        Save-WDEntity -Entity $i
                     }
                     Write-Verbose "Processed $($member.Id)"                
                 } 

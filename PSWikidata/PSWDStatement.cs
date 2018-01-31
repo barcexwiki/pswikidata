@@ -18,8 +18,7 @@ namespace PSWikidata
 
         public PSWDReference[] References { get => _references.ToArray(); }
 
-
-        private List<PSWDReference> _references = new List<PSWDReference>();
+        private readonly List<PSWDReference> _references = new List<PSWDReference>();
 
         internal override void RefreshFromExtensionData()
         {

@@ -29,12 +29,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Output the modidied items instead of the modified statements.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Output the modidied items instead of the modified statements.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Output the modidied items instead of the modified statements.", ParameterSetName = "somevalue")]
-        public SwitchParameter OutputItem
-        {
-            get { return _outputItem; }
-            set { _outputItem = value; }
-        }
-        private bool _outputItem;
+        public SwitchParameter OutputItem { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Change the statement but do not save the changes to Wikidata.", ParameterSetName = "item")]
         [Parameter(Mandatory = false, HelpMessage = "Change the statement but do not save the changes to Wikidata.", ParameterSetName = "monolingual")]
@@ -43,12 +38,7 @@ namespace PSWikidata
         [Parameter(Mandatory = false, HelpMessage = "Change the statement but do not save the changes to Wikidata.", ParameterSetName = "globecoordinate")]
         [Parameter(Mandatory = false, HelpMessage = "Change the statement but do not save the changes to Wikidata.", ParameterSetName = "novalue")]
         [Parameter(Mandatory = false, HelpMessage = "Change the statement but do not save the changes to Wikidata.", ParameterSetName = "somevalue")]
-        public SwitchParameter DoNotSave
-        {
-            get { return _doNotSave; }
-            set { _doNotSave = value; }
-        }
-        private bool _doNotSave;
+        public SwitchParameter DoNotSave {get; set;}
 
         protected override void ProcessRecord()
         {

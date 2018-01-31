@@ -11,72 +11,30 @@ namespace PSWikidata
     [Cmdlet(VerbsCommon.Set, "WDItem",
         SupportsShouldProcess = true,
         ConfirmImpact = ConfirmImpact.Medium)]
-    public class SetWDItem : PSWDNetCmdlet
+    public class SetWDItem : PSWDSetEntityCommonCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, HelpMessage = "Item to be modified.")]
         [PSWDEntityArgumentTransformationAttribute]
         public PSWDItem[] Item { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Language to be used.")]
-        public string Language { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = "Description to be set.")]
-        public string Description { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = "Label to be set.")]
-        public string Label { get; set; }
-
         [Parameter(Mandatory = false, HelpMessage = "Sitelink")]
         public PSWDSitelink Sitelink { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = "Removes the label")]
-        public SwitchParameter RemoveLabel { get; set; }
-
-        [Parameter(Mandatory = false, HelpMessage = "Removes the description")]
-        public SwitchParameter RemoveDescription { get; set; }
 
         [Parameter(Mandatory = false, HelpMessage = "Removes the sitelink")]
         public string RemoveSitelink { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Change the item but do not save the changes to Wikidata.")]
-        public SwitchParameter DoNotSave { get; set; }
-
         protected override void BeginProcessing()
         {
+            CheckEntityParameters();
+
             Dictionary<String, object> parms = MyInvocation.BoundParameters;
 
-            bool setAndRemoveLabel = (parms.ContainsKey("Label")
-                                    && parms.ContainsKey("RemoveLabel"));
-            bool setAndRemoveDescription = (parms.ContainsKey("Description")
-                                    && parms.ContainsKey("RemoveDescription"));
             bool setAndRemoveSitelink = (parms.ContainsKey("Sitelink")
                         && parms.ContainsKey("RemoveSitelink"));
-            bool labelButNoLanguage = (parms.ContainsKey("Label") & !parms.ContainsKey("Language"));
-            bool descriptionButNoLanguage = (parms.ContainsKey("Description") & !parms.ContainsKey("Language"));
-
-            if (setAndRemoveLabel)
-                ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Label cannot be set alongside RemoveLabel"), "BothLabelAndRemoveLabel",
-                    ErrorCategory.InvalidArgument, null));
-
-            if (setAndRemoveDescription)
-                ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Description cannot be set alongside RemoveDescription"), "BothLabelAndRemoveLabel",
-                    ErrorCategory.InvalidArgument, null));
 
             if (setAndRemoveSitelink)
                 ThrowTerminatingError(new ErrorRecord(
                     new ArgumentException("SiteLink cannot be set alongside RemoveSitelink"), "BothSitelinkAndRemoveSitelink",
-                    ErrorCategory.InvalidArgument, null));
-
-            if (labelButNoLanguage)
-                ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Language is required if Label is specified"), "LabelButNoLanguage",
-                    ErrorCategory.InvalidArgument, null));
-
-            if (descriptionButNoLanguage)
-                ThrowTerminatingError(new ErrorRecord(
-                    new ArgumentException("Language is required if Description is specified"), "DescriptionButNoLanguage",
                     ErrorCategory.InvalidArgument, null));
 
             base.BeginProcessing();
@@ -88,35 +46,8 @@ namespace PSWikidata
             {
                 if (ShouldProcess(i.Id, "Set label, description or sitelink"))
                 {
-                    bool touched = false;
 
-                    if (!String.IsNullOrEmpty(Description))
-                    {
-                        WriteVerbose($"Setting description {Language}: {Description} on {i.Id}");
-                        i.SetDescription(Language, Description);
-                        touched = true;
-                    }
-
-                    if (!String.IsNullOrEmpty(Label))
-                    {
-                        WriteVerbose($"Setting label {Language}: {Label} on {i.Id}");
-                        i.SetLabel(Language, Label);
-                        touched = true;
-                    }
-
-                    if (RemoveDescription)
-                    {
-                        WriteVerbose($"Removing description {Language} on {i.Id}");
-                        i.RemoveDescription(Language);
-                        touched = true;
-                    }
-
-                    if (RemoveLabel)
-                    {
-                        WriteVerbose($"Removing label {Language} on {i.Id}");
-                        i.RemoveLabel(Language);
-                        touched = true;
-                    }
+                    bool touched = ProcessEntity(i);
 
                     if (Sitelink != null)
                     {
@@ -132,13 +63,10 @@ namespace PSWikidata
                         touched = true;
                     }
 
-                    if (touched)
+                    if (touched && !DoNotSave)
                     {
-                        if (!DoNotSave)
-                        {
-                            string comment = i.Save();
-                            WriteVerbose(comment);
-                        }
+                        string comment = i.Save();
+                        WriteVerbose(comment);
                     }
 
                     WriteObject(i, true);

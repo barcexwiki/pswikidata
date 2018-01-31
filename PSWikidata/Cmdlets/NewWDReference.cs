@@ -13,22 +13,21 @@ namespace PSWikidata
         ConfirmImpact = ConfirmImpact.Low)]
     public class NewWDReference : PSCmdlet
     {
-        [Parameter(Mandatory = true, HelpMessage = "Snaks for the statement.")]
+        [Parameter(Mandatory = true, HelpMessage = "Snaks for the reference.")]
         public PSWDSnak[] Snak { get; set; }
 
-        private List<PSWDSnak> _snaks;
+        private readonly List<PSWDSnak> _snaks = new List<PSWDSnak>();
 
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            _snaks = new List<PSWDSnak>();
         }
 
         protected override void ProcessRecord()
         {
             foreach (PSWDSnak s in Snak)
             {
-                if (ShouldProcess("new reference", "Creating Reference"))
+                if (ShouldProcess("new reference", "create reference"))
                 {
                     _snaks.Add(s);                    
                 }

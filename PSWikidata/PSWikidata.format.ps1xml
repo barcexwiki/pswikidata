@@ -2,7 +2,7 @@
 <Configuration>
   <ViewDefinitions>
     <View>
-      <Name>MatchInfo</Name>
+      <Name>ItemInfo</Name>
        <ViewSelectedBy>
          <TypeName>PSWikidata.PSWDItem</TypeName>
        </ViewSelectedBy>
@@ -42,6 +42,61 @@ foreach ($l in $_languages) {
 $_lines += $_tableLines | Format-Table Language, Label, Description, Aliases -AutoSize -Wrap | Out-String 
 
 $_sites = $_.Sitelinks | Where-Object { $_.Site -in $PSWDOptions.PreferredDisplaySites } | Sort-Object Site
+
+$_lines += $_sites | Format-Table -AutoSize -Wrap | Out-String 
+
+
+
+($_lines -join ([Environment]::Newline)) -replace "$([Environment]::Newline)$([Environment]::Newline)$([Environment]::Newline)$([Environment]::Newline)", "$([Environment]::Newline)"
+
+
+                  </ScriptBlock>
+                 </ExpressionBinding>
+               </CustomItem>
+             </CustomEntry>
+           </CustomEntries>
+       </CustomControl>
+    </View>
+    <View>
+      <Name>PropertyInfo</Name>
+       <ViewSelectedBy>
+         <TypeName>PSWikidata.PSWDProperty</TypeName>
+       </ViewSelectedBy>
+       <CustomControl>
+         <CustomEntries>
+            <CustomEntry>
+             <CustomItem>
+                 <ExpressionBinding>
+                   <ScriptBlock>
+
+class WDInfo {
+    $Language
+    $Label
+    $Description
+    $Aliases
+}
+
+$_lines = @()
+
+$_languages = @($_.Labels.Language) + @($_.Descriptions.Language) + @($_.Aliases.Language) | `
+  Sort-Object -Unique | Where-Object {$_ -in $PSWDOptions.PreferredDisplayLanguages } 
+
+
+$_lines += "Id: $($_.Id) ($($_.Status))"
+$_lines += "Data type: $($_.DataType)"
+$_lines += "Labels: $([int]$_.Labels.Count)   Descriptions: $([int]$_.Descriptions.Count)   Aliases: $([int]$_.Aliases.Count)   Sitelinks: $([int]$_.Sitelinks.Count)   Claims: $([int]$_.Claims.Count)"
+
+$_tableLines = @()
+foreach ($l in $_languages) {
+    $info = New-Object -TypeName WDInfo
+    $info.Language = $l
+    $info.Label = ($_.Labels | Where-Object {$_.Language -eq $l}).Label
+    $info.Description = ($_.Descriptions | Where-Object {$_.Language -eq $l}).Description
+    $info.Aliases = ($_.Aliases | Where-Object {$_.Language -eq $l}).Label -join "`n"
+    $_tableLines += $info    
+}
+ 
+$_lines += $_tableLines | Format-Table Language, Label, Description, Aliases -AutoSize -Wrap | Out-String 
 
 $_lines += $_sites | Format-Table -AutoSize -Wrap | Out-String 
 

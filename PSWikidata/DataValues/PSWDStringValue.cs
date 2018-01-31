@@ -16,9 +16,6 @@ namespace PSWikidata.DataValues
             Value = s.Value;
         }
 
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
     }
 }

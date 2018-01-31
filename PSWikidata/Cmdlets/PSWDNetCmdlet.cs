@@ -15,9 +15,9 @@ namespace PSWikidata
 
         protected override void BeginProcessing()
         {
-            PSVariable stateVariable = SessionState.PSVariable.Get("__WikidataState");
+            PSVariable stateVariable = SessionState.PSVariable.Get("Global:__WikidataState");
 
-            if (stateVariable != null)
+            if (stateVariable?.Value != null)
             {
                 state = (PSWDSessionState)stateVariable.Value;
                 provider = state.EntityProvider;

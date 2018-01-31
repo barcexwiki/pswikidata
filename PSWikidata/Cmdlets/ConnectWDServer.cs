@@ -33,8 +33,8 @@ namespace PSWikidata
             {
                 EntityProvider p = new EntityProvider(Api);
                 PSWDSessionState state = new PSWDSessionState(Api, p);
-                SessionState.PSVariable.Set(new PSVariable("__WikidataState", state));
-                WriteDebug("Connected to Wikidata");
+                SessionState.PSVariable.Set(new PSVariable("Global:__WikidataState", state));
+                WriteDebug("Connected to wikibase");
             }
             else
             {

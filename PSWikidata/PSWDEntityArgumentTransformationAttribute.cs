@@ -25,16 +25,16 @@ namespace PSWikidata
                 }
                 EntityProvider provider;
                 PSWDSessionState state;
-                PSVariable stateVariable = sessionState.PSVariable.Get("__WikidataState");
+                PSVariable stateVariable = sessionState.PSVariable.Get("Global:__WikidataState");
 
-                if (stateVariable != null)
+                if (stateVariable?.Value != null)
                 {
                     state = (PSWDSessionState)stateVariable.Value;
                     provider = state.EntityProvider;
                 }
                 else
                 {
-                    throw new Exception("Not connected to Wikidata");
+                    throw new Exception("Not connected to the server");
                 }
 
                 Entity entity = provider.GetEntityFromId(new EntityId(qId));

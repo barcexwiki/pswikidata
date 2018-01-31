@@ -20,7 +20,6 @@ namespace PSWikidata
            HelpMessage = "Property or item to be modified."
         )]
         [PSWDEntityArgumentTransformation]
-        [Alias("Item","Property")]
         public PSWDEntity Entity { get; set; }
 
         [Parameter(

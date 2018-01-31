@@ -25,9 +25,6 @@ namespace PSWikidata.DataValues
             }
         }
 
-        public override string ToString()
-        {
-            return Id;
-        }
+        public override string ToString() => Id;
     }
 }

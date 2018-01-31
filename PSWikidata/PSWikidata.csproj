@@ -19,9 +19,16 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
-   <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.0-rc" /> 
-    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.0.0-rc" />
-    <PackageReference Include="Microsoft.WSMan.Management" Version="6.0.0-rc"/>
+   <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.0" /> 
+    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.0.0" />
+    <PackageReference Include="Microsoft.WSMan.Management" Version="6.0.0"/>
   </ItemGroup>
+
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="PSWikidata.psm1;PSWikidata.psd1;PSWikidata.format.ps1xml" DestinationFolder="$(OutDir)" />
+  </Target>
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="PSWikidata.psm1;PSWikidata.psd1;PSWikidata.format.ps1xml" DestinationFolder="$(OutDir)" />
+  </Target>
 
 </Project>
