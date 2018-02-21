@@ -37,16 +37,10 @@ namespace PSWikidata
                     throw new Exception("Not connected to the server");
                 }
 
-                Entity entity = provider.GetEntityFromId(new EntityId(qId));
+                PSWDEntity entity = PSWDEntity.CreateStubPSWDEntity(provider, qId);
                 if (entity != null)
                 {
-                    if (entity is Property)
-                        return new PSWDProperty((Property)entity);
-                    else
-                    if (entity is Entity)
-                        return new PSWDItem((Item)entity);
-                    else
-                        return element;
+                    return entity;
                 }
                 else
                 {

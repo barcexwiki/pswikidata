@@ -45,6 +45,10 @@ namespace PSWikidata
             {"math", PSWDDataType.Math}
         };
 
+        public PSWDProperty(EntityProvider provider, EntityId entityId): base(provider, entityId)
+        {            
+        }
+
         internal PSWDProperty(Property item) : base(item)
         {
         }
@@ -54,7 +58,18 @@ namespace PSWikidata
             DataType = dataType;
         }
 
-        public PSWDDataType DataType { get; private set; }
+        private PSWDDataType _dataType;
+        public PSWDDataType DataType { 
+            get 
+            {
+                LoadIfStub();
+                return _dataType;
+            }        
+            private set
+            {
+                _dataType = value;
+            } 
+        }
 
         internal override void RefreshFromExtensionData()
         {

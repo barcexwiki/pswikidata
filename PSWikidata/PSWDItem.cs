@@ -20,10 +20,15 @@ namespace PSWikidata
         {
         }
 
-        public PSWDSitelink[] SiteLinks { get => _sitelinks.ToArray(); }
+        public PSWDItem(EntityProvider provider, EntityId entityId): base(provider, entityId)
+        {            
+        }
+
+        public PSWDSitelink[] SiteLinks { get { LoadIfStub(); return _sitelinks.ToArray(); }}
 
         internal void SetSitelink(PSWDSitelink sitelink)
         {
+            LoadIfStub();
             var badges = sitelink.Badges.Select( x => new EntityId(x) );
             ((Item)ExtensionData).SetSitelink(sitelink.Site, sitelink.Title, badges);
             RefreshFromExtensionData();
@@ -32,6 +37,7 @@ namespace PSWikidata
 
         internal void RemoveSitelink(string site)
         {
+            LoadIfStub();
             ((Item)ExtensionData).RemoveSitelink(site);
             RefreshFromExtensionData();
             _log.Add(new LogEntry("RemoveSitelink", site, null));
@@ -39,6 +45,7 @@ namespace PSWikidata
 
         internal PSWDSitelink GetSitelink(string site)
         {
+            LoadIfStub();
             Sitelink sitelink = ((Item)(ExtensionData)).GetSitelink(site);
             return new PSWDSitelink(sitelink);
         }
