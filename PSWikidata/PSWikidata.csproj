@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -10,16 +10,10 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-     <DebugType>portable</DebugType>
   </PropertyGroup>
    
-
   <ItemGroup>
     <ProjectReference Include="..\..\wikibase.netcore\Wikibase.netcore\Wikibase.netcore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
-   <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.0.0" /> 
     <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.0.0" />
     <PackageReference Include="Microsoft.WSMan.Management" Version="6.0.0"/>
   </ItemGroup>
